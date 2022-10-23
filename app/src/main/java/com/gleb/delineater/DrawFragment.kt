@@ -1,6 +1,8 @@
 package com.gleb.delineater
 
 import android.graphics.Bitmap
+import android.graphics.Paint
+import android.graphics.Path
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,6 +17,11 @@ class DrawFragment : Fragment() {
 
     private var binding: FragmentDrawBinding? = null
 
+    companion object{
+        var paint = Paint()
+        var path = Path()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -27,13 +34,13 @@ class DrawFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val bitmap = arguments?.get("bitmap") as Bitmap?
-        bitmap?.let { bitmapPicture ->
+        /*bitmap?.let { bitmapPicture ->
             binding?.imageContainer?.let {
                 Glide.with(it)
                     .load(bitmapPicture)
                     .into(it)
             }
-        }
+        }*/
         initClickListeners()
     }
 

@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
+import com.gleb.delineater.MenuPictureListener
 import com.gleb.delineater.data.models.PictureModel
 import com.gleb.delineater.databinding.ItemAddPictureBinding
 import com.gleb.delineater.databinding.ItemMenuBinding
@@ -14,6 +15,7 @@ import com.gleb.delineater.ui.diffUtil.MenuPictureDiffUtil
 class MenuPictureAdapter : RecyclerView.Adapter<ViewHolder>() {
 
     private val oldPictureList = arrayListOf<PictureModel>()
+    private var menuPictureListener: MenuPictureListener? = null
 
     companion object {
         const val PICTURE_ITEM = 0
@@ -40,20 +42,16 @@ class MenuPictureAdapter : RecyclerView.Adapter<ViewHolder>() {
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         if (holder.itemViewType == PICTURE_ITEM) {
             (holder as PictureViewHolder).bind()
+        } else {
+            (holder as AddPictureViewHolder).bind()
         }
     }
 
     override fun getItemCount() = oldPictureList.size
 
-    inner class PictureViewHolder(private val binding: ItemMenuBinding) : ViewHolder(binding.root) {
-        fun bind() {
-            Glide.with(binding.imageContainer)
-                .load(oldPictureList[bindingAdapterPosition].picture)
-                .into(binding.imageContainer)
-        }
+    fun setOnItemClickedListener(listener: MenuPictureListener) {
+        menuPictureListener = listener
     }
-
-    inner class AddPictureViewHolder(binding: ItemAddPictureBinding) : ViewHolder(binding.root)
 
     fun setData(newPictureList: List<PictureModel>) {
         val diffUtil = MenuPictureDiffUtil(oldPictureList, newPictureList)
@@ -62,6 +60,31 @@ class MenuPictureAdapter : RecyclerView.Adapter<ViewHolder>() {
         oldPictureList.addAll(newPictureList)
         oldPictureList.add(PictureModel(picture = null))
         diffResults.dispatchUpdatesTo(this)
+    }
+
+    inner class PictureViewHolder(private val binding: ItemMenuBinding) : ViewHolder(binding.root) {
+        fun bind() {
+            Glide.with(binding.imageContainer)
+                .load(oldPictureList[bindingAdapterPosition].picture)
+                .into(binding.imageContainer)
+            binding.root.setOnClickListener {
+                oldPictureList[bindingAdapterPosition].picture?.let { bitmap ->
+                    menuPictureListener?.showPictureInfo(
+                        "Just picture rn",
+                        bitmap
+                    )
+                }
+            }
+        }
+    }
+
+    inner class AddPictureViewHolder(private val binding: ItemAddPictureBinding) :
+        ViewHolder(binding.root) {
+        fun bind() {
+            binding.root.setOnClickListener {
+                menuPictureListener?.showAddPictureInfo("Would be functionality to add a new drawing surface")
+            }
+        }
     }
 
 }

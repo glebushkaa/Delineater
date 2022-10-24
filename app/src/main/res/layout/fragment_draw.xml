@@ -26,8 +26,10 @@
         app:cardElevation="0dp">
 
         <com.gleb.delineater.PaintView
+            android:id="@+id/paintView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:background="@color/white" />
 
         <!--<ImageView
             android:id="@+id/imageContainer"
@@ -36,69 +38,103 @@
 
     </com.google.android.material.card.MaterialCardView>
 
-    <LinearLayout
-        android:layout_width="wrap_content"
+    <HorizontalScrollView
+        android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_gravity="bottom|end">
+        android:layout_gravity="bottom">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/colorPickerBtn"
-            style="@style/ColorButtonStyle"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_gravity="center"
-            android:layout_marginStart="12dp"
-            app:backgroundTint="@color/purple_200" />
-
-        <com.google.android.material.slider.Slider
-            android:id="@+id/paintSizeSlider"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="60dp"
-            android:layout_gravity="center"
-            android:layout_marginStart="20dp"
-            android:layout_weight="1.6"
-            android:stepSize="1"
-            android:valueFrom="0"
-            android:valueTo="200"
-            android:value="10"
-            app:haloColor="@color/white"
-            app:labelBehavior="gone"
-            app:thumbColor="@color/white"
-            app:tickColor="@color/gray_background"
-            app:trackColor="@color/white"
-            app:trackHeight="5dp" />
+            android:layout_gravity="bottom|end">
 
-        <TextView
-            android:id="@+id/paintSize"
-            android:layout_width="60dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:gravity="end"
-            android:text="10dp"
-            android:textColor="@color/white"
-            android:textSize="20sp" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/colorPickerBtn"
+                style="@style/ColorButtonStyle"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:layout_marginStart="12dp"
+                app:backgroundTint="#880000"
+                app:strokeColor="@color/white"
+                app:strokeWidth="1dp" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/eraseBtn"
-            android:layout_width="48dp"
-            android:layout_height="60dp"
-            app:backgroundTint="@color/black_background"
-            app:icon="@drawable/ic_eraser"
-            app:iconGravity="textStart"
-            app:iconPadding="0dp"
-            app:iconSize="32dp"
-            app:rippleColor="@color/black_background" />
+            <com.google.android.material.slider.Slider
+                android:id="@+id/paintSizeSlider"
+                android:layout_width="120dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                android:layout_marginStart="20dp"
+                android:layout_weight="1.6"
+                android:stepSize="1"
+                android:value="10"
+                android:valueFrom="1"
+                android:valueTo="200"
+                app:haloColor="@color/white"
+                app:labelBehavior="gone"
+                app:thumbColor="@color/white"
+                app:tickColor="@color/gray_background"
+                app:trackColor="@color/white"
+                app:trackHeight="5dp" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/brushBtn"
-            android:layout_width="48dp"
-            android:layout_height="60dp"
-            app:backgroundTint="@color/black_background"
-            app:icon="@drawable/ic_brush"
-            app:iconGravity="textStart"
-            app:iconPadding="0dp"
-            app:iconSize="32dp"
-            app:rippleColor="@color/black_background" />
-    </LinearLayout>
+            <TextView
+                android:id="@+id/paintSize"
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:gravity="end"
+                android:text="10dp"
+                android:textColor="@color/white"
+                android:textSize="20sp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/eraseBtn"
+                android:layout_width="48dp"
+                android:layout_height="60dp"
+                app:backgroundTint="@color/black_background"
+                app:icon="@drawable/ic_eraser"
+                app:iconGravity="textStart"
+                app:iconPadding="0dp"
+                app:iconSize="32dp"
+                app:iconTint="@color/gray_background"
+                app:rippleColor="@color/black_background" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/brushBtn"
+                android:layout_width="48dp"
+                android:layout_height="60dp"
+                app:backgroundTint="@color/black_background"
+                app:icon="@drawable/ic_brush"
+                app:iconGravity="textStart"
+                app:iconPadding="0dp"
+                app:iconSize="32dp"
+                app:iconTint="@color/white_background"
+                app:rippleColor="@color/black_background" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/fillBackBtn"
+                android:layout_width="48dp"
+                android:layout_height="60dp"
+                app:backgroundTint="@color/black_background"
+                app:icon="@drawable/ic_fill_back"
+                app:iconGravity="textStart"
+                app:iconPadding="0dp"
+                app:iconSize="32dp"
+                app:iconTint="@color/white_background"
+                app:rippleColor="@color/black_background" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/refreshBtn"
+                android:layout_width="48dp"
+                android:layout_height="60dp"
+                app:backgroundTint="@color/black_background"
+                app:icon="@drawable/ic_refresh"
+                app:iconGravity="textStart"
+                app:iconPadding="0dp"
+                app:iconSize="32dp"
+                app:iconTint="@color/white_background"
+                app:rippleColor="@color/black_background" />
+        </LinearLayout>
+    </HorizontalScrollView>
 
 </FrameLayout>

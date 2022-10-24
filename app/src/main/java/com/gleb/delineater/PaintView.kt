@@ -1,14 +1,17 @@
 package com.gleb.delineater
 
-import android.app.ActionBar.LayoutParams
 import android.content.Context
-import android.graphics.*
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.Path
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
-import com.gleb.delineater.DrawFragment.Companion.paint
-import com.gleb.delineater.DrawFragment.Companion.paintStroke
-import com.gleb.delineater.DrawFragment.Companion.path
+import com.gleb.delineater.DrawFragment.Companion.brushColor
+import com.gleb.delineater.DrawFragment.Companion.brushWidth
+import com.gleb.delineater.DrawFragment.Companion.eraserColor
+import com.gleb.delineater.DrawFragment.Companion.isEraserSelected
 import com.gleb.delineater.data.models.PaintModel
 
 class PaintView @JvmOverloads constructor(
@@ -17,23 +20,19 @@ class PaintView @JvmOverloads constructor(
     defStyle: Int = 0
 ) : View(context, attrs, defStyle) {
 
-    private var params: LayoutParams? = null
-
     companion object {
         var paintList = arrayListOf<PaintModel>()
-        var colorList = arrayListOf<Int>()
+        var paint = Paint()
+        var path = Path()
     }
 
     init {
         paint.apply {
             isAntiAlias = true
-            color = Color.BLACK
+            color = brushColor
             style = Paint.Style.STROKE
             strokeJoin = Paint.Join.ROUND
-            strokeWidth = 10f
-        }
-        LayoutParams.MATCH_PARENT.let {
-            params = LayoutParams(it, it)
+            strokeWidth = brushWidth
         }
     }
 
@@ -43,20 +42,14 @@ class PaintView @JvmOverloads constructor(
 
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
+                path = Path()
+                paint = Paint()
                 path.moveTo(x, y)
                 return true
             }
             MotionEvent.ACTION_MOVE -> {
                 path.lineTo(x, y)
-                val newPaint = Paint()
-                newPaint.apply {
-                    isAntiAlias = true
-                    color = Color.BLACK
-                    style = Paint.Style.STROKE
-                    strokeJoin = Paint.Join.ROUND
-                    strokeWidth = paintStroke
-                }
-                paintList.add(PaintModel(path, newPaint))
+                selectPaintType()
             }
             else -> {
                 return false
@@ -67,10 +60,39 @@ class PaintView @JvmOverloads constructor(
     }
 
     override fun onDraw(canvas: Canvas?) {
-        paintList.indices.forEach {
-            canvas?.drawPath(paintList[it].path, paintList[it].paint)
-            invalidate()
+        paintList.forEach {
+            canvas?.drawPath(it.path, it.paint)
         }
+        invalidate()
+    }
+
+    private fun setPaint(paintColor: Int) {
+        paint.apply {
+            isAntiAlias = true
+            color = paintColor
+            style = Paint.Style.STROKE
+            strokeJoin = Paint.Join.ROUND
+            strokeWidth = brushWidth
+        }
+    }
+
+    private fun selectPaintType() {
+        if (isEraserSelected) {
+            setEraserPaint()
+        } else {
+            setBrushPaint()
+        }
+        paintList.add(
+            PaintModel(path, paint)
+        )
+    }
+
+    private fun setBrushPaint() {
+        setPaint(brushColor)
+    }
+
+    private fun setEraserPaint() {
+        setPaint(eraserColor)
     }
 
 }

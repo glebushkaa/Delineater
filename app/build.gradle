@@ -47,6 +47,10 @@ dependencies {
     def material = "1.7.0"
     def navigation = "2.5.1"
     def recycler = "1.2.0"
+    def color_picker = "2.0.6"
+
+    //Color picker
+    implementation "com.github.skydoves:colorpickerpreference:$color_picker"
 
     //Koin
     implementation "io.insert-koin:koin-android:$koin_version"

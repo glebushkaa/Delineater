@@ -2,16 +2,14 @@ package com.gleb.delineater
 
 import android.app.ActionBar.LayoutParams
 import android.content.Context
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.Path
+import android.graphics.*
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
-import android.view.ViewGroup
 import com.gleb.delineater.DrawFragment.Companion.paint
+import com.gleb.delineater.DrawFragment.Companion.paintStroke
 import com.gleb.delineater.DrawFragment.Companion.path
+import com.gleb.delineater.data.models.PaintModel
 
 class PaintView @JvmOverloads constructor(
     context: Context,
@@ -22,7 +20,7 @@ class PaintView @JvmOverloads constructor(
     private var params: LayoutParams? = null
 
     companion object {
-        var pathList = arrayListOf<Path>()
+        var paintList = arrayListOf<PaintModel>()
         var colorList = arrayListOf<Int>()
     }
 
@@ -50,7 +48,15 @@ class PaintView @JvmOverloads constructor(
             }
             MotionEvent.ACTION_MOVE -> {
                 path.lineTo(x, y)
-                pathList.add(path)
+                val newPaint = Paint()
+                newPaint.apply {
+                    isAntiAlias = true
+                    color = Color.BLACK
+                    style = Paint.Style.STROKE
+                    strokeJoin = Paint.Join.ROUND
+                    strokeWidth = paintStroke
+                }
+                paintList.add(PaintModel(path, newPaint))
             }
             else -> {
                 return false
@@ -61,8 +67,8 @@ class PaintView @JvmOverloads constructor(
     }
 
     override fun onDraw(canvas: Canvas?) {
-        for (index in pathList.indices){
-            canvas?.drawPath(pathList[index], paint)
+        paintList.indices.forEach {
+            canvas?.drawPath(paintList[it].path, paintList[it].paint)
             invalidate()
         }
     }

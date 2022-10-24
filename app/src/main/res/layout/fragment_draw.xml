@@ -27,7 +27,7 @@
 
         <com.gleb.delineater.PaintView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent" />
 
         <!--<ImageView
             android:id="@+id/imageContainer"
@@ -42,7 +42,45 @@
         android:layout_gravity="bottom|end">
 
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/colorPickerBtn"
+            style="@style/ColorButtonStyle"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:layout_marginStart="12dp"
+            app:backgroundTint="@color/purple_200" />
+
+        <com.google.android.material.slider.Slider
+            android:id="@+id/paintSizeSlider"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center"
+            android:layout_marginStart="20dp"
+            android:layout_weight="1.6"
+            android:stepSize="1"
+            android:valueFrom="0"
+            android:valueTo="200"
+            android:value="10"
+            app:haloColor="@color/white"
+            app:labelBehavior="gone"
+            app:thumbColor="@color/white"
+            app:tickColor="@color/gray_background"
+            app:trackColor="@color/white"
+            app:trackHeight="5dp" />
+
+        <TextView
+            android:id="@+id/paintSize"
             android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:gravity="end"
+            android:text="10dp"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/eraseBtn"
+            android:layout_width="48dp"
             android:layout_height="60dp"
             app:backgroundTint="@color/black_background"
             app:icon="@drawable/ic_eraser"
@@ -52,17 +90,8 @@
             app:rippleColor="@color/black_background" />
 
         <com.google.android.material.button.MaterialButton
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            app:backgroundTint="@color/black_background"
-            app:icon="@drawable/ic_pencil"
-            app:iconGravity="textStart"
-            app:iconPadding="0dp"
-            app:iconSize="32dp"
-            app:rippleColor="@color/black_background" />
-
-        <com.google.android.material.button.MaterialButton
-            android:layout_width="60dp"
+            android:id="@+id/brushBtn"
+            android:layout_width="48dp"
             android:layout_height="60dp"
             app:backgroundTint="@color/black_background"
             app:icon="@drawable/ic_brush"
@@ -71,14 +100,5 @@
             app:iconSize="32dp"
             app:rippleColor="@color/black_background" />
     </LinearLayout>
-
-    <com.google.android.material.button.MaterialButton
-        style="@style/ColorButtonStyle"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_gravity="bottom"
-        android:layout_marginStart="12dp"
-        android:layout_marginBottom="15dp"
-        app:backgroundTint="@color/purple_200" />
 
 </FrameLayout>

@@ -1,4 +1,4 @@
-package com.gleb.delineater.ui.recycler
+package com.gleb.delineater.ui.recycler.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -6,11 +6,11 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
-import com.gleb.delineater.MenuPictureListener
+import com.gleb.delineater.listeners.MenuPictureListener
 import com.gleb.delineater.data.models.PictureModel
 import com.gleb.delineater.databinding.ItemAddPictureBinding
 import com.gleb.delineater.databinding.ItemMenuBinding
-import com.gleb.delineater.ui.diffUtil.MenuPictureDiffUtil
+import com.gleb.delineater.ui.recycler.diffUtil.MenuPictureDiffUtil
 
 class MenuPictureAdapter : RecyclerView.Adapter<ViewHolder>() {
 

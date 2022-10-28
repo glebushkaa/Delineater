@@ -35,7 +35,30 @@
     </fragment>
     <fragment
         android:id="@+id/drawFragment"
-        android:name="com.gleb.delineater.DrawFragment"
+        android:name="com.gleb.delineater.ui.fragments.DrawFragment"
         android:label="fragment_draw"
-        tools:layout="@layout/fragment_draw" />
+        tools:layout="@layout/fragment_draw">
+        <action
+            android:id="@+id/draw_to_download"
+            app:destination="@id/downloadFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
+    </fragment>
+    <fragment
+        android:id="@+id/downloadFragment"
+        android:name="com.gleb.delineater.ui.fragments.DownloadFragment"
+        android:label="fragment_download"
+        tools:layout="@layout/fragment_download">
+        <action
+            android:id="@+id/download_to_menu"
+            app:destination="@id/menuFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out"
+            app:popUpTo="@id/menuFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
 </navigation>

@@ -2,7 +2,6 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'kotlin-kapt'
-//    id 'com.google.gms.google-services'
     id 'kotlin-parcelize'
 }
 
@@ -33,7 +32,7 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
-    buildFeatures{
+    buildFeatures {
         viewBinding true
     }
 }
@@ -48,6 +47,13 @@ dependencies {
     def navigation = "2.5.1"
     def recycler = "1.2.0"
     def color_picker = "2.0.6"
+    def room_version = "2.4.3"
+
+    //Room
+    implementation("androidx.room:room-runtime:$room_version")
+    annotationProcessor("androidx.room:room-compiler:$room_version")
+    kapt("androidx.room:room-compiler:$room_version")
+    implementation("androidx.room:room-ktx:$room_version")
 
     //Color picker
     implementation "com.github.skydoves:colorpickerpreference:$color_picker"
@@ -61,21 +67,6 @@ dependencies {
 
     //Glide
     implementation "com.github.bumptech.glide:glide:$glide"
-
-//    //SafetyNet
-//    implementation 'com.google.android.gms:play-services-base:18.1.0'
-//    implementation 'com.google.android.gms:play-services-safetynet:18.0.1'
-
-//    //Firebase
-//    implementation platform('com.google.firebase:firebase-bom:30.3.2')
-//    implementation 'com.google.firebase:firebase-auth-ktx'
-//    implementation 'com.google.firebase:firebase-database-ktx'
-//    implementation 'com.google.firebase:firebase-firestore-ktx'
-//    implementation 'com.google.firebase:firebase-functions-ktx'
-//    implementation 'com.google.firebase:firebase-storage-ktx'
-//    implementation 'com.google.firebase:firebase-messaging-ktx'
-//    implementation 'com.google.android.gms:play-services-auth:20.3.0'
-//    implementation 'com.facebook.android:facebook-login:14.1.1'
 
     //RecyclerView
     implementation "androidx.recyclerview:recyclerview:$recycler"

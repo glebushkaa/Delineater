@@ -1,4 +1,4 @@
-package com.gleb.delineater
+package com.gleb.delineater.ui.fragments
 
 import android.annotation.SuppressLint
 import android.content.res.ColorStateList
@@ -8,10 +8,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.graphics.drawable.toDrawable
+import androidx.core.os.bundleOf
+import androidx.core.view.drawToBitmap
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.gleb.delineater.PaintView.Companion.paintList
-import com.gleb.delineater.PaintView.Companion.path
+import com.gleb.delineater.ui.customViews.PaintView.Companion.paintList
+import com.gleb.delineater.R
 import com.gleb.delineater.databinding.FragmentDrawBinding
 import com.skydoves.colorpickerview.ColorEnvelope
 import com.skydoves.colorpickerview.ColorPickerDialog
@@ -46,6 +48,7 @@ class DrawFragment : Fragment() {
         initListeners()
         initColorPickerDialog()
         binding?.colorPickerBtn?.setBackgroundColor(brushColor)
+        binding?.paintView?.setBackgroundColor(eraserColor)
     }
 
     @SuppressLint("SetTextI18n")
@@ -70,12 +73,19 @@ class DrawFragment : Fragment() {
                 dialog.show()
             }
             refreshBtn.setOnClickListener {
-                paintList.clear()
-                path.reset()
+                paintView.resetSurface()
             }
             fillBackBtn.setOnClickListener {
                 isFillBackgroundSelected = true
                 dialog.show()
+            }
+            downloadBtn.setOnClickListener {
+                val bitmap = paintView.drawToBitmap()
+                findNavController().navigate(
+                    R.id.draw_to_download, bundleOf(
+                        "downloadImage" to bitmap
+                    )
+                )
             }
         }
     }
@@ -87,11 +97,11 @@ class DrawFragment : Fragment() {
             .setPositiveButton("Confirm", object : ColorEnvelopeListener {
                 override fun onColorSelected(envelope: ColorEnvelope?, fromUser: Boolean) {
                     envelope?.color?.let {
-                        if(isFillBackgroundSelected){
+                        if (isFillBackgroundSelected) {
                             eraserColor = it
                             binding?.paintView?.background = it.toDrawable()
                             isFillBackgroundSelected = false
-                        }else{
+                        } else {
                             brushColor = it
                             binding?.colorPickerBtn?.setBackgroundColor(brushColor)
                         }

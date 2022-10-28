@@ -1,4 +1,4 @@
-package com.gleb.delineater
+package com.gleb.delineater.listeners
 
 import android.graphics.Bitmap
 

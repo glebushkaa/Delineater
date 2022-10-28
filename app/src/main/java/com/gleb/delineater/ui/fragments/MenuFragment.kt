@@ -9,11 +9,11 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.gleb.delineater.MenuPictureListener
+import com.gleb.delineater.listeners.MenuPictureListener
 import com.gleb.delineater.R
 import com.gleb.delineater.databinding.FragmentMenuBinding
 import com.gleb.delineater.extensions.showSnackBar
-import com.gleb.delineater.ui.recycler.MenuPictureAdapter
+import com.gleb.delineater.ui.recycler.adapter.MenuPictureAdapter
 import com.gleb.delineater.ui.viewModels.PictureMenuViewModel
 
 class MenuFragment : Fragment() {
@@ -44,7 +44,9 @@ class MenuFragment : Fragment() {
         adapter.setOnItemClickedListener(
             object : MenuPictureListener {
                 override fun showAddPictureInfo(text: String) {
-                    findNavController().navigate(R.id.menu_to_draw)
+                    findNavController().navigate(
+                        R.id.menu_to_draw
+                    )
                 }
 
                 override fun showPictureInfo(text: String, bitmap: Bitmap) {

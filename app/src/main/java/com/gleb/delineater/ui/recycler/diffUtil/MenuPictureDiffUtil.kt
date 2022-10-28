@@ -1,4 +1,4 @@
-package com.gleb.delineater.ui.diffUtil
+package com.gleb.delineater.ui.recycler.diffUtil
 
 import androidx.recyclerview.widget.DiffUtil
 import com.gleb.delineater.data.models.PictureModel

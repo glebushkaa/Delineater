@@ -10,6 +10,8 @@ import kotlinx.coroutines.launch
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
-class SplashViewModel() : ViewModel() {
+class SplashViewModel(val pictureDao: PictureDao) : ViewModel() {
+
+    suspend fun getAllUsers() = pictureDao.getAllPictures()
 
 }

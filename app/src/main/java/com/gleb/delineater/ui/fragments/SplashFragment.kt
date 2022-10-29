@@ -18,8 +18,6 @@ class SplashFragment : Fragment() {
     private val viewModel: SplashViewModel by viewModel()
     private var binding: FragmentSplashBinding? = null
 
-    private val pictureDao: PictureDao by inject()
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
@@ -31,7 +29,7 @@ class SplashFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         lifecycleScope.launch {
-            pictureDao.getAllPictures()
+            viewModel.getAllUsers()
 //            findNavController().navigate(R.id.splash_to_picture_menu)
         }
     }

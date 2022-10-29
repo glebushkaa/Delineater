@@ -8,7 +8,9 @@ import org.koin.dsl.module
 
 val splashViewModelModule = module {
     viewModel {
-        SplashViewModel()
+        SplashViewModel(
+            pictureDao = get()
+        )
     }
 }
 

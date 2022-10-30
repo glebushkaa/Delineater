@@ -1,37 +1,56 @@
 package com.gleb.delineater.ui.fragments
 
+import android.Manifest
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
+import com.gleb.delineater.ui.BaseFragment
 import com.gleb.delineater.R
+import com.gleb.delineater.data.constants.PICTURES_LIST
 import com.gleb.delineater.databinding.FragmentSplashBinding
+import com.gleb.delineater.extensions.showSnackBar
 import com.gleb.delineater.ui.viewModels.SplashViewModel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SplashFragment : Fragment() {
+class SplashFragment : BaseFragment(R.layout.fragment_splash) {
 
-    private val viewModel: SplashViewModel by viewModels()
-    private var binding: FragmentSplashBinding? = null
+    private val viewModel: SplashViewModel by viewModel()
+    private lateinit var binding: FragmentSplashBinding
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
-        binding = FragmentSplashBinding.inflate(inflater, container, false)
-        return binding?.root
+    private val permissionsArray = arrayOf(
+        Manifest.permission.READ_EXTERNAL_STORAGE,
+        Manifest.permission.WRITE_EXTERNAL_STORAGE
+    )
+
+    private var storagePermissionLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.RequestMultiplePermissions()
+        ) { permissions ->
+            if (permissions.all { !it.value }) {
+                view?.showSnackBar(text = getString(R.string.allow_read_files))
+            }
+            viewModel.getAllUsers()
+        }
+
+    override fun initBinding(view: View) {
+        binding = FragmentSplashBinding.bind(view)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        lifecycleScope.launch {
-            delay(2000)
+        storagePermissionLauncher.launch(permissionsArray)
+        initObservers()
+    }
+
+    private fun initObservers() {
+        viewModel.picturesLiveData.observe(viewLifecycleOwner) { picturesList ->
             findNavController().navigate(
-                R.id.splash_to_picture_menu
+                R.id.splash_to_menu,
+                bundleOf(
+                    PICTURES_LIST to picturesList
+                )
             )
         }
     }

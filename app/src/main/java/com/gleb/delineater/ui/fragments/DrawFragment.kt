@@ -1,26 +1,28 @@
-package com.gleb.delineater
+package com.gleb.delineater.ui.fragments
 
 import android.annotation.SuppressLint
 import android.content.res.ColorStateList
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.core.graphics.drawable.toDrawable
-import androidx.fragment.app.Fragment
+import androidx.core.os.bundleOf
+import androidx.core.view.drawToBitmap
 import androidx.navigation.fragment.findNavController
-import com.gleb.delineater.PaintView.Companion.paintList
-import com.gleb.delineater.PaintView.Companion.path
+import com.gleb.delineater.ui.BaseFragment
+import com.gleb.delineater.ui.customViews.PaintView.Companion.paintList
+import com.gleb.delineater.R
+import com.gleb.delineater.data.constants.PICTURE_PATH
 import com.gleb.delineater.databinding.FragmentDrawBinding
 import com.skydoves.colorpickerview.ColorEnvelope
 import com.skydoves.colorpickerview.ColorPickerDialog
 import com.skydoves.colorpickerview.listeners.ColorEnvelopeListener
 
 
-class DrawFragment : Fragment() {
+class DrawFragment : BaseFragment(R.layout.fragment_draw){
 
-    private var binding: FragmentDrawBinding? = null
+    private lateinit var binding: FragmentDrawBinding
 
     private lateinit var dialog: androidx.appcompat.app.AlertDialog
     private var isFillBackgroundSelected = false
@@ -32,25 +34,25 @@ class DrawFragment : Fragment() {
         var isEraserSelected = false
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding = FragmentDrawBinding.inflate(inflater, container, false)
-        return binding?.root
+    override fun initBinding(view: View) {
+        binding = FragmentDrawBinding.bind(view)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         initListeners()
         initColorPickerDialog()
-        binding?.colorPickerBtn?.setBackgroundColor(brushColor)
+        binding.colorPickerBtn.setBackgroundColor(brushColor)
+        binding.paintView.setBackgroundColor(eraserColor)
+        arguments?.getString(PICTURE_PATH)?.let {
+            binding.paintView.background = BitmapFactory.decodeFile(it).toDrawable(resources)
+        }
     }
 
     @SuppressLint("SetTextI18n")
     private fun initListeners() {
-        binding?.apply {
+        binding.apply {
             backBtn.setOnClickListener {
                 findNavController().popBackStack()
             }
@@ -70,12 +72,19 @@ class DrawFragment : Fragment() {
                 dialog.show()
             }
             refreshBtn.setOnClickListener {
-                paintList.clear()
-                path.reset()
+                paintView.resetSurface()
             }
             fillBackBtn.setOnClickListener {
                 isFillBackgroundSelected = true
                 dialog.show()
+            }
+            downloadBtn.setOnClickListener {
+                val bitmap = paintView.drawToBitmap()
+                findNavController().navigate(
+                    R.id.draw_to_download, bundleOf(
+                        "downloadImage" to bitmap
+                    )
+                )
             }
         }
     }
@@ -87,13 +96,13 @@ class DrawFragment : Fragment() {
             .setPositiveButton("Confirm", object : ColorEnvelopeListener {
                 override fun onColorSelected(envelope: ColorEnvelope?, fromUser: Boolean) {
                     envelope?.color?.let {
-                        if(isFillBackgroundSelected){
+                        if (isFillBackgroundSelected) {
                             eraserColor = it
-                            binding?.paintView?.background = it.toDrawable()
+                            binding.paintView.background = it.toDrawable()
                             isFillBackgroundSelected = false
-                        }else{
+                        } else {
                             brushColor = it
-                            binding?.colorPickerBtn?.setBackgroundColor(brushColor)
+                            binding.colorPickerBtn.setBackgroundColor(brushColor)
                         }
                     }
                 }
@@ -103,7 +112,7 @@ class DrawFragment : Fragment() {
     }
 
     private fun setColorPaintButtons() {
-        binding?.apply {
+        binding.apply {
             if (isEraserSelected) {
                 eraseBtn.iconTint = ColorStateList.valueOf(
                     resources.getColor(R.color.white, null)

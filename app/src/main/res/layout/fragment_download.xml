@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black_background"
+    tools:context=".ui.fragments.DownloadFragment">
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/backBtn"
+        style="@style/BottomDrawButton"
+        app:icon="@drawable/ic_back"
+        app:iconSize="24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/menuBtn"
+        style="@style/BottomDrawButton"
+        app:icon="@drawable/ic_menu"
+        app:iconSize="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/downloadImage"
+        android:layout_width="220dp"
+        android:layout_height="280dp"
+        android:layout_marginTop="100dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@drawable/test_img" />
+
+    <TextView
+        android:id="@+id/shareText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Share your picture to others"
+        android:textColor="@color/white_background"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/downloadImage" />
+
+    <LinearLayout
+        android:id="@+id/socialsLinear"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/shareText">
+
+        <ImageView
+            style="@style/SocialsButtonStyle"
+            android:src="@drawable/ic_facebook" />
+
+        <ImageView
+            style="@style/SocialsButtonStyle"
+            android:src="@drawable/ic_telegram" />
+
+        <ImageView
+            style="@style/SocialsButtonStyle"
+            android:src="@drawable/ic_instagram" />
+
+        <ImageView
+            style="@style/SocialsButtonStyle"
+            android:layout_marginEnd="0dp"
+            android:src="@drawable/ic_viber" />
+
+    </LinearLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/materialButton"
+        style="@style/SimpleRoundedButton"
+        android:layout_width="240dp"
+        android:layout_height="46dp"
+        android:layout_marginStart="60dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginEnd="60dp"
+        android:letterSpacing="0"
+        android:text="Save"
+        android:textAllCaps="false"
+        android:textSize="24dp"
+        app:backgroundTint="@color/blue"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/socialsLinear"
+        app:rippleColor="@color/blue" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,18 +1,17 @@
-package com.gleb.delineater
+package com.gleb.delineater.ui.customViews
 
 import android.content.Context
 import android.graphics.Canvas
-import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Path
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
-import com.gleb.delineater.DrawFragment.Companion.brushColor
-import com.gleb.delineater.DrawFragment.Companion.brushWidth
-import com.gleb.delineater.DrawFragment.Companion.eraserColor
-import com.gleb.delineater.DrawFragment.Companion.isEraserSelected
-import com.gleb.delineater.data.models.PaintModel
+import com.gleb.delineater.ui.fragments.DrawFragment.Companion.brushColor
+import com.gleb.delineater.ui.fragments.DrawFragment.Companion.brushWidth
+import com.gleb.delineater.ui.fragments.DrawFragment.Companion.eraserColor
+import com.gleb.delineater.ui.fragments.DrawFragment.Companion.isEraserSelected
+import com.gleb.delineater.data.entities.PaintEntity
 
 class PaintView @JvmOverloads constructor(
     context: Context,
@@ -21,7 +20,7 @@ class PaintView @JvmOverloads constructor(
 ) : View(context, attrs, defStyle) {
 
     companion object {
-        var paintList = arrayListOf<PaintModel>()
+        var paintList = arrayListOf<PaintEntity>()
         var paint = Paint()
         var path = Path()
     }
@@ -66,6 +65,11 @@ class PaintView @JvmOverloads constructor(
         invalidate()
     }
 
+    fun resetSurface(){
+        paintList.clear()
+        path.reset()
+    }
+
     private fun setPaint(paintColor: Int) {
         paint.apply {
             isAntiAlias = true
@@ -83,7 +87,7 @@ class PaintView @JvmOverloads constructor(
             setBrushPaint()
         }
         paintList.add(
-            PaintModel(path, paint)
+            PaintEntity(path, paint)
         )
     }
 

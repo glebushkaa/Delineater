@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Delineater</string>
+    <string name="allow_read_files">Будь ласка, дозвольте читати файли, нам це потрібно для збереження ваших картин!</string>
+</resources>

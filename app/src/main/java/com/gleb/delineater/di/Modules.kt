@@ -2,10 +2,12 @@ package com.gleb.delineater.di
 
 import android.content.Context
 import androidx.room.Room
-import com.gleb.delineater.MyApp.Companion.TABLE_NAME
+import com.gleb.delineater.data.repositories.PictureRepository
 import com.gleb.delineater.data.room.PictureDatabase
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
+
+const val TABLE_NAME = "images_table"
 
 val roomModule = module {
 
@@ -15,16 +17,13 @@ val roomModule = module {
 
     fun providePictureDao(pictureDatabase: PictureDatabase) = pictureDatabase.pictureDao()
 
-    single {
-        buildPictureDatabase(
-            context = androidContext()
-        )
-    }
+    single { buildPictureDatabase(context = androidContext()) }
+    single { providePictureDao(pictureDatabase = get()) }
 
-    single {
-        providePictureDao(
-            pictureDatabase = get()
-        )
-    }
+}
+
+val pictureRepositoryModule = module {
+
+    single { PictureRepository(pictureDao = get()) }
 
 }

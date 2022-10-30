@@ -1,21 +1,24 @@
 package com.gleb.delineater.di
 
-import com.gleb.delineater.ui.viewModels.PictureMenuViewModel
+import com.gleb.delineater.ui.viewModels.DownloadViewModel
+import com.gleb.delineater.ui.viewModels.DrawViewModel
+import com.gleb.delineater.ui.viewModels.MenuViewModel
 import com.gleb.delineater.ui.viewModels.SplashViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 
-val splashViewModelModule = module {
+val viewModelsModule = module {
     viewModel {
-        SplashViewModel(
-            pictureDao = get()
-        )
+        SplashViewModel(pictureRepository = get())
     }
-}
-
-val menuViewModelModule = module {
     viewModel {
-        PictureMenuViewModel()
+        MenuViewModel(pictureRepository = get())
+    }
+    viewModel {
+        DrawViewModel()
+    }
+    viewModel {
+        DownloadViewModel()
     }
 }

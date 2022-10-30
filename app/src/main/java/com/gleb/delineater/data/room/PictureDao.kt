@@ -1,10 +1,9 @@
-package com.gleb.delineater.data.room.dao
+package com.gleb.delineater.data.room
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import com.gleb.delineater.MyApp.Companion.TABLE_NAME
-import com.gleb.delineater.data.room.entity.PictureEntity
+import com.gleb.delineater.data.entities.PictureEntity
 
 @Dao
 interface PictureDao {
@@ -13,6 +12,6 @@ interface PictureDao {
     suspend fun getAllPictures(): List<PictureEntity>
 
     @Insert
-    fun addPicture(pictureEntity: PictureEntity)
+    suspend fun addPicture(pictureEntity: PictureEntity)
 
 }

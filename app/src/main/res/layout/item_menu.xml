@@ -13,4 +13,11 @@
         android:layout_height="wrap_content"
         android:src="@drawable/test_img"/>
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:indeterminateTint="@color/gray_background"
+        android:layout_gravity="center"/>
+
 </com.google.android.material.card.MaterialCardView>

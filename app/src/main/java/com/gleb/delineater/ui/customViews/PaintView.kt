@@ -11,7 +11,7 @@ import com.gleb.delineater.ui.fragments.DrawFragment.Companion.brushColor
 import com.gleb.delineater.ui.fragments.DrawFragment.Companion.brushWidth
 import com.gleb.delineater.ui.fragments.DrawFragment.Companion.eraserColor
 import com.gleb.delineater.ui.fragments.DrawFragment.Companion.isEraserSelected
-import com.gleb.delineater.data.models.PaintModel
+import com.gleb.delineater.data.entities.PaintEntity
 
 class PaintView @JvmOverloads constructor(
     context: Context,
@@ -20,7 +20,7 @@ class PaintView @JvmOverloads constructor(
 ) : View(context, attrs, defStyle) {
 
     companion object {
-        var paintList = arrayListOf<PaintModel>()
+        var paintList = arrayListOf<PaintEntity>()
         var paint = Paint()
         var path = Path()
     }
@@ -87,7 +87,7 @@ class PaintView @JvmOverloads constructor(
             setBrushPaint()
         }
         paintList.add(
-            PaintModel(path, paint)
+            PaintEntity(path, paint)
         )
     }
 

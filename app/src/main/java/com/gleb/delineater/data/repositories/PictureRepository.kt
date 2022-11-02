@@ -13,4 +13,8 @@ class PictureRepository(
         pictureDao.addPicture(picture)
     }
 
+    override suspend fun updatePicture(picture: PictureEntity) {
+        pictureDao.updatePicture(picture)
+    }
+
 }

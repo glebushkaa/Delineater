@@ -18,7 +18,8 @@ class MyApp : Application() {
     private fun provideModules() = listOf(
         viewModelsModule,
         roomModule,
-        pictureRepositoryModule
+        repositoryModule,
+        fileHelperModule
     )
 
 }

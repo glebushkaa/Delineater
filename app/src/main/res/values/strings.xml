@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">Delineater</string>
     <string name="allow_read_files">Please allow reading files, we need it for saving your paintings!</string>
+    <string name="confirm">Confirm</string>
+    <string name="cancel">Cancel</string>
 </resources>

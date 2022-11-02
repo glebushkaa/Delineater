@@ -98,10 +98,10 @@ class MenuPictureAdapter : RecyclerView.Adapter<ViewHolder>() {
                 .into(binding.imageContainer)
 
             binding.root.setOnClickListener {
-                oldPictureList[bindingAdapterPosition].picturePath?.let { picturePath ->
+                oldPictureList[bindingAdapterPosition].let { picture ->
                     menuPictureListener?.showPictureInfo(
                         "Just picture rn",
-                        picturePath
+                        picture
                     )
                 }
             }

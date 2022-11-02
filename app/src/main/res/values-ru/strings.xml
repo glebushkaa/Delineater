@@ -2,4 +2,6 @@
 <resources>
     <string name="app_name">Delineater</string>
     <string name="allow_read_files">Пожалуйста, разрешите чтение файлов, нам это необходимо для сохранения ваших картин!</string>
+    <string name="confirm">Подтвердить</string>
+    <string name="cancel">Отменить</string>
 </resources>

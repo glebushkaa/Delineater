@@ -6,7 +6,9 @@ import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.gleb.delineater.ui.BaseFragment
 import com.gleb.delineater.R
+import com.gleb.delineater.data.constants.DOWNLOAD_IMAGE
 import com.gleb.delineater.databinding.FragmentDownloadBinding
+import java.io.File
 
 
 class DownloadFragment : BaseFragment(R.layout.fragment_download) {
@@ -19,13 +21,7 @@ class DownloadFragment : BaseFragment(R.layout.fragment_download) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        arguments?.get("downloadImage")?.let { bitmap ->
-            binding.downloadImage.let { imageView ->
-                Glide.with(imageView)
-                    .load(bitmap)
-                    .into(imageView)
-            }
-        }
+        getArgs()
         initClickListeners()
     }
 
@@ -37,6 +33,14 @@ class DownloadFragment : BaseFragment(R.layout.fragment_download) {
             menuBtn.setOnClickListener {
                 findNavController().navigate(R.id.download_to_menu)
             }
+        }
+    }
+
+    private fun getArgs() {
+        arguments?.getString(DOWNLOAD_IMAGE)?.let { picturePath ->
+            Glide.with(binding.downloadImage)
+                .load(File(picturePath))
+                .into(binding.downloadImage)
         }
     }
 

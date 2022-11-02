@@ -2,6 +2,7 @@ package com.gleb.delineater.di
 
 import android.content.Context
 import androidx.room.Room
+import com.gleb.delineater.data.FileHelper
 import com.gleb.delineater.data.repositories.PictureRepository
 import com.gleb.delineater.data.room.PictureDatabase
 import org.koin.android.ext.koin.androidContext
@@ -22,8 +23,14 @@ val roomModule = module {
 
 }
 
-val pictureRepositoryModule = module {
+val repositoryModule = module {
 
     single { PictureRepository(pictureDao = get()) }
+
+}
+
+val fileHelperModule = module {
+
+    factory { FileHelper() }
 
 }

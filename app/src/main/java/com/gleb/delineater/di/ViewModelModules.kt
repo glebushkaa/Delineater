@@ -16,7 +16,7 @@ val viewModelsModule = module {
         MenuViewModel(pictureRepository = get())
     }
     viewModel {
-        DrawViewModel()
+        DrawViewModel(pictureRepository = get())
     }
     viewModel {
         DownloadViewModel()

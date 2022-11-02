@@ -5,22 +5,32 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Path
+import android.graphics.Region
 import android.util.AttributeSet
+import android.util.Log
 import android.view.MotionEvent
+import android.view.SurfaceHolder
+import android.view.SurfaceView
 import android.view.View
-import com.bumptech.glide.Glide
+import com.gleb.delineater.data.entities.PaintEntity
 import com.gleb.delineater.ui.fragments.DrawFragment.Companion.brushColor
 import com.gleb.delineater.ui.fragments.DrawFragment.Companion.brushWidth
 import com.gleb.delineater.ui.fragments.DrawFragment.Companion.eraserColor
 import com.gleb.delineater.ui.fragments.DrawFragment.Companion.isEraserSelected
-import com.gleb.delineater.data.entities.PaintEntity
-import java.io.File
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
 
 class PaintView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyle: Int = 0
 ) : View(context, attrs, defStyle) {
+
+    private val scope = CoroutineScope(Dispatchers.IO)
+    private var drawThread: Thread? = null
+    private var surfaceReady = false
+    private var drawingActive = false
 
     companion object {
         var paintList = arrayListOf<PaintEntity>()
@@ -65,16 +75,15 @@ class PaintView @JvmOverloads constructor(
         paintList.forEach {
             canvas?.drawPath(it.path, it.paint)
         }
-        invalidate()
     }
 
-    fun resetPaint(){
+    fun resetPaint() {
         brushColor = Color.BLACK
         brushWidth = 10f
         paintList.clear()
     }
 
-    fun resetSurface(){
+    fun resetSurface() {
         paintList.clear()
         path.reset()
     }
@@ -91,21 +100,14 @@ class PaintView @JvmOverloads constructor(
 
     private fun selectPaintType() {
         if (isEraserSelected) {
-            setEraserPaint()
+            setPaint(eraserColor)
         } else {
-            setBrushPaint()
+            setPaint(brushColor)
         }
-        paintList.add(
-            PaintEntity(path, paint)
-        )
+        val paintEntity = PaintEntity(path, paint)
+        paintList.forEach {
+            it.path.op(paintEntity.path, Path.Op.REVERSE_DIFFERENCE)
+        }
+        paintList.add(paintEntity)
     }
-
-    private fun setBrushPaint() {
-        setPaint(brushColor)
-    }
-
-    private fun setEraserPaint() {
-        setPaint(eraserColor)
-    }
-
 }

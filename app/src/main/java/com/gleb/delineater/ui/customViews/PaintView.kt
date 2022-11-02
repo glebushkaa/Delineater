@@ -5,12 +5,9 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Path
-import android.graphics.Region
 import android.util.AttributeSet
 import android.util.Log
 import android.view.MotionEvent
-import android.view.SurfaceHolder
-import android.view.SurfaceView
 import android.view.View
 import com.gleb.delineater.data.entities.PaintEntity
 import com.gleb.delineater.ui.fragments.DrawFragment.Companion.brushColor
@@ -19,7 +16,6 @@ import com.gleb.delineater.ui.fragments.DrawFragment.Companion.eraserColor
 import com.gleb.delineater.ui.fragments.DrawFragment.Companion.isEraserSelected
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancel
 
 class PaintView @JvmOverloads constructor(
     context: Context,
@@ -28,9 +24,6 @@ class PaintView @JvmOverloads constructor(
 ) : View(context, attrs, defStyle) {
 
     private val scope = CoroutineScope(Dispatchers.IO)
-    private var drawThread: Thread? = null
-    private var surfaceReady = false
-    private var drawingActive = false
 
     companion object {
         var paintList = arrayListOf<PaintEntity>()
@@ -57,11 +50,27 @@ class PaintView @JvmOverloads constructor(
                 path = Path()
                 paint = Paint()
                 path.moveTo(x, y)
+                paintList.add(PaintEntity(path, paint))
                 return true
+
             }
             MotionEvent.ACTION_MOVE -> {
                 path.lineTo(x, y)
                 selectPaintType()
+            }
+            MotionEvent.ACTION_UP -> {
+                val lastPaintEntity = paintList.last()
+                paintList.forEach {
+                    if (lastPaintEntity != it) {
+                        it.path.op(
+                            lastPaintEntity.path, Path.Op.INTERSECT
+                        )
+                    }
+                }
+                paintList.forEach {
+                    Log.d("TESTTTTTTTT",it.path.toString())
+                }
+                return false
             }
             else -> {
                 return false
@@ -104,10 +113,7 @@ class PaintView @JvmOverloads constructor(
         } else {
             setPaint(brushColor)
         }
-        val paintEntity = PaintEntity(path, paint)
-        paintList.forEach {
-            it.path.op(paintEntity.path, Path.Op.REVERSE_DIFFERENCE)
-        }
-        paintList.add(paintEntity)
+        paintList.removeLast()
+        paintList.add(PaintEntity(path, paint))
     }
 }

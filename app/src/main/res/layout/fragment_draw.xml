@@ -7,6 +7,7 @@
     android:background="@color/black_background"
     tools:context=".ui.fragments.DrawFragment">
 
+
     <com.google.android.material.button.MaterialButton
         android:id="@+id/backBtn"
         style="@style/BottomDrawButton"
@@ -93,6 +94,18 @@
                 android:id="@+id/fillBackBtn"
                 style="@style/BottomDrawButton"
                 app:icon="@drawable/ic_fill_back"
+                app:iconTint="@color/white_background" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/stepBackBtn"
+                style="@style/BottomDrawButton"
+                app:icon="@drawable/ic_back_step"
+                app:iconTint="@color/white_background" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/restore_step_btn"
+                style="@style/BottomDrawButton"
+                app:icon="@drawable/ic_next_step"
                 app:iconTint="@color/white_background" />
 
             <com.google.android.material.button.MaterialButton

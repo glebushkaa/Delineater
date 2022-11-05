@@ -13,7 +13,7 @@ interface PictureDao {
     @Query("SELECT * FROM picture_entity")
     suspend fun getAllPictures(): List<PictureEntity>
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addPicture(pictureEntity: PictureEntity)
 
     @Update(onConflict = OnConflictStrategy.REPLACE)

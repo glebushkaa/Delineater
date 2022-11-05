@@ -5,17 +5,14 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Path
+import android.os.Build
 import android.util.AttributeSet
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
+import androidx.annotation.RequiresApi
+import com.gleb.delineater.data.PaintType
 import com.gleb.delineater.data.entities.PaintEntity
-import com.gleb.delineater.ui.fragments.DrawFragment.Companion.brushColor
-import com.gleb.delineater.ui.fragments.DrawFragment.Companion.brushWidth
-import com.gleb.delineater.ui.fragments.DrawFragment.Companion.eraserColor
-import com.gleb.delineater.ui.fragments.DrawFragment.Companion.isEraserSelected
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import java.util.Stack
 
 class PaintView @JvmOverloads constructor(
     context: Context,
@@ -23,24 +20,21 @@ class PaintView @JvmOverloads constructor(
     defStyle: Int = 0
 ) : View(context, attrs, defStyle) {
 
-    private val scope = CoroutineScope(Dispatchers.IO)
+    private var paint = Paint()
+    private var path = Path()
+    private var paintList = arrayListOf<PaintEntity>()
+    private var deletedItemsList = arrayListOf<PaintEntity>()
 
-    companion object {
-        var paintList = arrayListOf<PaintEntity>()
-        var paint = Paint()
-        var path = Path()
-    }
+    var brushWidth = 10f
+    var brushColor = Color.BLACK
+    var eraserColor = Color.WHITE
+    var paintType: PaintType = PaintType.Brush
 
     init {
-        paint.apply {
-            isAntiAlias = true
-            color = brushColor
-            style = Paint.Style.STROKE
-            strokeJoin = Paint.Join.ROUND
-            strokeWidth = brushWidth
-        }
+        setPaint(brushColor)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onTouchEvent(event: MotionEvent): Boolean {
         val x = event.x
         val y = event.y
@@ -50,27 +44,12 @@ class PaintView @JvmOverloads constructor(
                 path = Path()
                 paint = Paint()
                 path.moveTo(x, y)
-                paintList.add(PaintEntity(path, paint))
+                paintList.add(PaintEntity(path, paint, paintType))
                 return true
-
             }
             MotionEvent.ACTION_MOVE -> {
                 path.lineTo(x, y)
                 selectPaintType()
-            }
-            MotionEvent.ACTION_UP -> {
-                val lastPaintEntity = paintList.last()
-                paintList.forEach {
-                    if (lastPaintEntity != it) {
-                        it.path.op(
-                            lastPaintEntity.path, Path.Op.INTERSECT
-                        )
-                    }
-                }
-                paintList.forEach {
-                    Log.d("TESTTTTTTTT",it.path.toString())
-                }
-                return false
             }
             else -> {
                 return false
@@ -94,7 +73,32 @@ class PaintView @JvmOverloads constructor(
 
     fun resetSurface() {
         paintList.clear()
+        deletedItemsList.clear()
         path.reset()
+        postInvalidate()
+    }
+
+    fun removeLastStep() {
+        if (paintList.isNotEmpty()) {
+            deletedItemsList.add(paintList.removeLast())
+            postInvalidate()
+        }
+    }
+
+    fun restoreDeletedStep() {
+        if (deletedItemsList.isNotEmpty()) {
+            paintList.add(deletedItemsList.removeLast())
+            postInvalidate()
+        }
+    }
+
+    fun updateEraseColor(color: Int) {
+        paintList.forEach {
+            if (it.paintType == PaintType.Eraser) {
+                it.paint.color = color
+            }
+        }
+        invalidate()
     }
 
     private fun setPaint(paintColor: Int) {
@@ -108,12 +112,11 @@ class PaintView @JvmOverloads constructor(
     }
 
     private fun selectPaintType() {
-        if (isEraserSelected) {
-            setPaint(eraserColor)
-        } else {
-            setPaint(brushColor)
+        when (paintType) {
+            is PaintType.Brush -> setPaint(brushColor)
+            is PaintType.Eraser -> setPaint(eraserColor)
         }
         paintList.removeLast()
-        paintList.add(PaintEntity(path, paint))
+        paintList.add(PaintEntity(path, paint, paintType))
     }
 }

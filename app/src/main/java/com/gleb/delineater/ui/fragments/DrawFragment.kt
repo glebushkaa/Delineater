@@ -1,11 +1,10 @@
 package com.gleb.delineater.ui.fragments
 
 import android.annotation.SuppressLint
+import android.app.Dialog
 import android.content.res.ColorStateList
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.Color
-import android.graphics.Picture
 import android.os.Bundle
 import android.view.View
 import androidx.core.graphics.drawable.toDrawable
@@ -13,16 +12,15 @@ import androidx.core.os.bundleOf
 import androidx.core.view.drawToBitmap
 import androidx.navigation.fragment.findNavController
 import com.gleb.delineater.R
+import com.gleb.delineater.data.ColorPickerType
 import com.gleb.delineater.data.FileHelper
+import com.gleb.delineater.data.PaintType
 import com.gleb.delineater.data.constants.DOWNLOAD_IMAGE
 import com.gleb.delineater.data.constants.PICTURE
-import com.gleb.delineater.data.entities.PictureEntity
 import com.gleb.delineater.databinding.FragmentDrawBinding
 import com.gleb.delineater.ui.BaseFragment
+import com.gleb.delineater.ui.dialogs.ColorDialogHelper
 import com.gleb.delineater.ui.viewModels.DrawViewModel
-import com.skydoves.colorpickerview.ColorEnvelope
-import com.skydoves.colorpickerview.ColorPickerDialog
-import com.skydoves.colorpickerview.listeners.ColorEnvelopeListener
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -33,17 +31,10 @@ class DrawFragment : BaseFragment(R.layout.fragment_draw) {
     private val viewModel: DrawViewModel by viewModel()
 
     private val fileHelper: FileHelper by inject()
-    private var recentPicture: PictureEntity? = null
+    private var colorDialog: ColorDialogHelper? = null
+    private var dialog: Dialog? = null
 
-    private lateinit var dialog: androidx.appcompat.app.AlertDialog
-    private var isFillBackgroundSelected = false
-
-    companion object {
-        var brushWidth = 10f
-        var brushColor = Color.BLACK
-        var eraserColor = Color.WHITE
-        var isEraserSelected = false
-    }
+    private var colorPickerType: ColorPickerType = ColorPickerType.BrushColorPicker
 
     override fun initBinding(view: View) {
         binding = FragmentDrawBinding.bind(view)
@@ -52,23 +43,28 @@ class DrawFragment : BaseFragment(R.layout.fragment_draw) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         getArgs()
-        setBackground()
         initListeners()
-        initColorPickerDialog()
-        binding.colorPickerBtn.setBackgroundColor(brushColor)
+        initColorDialog()
+        setColors()
+        setBackground()
     }
 
     private fun setBackground() {
-        recentPicture?.let {
+        viewModel.currentPicture?.let {
             binding.paintView.background =
                 BitmapFactory.decodeFile(it.picturePath).toDrawable(resources)
-        } ?: run {
-            binding.paintView.setBackgroundColor(eraserColor)
+        }
+    }
+
+    private fun setColors() {
+        binding.apply {
+            colorPickerBtn.setBackgroundColor(paintView.brushColor)
+            paintView.setBackgroundColor(paintView.eraserColor)
         }
     }
 
     private fun getArgs() {
-        recentPicture = arguments?.getParcelable(PICTURE)
+        viewModel.currentPicture = arguments?.getParcelable(PICTURE)
     }
 
     @SuppressLint("SetTextI18n")
@@ -77,84 +73,51 @@ class DrawFragment : BaseFragment(R.layout.fragment_draw) {
             backBtn.setOnClickListener {
                 findNavController().popBackStack()
             }
-            paintSizeSlider.addOnChangeListener { _, value, _ ->
-                paintSize.text = "${value.toInt()}dp"
-                brushWidth = value
+            paintSizeSlider.addOnChangeListener { _, size, _ ->
+                paintSize.text = "${size.toInt()}dp"
+                paintView.brushWidth = size
             }
             brushBtn.setOnClickListener {
-                isEraserSelected = false
+                paintView.paintType = PaintType.Brush
                 setPaintBtn(eraseColor = R.color.gray_background, brushColor = R.color.white)
             }
             eraseBtn.setOnClickListener {
-                isEraserSelected = true
+                paintView.paintType = PaintType.Eraser
                 setPaintBtn(eraseColor = R.color.white, brushColor = R.color.gray_background)
             }
             colorPickerBtn.setOnClickListener {
-                dialog.show()
+                colorPickerType = ColorPickerType.BrushColorPicker
+                dialog?.show()
             }
             refreshBtn.setOnClickListener {
                 paintView.resetSurface()
             }
             fillBackBtn.setOnClickListener {
-                isFillBackgroundSelected = true
-                dialog.show()
+                colorPickerType = ColorPickerType.BackgroundColorPicker
+                dialog?.show()
             }
             downloadBtn.setOnClickListener {
                 saveImage()
+            }
+            stepBackBtn.setOnClickListener {
+                paintView.removeLastStep()
+            }
+            restoreStepBtn.setOnClickListener {
+                paintView.restoreDeletedStep()
             }
         }
     }
 
     private fun saveImage() {
         fileHelper.saveImage(
-            binding.paintView.drawToBitmap(
-                Bitmap.Config.ARGB_8888
+            binding.paintView.drawToBitmap(Bitmap.Config.ARGB_8888)
+        ) {
+            viewModel.addCurrentPicture(it)
+            findNavController().navigate(
+                R.id.draw_to_download,
+                bundleOf(DOWNLOAD_IMAGE to it)
             )
-        ) { picturePath ->
-            addPicture(picturePath) {
-                findNavController().navigate(
-                    R.id.draw_to_download,
-                    bundleOf(DOWNLOAD_IMAGE to picturePath)
-                )
-            }
         }
-    }
-
-    private fun addPicture(picturePath: String, completeCallback: () -> Unit) {
-        recentPicture?.let {
-            viewModel.updatePicture(
-                PictureEntity(
-                    uid = it.uid,
-                    picturePath = it.picturePath
-                )
-            )
-            completeCallback()
-        } ?: run {
-            viewModel.addNewPicture(PictureEntity(picturePath = picturePath))
-            completeCallback()
-        }
-    }
-
-    private fun initColorPickerDialog() {
-        dialog = ColorPickerDialog.Builder(requireContext())
-            .setTitle("ColorPicker Dialog")
-            .setPreferenceName("MyColorPickerDialog")
-            .setPositiveButton(getString(R.string.confirm), object : ColorEnvelopeListener {
-                override fun onColorSelected(envelope: ColorEnvelope?, fromUser: Boolean) {
-                    envelope?.color?.let {
-                        if (isFillBackgroundSelected) {
-                            eraserColor = it
-                            binding.paintView.background = it.toDrawable()
-                            isFillBackgroundSelected = false
-                        } else {
-                            brushColor = it
-                            binding.colorPickerBtn.setBackgroundColor(brushColor)
-                        }
-                    }
-                }
-            })
-            .setNegativeButton(getString(R.string.cancel)) { dialogInterface, _ -> dialogInterface.dismiss() }
-            .create()
     }
 
     private fun setPaintBtn(eraseColor: Int, brushColor: Int) {
@@ -164,6 +127,40 @@ class DrawFragment : BaseFragment(R.layout.fragment_draw) {
         binding.brushBtn.iconTint = ColorStateList.valueOf(
             (resources.getColor(brushColor, null))
         )
+    }
+
+    private fun initColorDialog() {
+        binding.apply {
+            colorDialog = ColorDialogHelper(requireContext())
+            dialog = colorDialog?.initColorPickerDialog {
+                getColorFromPicker(it)
+            }
+        }
+    }
+
+    private fun getColorFromPicker(color: Int) {
+        when (colorPickerType) {
+            is ColorPickerType.BackgroundColorPicker -> setEraseColor(color)
+            is ColorPickerType.BrushColorPicker -> {
+                setBrushColor(color)
+                setPaintBtn(R.color.gray_background, R.color.white)
+            }
+        }
+    }
+
+    private fun setBrushColor(color: Int) {
+        binding.apply {
+            paintView.brushColor = color
+            colorPickerBtn.setBackgroundColor(color)
+        }
+    }
+
+    private fun setEraseColor(color: Int) {
+        binding.apply {
+            paintView.eraserColor = color
+            paintView.background = color.toDrawable()
+            paintView.updateEraseColor(color)
+        }
     }
 
     override fun onDestroy() {

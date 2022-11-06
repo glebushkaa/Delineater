@@ -4,6 +4,7 @@ import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
@@ -69,40 +70,62 @@ class MenuPictureAdapter : RecyclerView.Adapter<ViewHolder>() {
         diffResults.dispatchUpdatesTo(this)
     }
 
+    fun getProgressBarListener(progressBar: View) = object : RequestListener<Drawable> {
+        override fun onLoadFailed(
+            e: GlideException?,
+            model: Any?,
+            target: Target<Drawable>?,
+            isFirstResource: Boolean
+        ): Boolean {
+            return false
+        }
+
+        override fun onResourceReady(
+            resource: Drawable?,
+            model: Any?,
+            target: Target<Drawable>?,
+            dataSource: DataSource?,
+            isFirstResource: Boolean
+        ): Boolean {
+            progressBar.visibility = View.GONE
+            return false
+        }
+
+    }
+
     inner class PictureViewHolder(private val binding: ItemMenuBinding) : ViewHolder(binding.root) {
         fun bind() {
-            Glide.with(binding.imageContainer)
-                .load(File(oldPictureList[bindingAdapterPosition].picturePath.orEmpty()))
-                .listener(object : RequestListener<Drawable> {
-                    override fun onLoadFailed(
-                        e: GlideException?,
-                        model: Any?,
-                        target: Target<Drawable>?,
-                        isFirstResource: Boolean
-                    ): Boolean {
-                        return false
-                    }
-
-                    override fun onResourceReady(
-                        resource: Drawable?,
-                        model: Any?,
-                        target: Target<Drawable>?,
-                        dataSource: DataSource?,
-                        isFirstResource: Boolean
-                    ): Boolean {
-                        binding.progressBar.visibility = View.GONE
-                        return false
-                    }
-
-                })
-                .into(binding.imageContainer)
-
-            binding.root.setOnClickListener {
-                oldPictureList[bindingAdapterPosition].let { picture ->
-                    menuPictureListener?.showPictureInfo(
-                        "Just picture rn",
-                        picture
+            binding.apply {
+                Glide.with(imageContainer)
+                    .load(
+                        File(
+                            oldPictureList[bindingAdapterPosition].picturePath.orEmpty()
+                        )
                     )
+                    .listener(getProgressBarListener(progressBar))
+                    .into(imageContainer)
+
+                deleteImageBtn.setOnLongClickListener {
+                    deleteImageBtn.visibility = View.GONE
+                    true
+                }
+
+                deleteImageBtn.setOnClickListener {
+                    menuPictureListener?.deleteImage(oldPictureList[bindingAdapterPosition])
+                }
+
+                root.setOnLongClickListener {
+                    deleteImageBtn.visibility = View.VISIBLE
+                    true
+                }
+
+                root.setOnClickListener {
+                    oldPictureList[bindingAdapterPosition].let { picture ->
+                        menuPictureListener?.showPictureInfo(
+                            "Just picture rn",
+                            picture
+                        )
+                    }
                 }
             }
         }
@@ -112,7 +135,9 @@ class MenuPictureAdapter : RecyclerView.Adapter<ViewHolder>() {
         ViewHolder(binding.root) {
         fun bind() {
             binding.root.setOnClickListener {
-                menuPictureListener?.showAddPictureInfo("Would be functionality to add a new drawing surface")
+                menuPictureListener?.showAddPictureInfo(
+                    "Would be functionality to add a new drawing surface"
+                )
             }
         }
     }

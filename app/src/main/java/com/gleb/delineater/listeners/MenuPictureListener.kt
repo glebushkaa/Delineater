@@ -6,6 +6,8 @@ interface MenuPictureListener {
 
     fun showAddPictureInfo(text: String)
 
-    fun showPictureInfo(text: String,picture: PictureEntity)
+    fun showPictureInfo(text: String, picture: PictureEntity)
+
+    fun deleteImage(picture: PictureEntity)
 
 }

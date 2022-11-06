@@ -1,6 +1,7 @@
 package com.gleb.delineater.ui.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
@@ -8,6 +9,7 @@ import com.gleb.delineater.R
 import com.gleb.delineater.data.constants.*
 import com.gleb.delineater.data.entities.PictureEntity
 import com.gleb.delineater.databinding.FragmentMenuBinding
+import com.gleb.delineater.extensions.showToast
 import com.gleb.delineater.listeners.MenuPictureListener
 import com.gleb.delineater.ui.BaseFragment
 import com.gleb.delineater.ui.recycler.adapter.MenuPictureAdapter
@@ -29,15 +31,7 @@ class MenuFragment : BaseFragment(R.layout.fragment_menu) {
         initAdapter()
         initObservers()
         getArgs()
-        /* saveImage(resources.getDrawable(R.drawable.test_img, null)) {
-             viewModel.addPicture(
-                 PictureEntity(
-                     picturePath = it
-                 )
-             )
-         }*/
     }
-
 
     private fun initAdapter() {
         binding.menuRecycler.let {
@@ -59,6 +53,9 @@ class MenuFragment : BaseFragment(R.layout.fragment_menu) {
                         )
                     )
                 }
+                override fun deleteImage(picture: PictureEntity) {
+                    viewModel.deleteImage(picture)
+                }
             }
         )
     }
@@ -71,7 +68,7 @@ class MenuFragment : BaseFragment(R.layout.fragment_menu) {
 
     private fun getArgs() {
         arguments?.getParcelableArrayList<PictureEntity>(PICTURES_LIST)?.let { pictureEntities ->
-            adapter.setData(pictureEntities)
+            viewModel.initPictureList(pictureEntities)
         } ?: run {
             viewModel.getAllPictures()
         }

@@ -12,13 +12,27 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="fitXY"
-        android:src="@drawable/test_img"/>
+        android:src="@drawable/test_img" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/deleteImageBtn"
+        style="@style/SimpleRoundedButton"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0.9"
+        android:visibility="gone"
+        app:cornerRadius="0dp"
+        app:backgroundTint="@color/gray_background"
+        app:icon="@drawable/ic_close"
+        app:iconPadding="0dp"
+        app:iconGravity="textStart"
+        app:iconSize="40dp"/>
 
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:indeterminateTint="@color/gray_background"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center"
+        android:indeterminateTint="@color/gray_background" />
 
 </com.google.android.material.card.MaterialCardView>

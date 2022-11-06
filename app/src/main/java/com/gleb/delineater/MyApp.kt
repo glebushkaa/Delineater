@@ -19,7 +19,7 @@ class MyApp : Application() {
         viewModelsModule,
         roomModule,
         repositoryModule,
-        fileHelperModule
+        helpersModule
     )
 
 }

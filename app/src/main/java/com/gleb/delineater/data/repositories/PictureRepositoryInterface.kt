@@ -9,5 +9,7 @@ interface PictureRepositoryInterface {
     suspend fun addNewPicture(picture: PictureEntity)
 
     suspend fun updatePicture(picture: PictureEntity)
+
+    suspend fun deletePicture(picture: PictureEntity)
 }
 

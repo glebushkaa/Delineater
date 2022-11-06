@@ -1,5 +1,6 @@
 package com.gleb.delineater.ui.viewModels
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,11 +12,27 @@ import kotlinx.coroutines.launch
 class MenuViewModel(private val pictureRepository: PictureRepository) : ViewModel() {
 
     val pictureLiveData = MutableLiveData<List<PictureEntity>>()
+    private val pictureList = arrayListOf<PictureEntity>()
 
     fun getAllPictures() {
         viewModelScope.launch(Dispatchers.IO) {
-            pictureLiveData.postValue(pictureRepository.getAllPictures())
+            pictureRepository.getAllPictures().let {
+                pictureLiveData.postValue(it)
+                pictureList.addAll(it)
+            }
         }
     }
 
+    fun initPictureList(list: List<PictureEntity>) {
+        pictureList.addAll(list)
+        pictureLiveData.value = list
+    }
+
+    fun deleteImage(pictureEntity: PictureEntity) {
+        viewModelScope.launch(Dispatchers.IO) {
+            pictureRepository.deletePicture(pictureEntity)
+            pictureList.remove(pictureEntity)
+            pictureLiveData.postValue(pictureList)
+        }
+    }
 }

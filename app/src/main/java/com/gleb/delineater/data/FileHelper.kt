@@ -11,6 +11,8 @@ import java.util.*
 
 class FileHelper {
 
+    private val jpgType = ".jpg"
+
     fun saveImage(bitmap: Bitmap, callback: (String) -> Unit) {
         val file = getPictureDisc()
 
@@ -19,7 +21,7 @@ class FileHelper {
         }
 
         val uuid = UUID.randomUUID().toString()
-        val name = "picture$uuid.jpg"
+        val name = "picture$uuid$jpgType"
         val fileName = file.absolutePath + "/" + name
         val newFile = File(fileName)
 
@@ -36,38 +38,9 @@ class FileHelper {
         }
     }
 
-    fun savePaint(paintList: List<PaintEntity>, callback: (String) -> Unit) {
-        val file = getPaintDisc()
-
-        if (!file.exists() && !file.mkdirs()) {
-            file.mkdir()
-        }
-
-        val uuid = UUID.randomUUID().toString()
-        val name = "paint$uuid"
-        val fileName = file.absolutePath + "/" + name
-        val newFile = File(fileName)
-
-        try {
-            val fileOutPutStream = FileOutputStream(newFile)
-            fileOutPutStream.flush()
-            fileOutPutStream.close()
-            callback(fileName)
-        } catch (e: FileNotFoundException) {
-            e.printStackTrace()
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-    }
-
     private fun getPictureDisc(): File {
         val file = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
         return File(file, "PictureAlbum")
-    }
-
-    private fun getPaintDisc(): File {
-        val file = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-        return File(file, "PaintAlbum")
     }
 
 }

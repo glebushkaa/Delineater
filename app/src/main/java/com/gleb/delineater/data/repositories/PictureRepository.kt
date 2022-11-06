@@ -17,4 +17,8 @@ class PictureRepository(
         pictureDao.updatePicture(picture)
     }
 
+    override suspend fun deletePicture(picture: PictureEntity) {
+        pictureDao.deletePicture(picture)
+    }
+
 }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -16,8 +16,17 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.button.MaterialButton
+        android:id="@+id/shareBtn"
+        style="@style/BottomDrawButton"
+        app:icon="@drawable/ic_share"
+        android:layout_gravity="end"
+        app:iconSize="18dp"
+        android:layout_marginEnd="60dp"/>
+
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/menuBtn"
         style="@style/BottomDrawButton"
+        android:layout_gravity="end"
         app:icon="@drawable/ic_menu"
         app:iconSize="24dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -27,68 +36,30 @@
         android:id="@+id/downloadImage"
         android:layout_width="220dp"
         android:layout_height="280dp"
-        android:layout_marginTop="100dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_gravity="center|top"
+        android:layout_marginTop="120dp"
         tools:src="@drawable/test_img" />
-
-    <TextView
-        android:id="@+id/shareText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="Share your picture to others"
-        android:textColor="@color/white_background"
-        android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/downloadImage" />
-
-    <LinearLayout
-        android:id="@+id/socialsLinear"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/shareText">
-
-        <ImageView
-            style="@style/SocialsButtonStyle"
-            android:src="@drawable/ic_facebook" />
-
-        <ImageView
-            style="@style/SocialsButtonStyle"
-            android:src="@drawable/ic_telegram" />
-
-        <ImageView
-            style="@style/SocialsButtonStyle"
-            android:src="@drawable/ic_instagram" />
-
-        <ImageView
-            style="@style/SocialsButtonStyle"
-            android:layout_marginEnd="0dp"
-            android:src="@drawable/ic_viber" />
-
-    </LinearLayout>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/saveBtn"
         style="@style/SimpleRoundedButton"
-        android:layout_width="240dp"
-        android:layout_height="46dp"
-        android:layout_marginStart="60dp"
-        android:layout_marginTop="60dp"
-        android:layout_marginEnd="60dp"
-        android:letterSpacing="0"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
         android:text="Save"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="70dp"
         android:textAllCaps="false"
-        android:textSize="24dp"
+        android:textSize="24sp"
+        android:letterSpacing="0"
+        android:fontFamily="@font/rubik_semibold"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
         app:backgroundTint="@color/blue"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/socialsLinear"
         app:rippleColor="@color/blue" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_gravity="bottom" />
+
+</FrameLayout>

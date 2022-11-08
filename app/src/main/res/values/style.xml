@@ -10,11 +10,12 @@
         <item name="cornerRadius">60dp</item>
     </style>
 
-    <style name="BottomDrawButton">
+    <style name="BottomDrawButton" parent="Widget.MaterialComponents.Button.UnelevatedButton">
         <item name="android:layout_width">60dp</item>
         <item name="android:layout_height">60dp</item>
         <item name="backgroundTint">@color/black_background</item>
         <item name="rippleColor">@color/black_background</item>
+        <item name="elevation">0dp</item>
         <item name="iconGravity">textStart</item>
         <item name="iconPadding">0dp</item>
         <item name="iconSize">32dp</item>

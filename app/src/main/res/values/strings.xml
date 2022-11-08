@@ -3,4 +3,7 @@
     <string name="allow_read_files">Please allow reading files, we need it for saving your paintings!</string>
     <string name="confirm">Confirm</string>
     <string name="cancel">Cancel</string>
+    <string name="my_paintings">My paintings</string>
+    <string name="save">Save</string>
+    <string name="download_head">This is your painting!</string>
 </resources>

@@ -4,10 +4,10 @@ import com.gleb.delineater.data.entities.PictureEntity
 
 interface MenuPictureListener {
 
-    fun showAddPictureInfo(text: String)
+    fun openExistPicture(picture: PictureEntity)
 
-    fun showPictureInfo(text: String, picture: PictureEntity)
+    fun openNewPicture()
 
-    fun deleteImage(picture: PictureEntity)
+    fun deletePicture(picture: PictureEntity)
 
 }

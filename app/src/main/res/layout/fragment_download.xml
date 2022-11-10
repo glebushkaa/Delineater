@@ -15,23 +15,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!--<com.google.android.material.button.MaterialButton
-        android:id="@+id/shareBtn"
-        style="@style/BottomDrawButton"
-        android:layout_gravity="end"
-        app:icon="@drawable/ic_share"
-        app:iconSize="24dp"
-        app:layout_constraintEnd_toStartOf="@+id/menuBtn"
-        app:layout_constraintTop_toTopOf="parent" />-->
-
-    <!--<com.google.android.material.button.MaterialButton
-        android:id="@+id/shareBtn"
-        style="@style/BottomDrawButton"
-        app:icon="@drawable/ic_share"
-        app:iconSize="30dp"
-        app:layout_constraintEnd_toStartOf="@+id/menuBtn"
-        app:layout_constraintTop_toTopOf="parent" />-->
-
     <com.google.android.material.button.MaterialButton
         android:id="@+id/menuBtn"
         style="@style/BottomDrawButton"
@@ -58,7 +41,7 @@
     <ImageView
         android:id="@+id/downloadImage"
         android:layout_width="300dp"
-        android:layout_height="300dp"
+        android:layout_height="340dp"
         android:layout_gravity="center|top"
         android:layout_marginTop="40dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -66,71 +49,37 @@
         app:layout_constraintTop_toBottomOf="@+id/headText"
         tools:src="@drawable/test_img" />
 
-   <!-- <TextView
-        android:id="@+id/shareText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:alpha="0.9"
-        android:fontFamily="@font/rubik_medium"
-        android:gravity="center"
-        android:text="Share it to your friends"
-        android:textColor="@color/white_background"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/downloadImage" />-->
-
     <com.google.android.material.button.MaterialButton
         android:id="@+id/saveBtn"
-        style="@style/SimpleRoundedButton"
-        android:layout_width="match_parent"
-        android:layout_height="54dp"
-        android:layout_gravity="bottom"
-        android:layout_marginStart="40dp"
-        android:layout_marginEnd="40dp"
-        android:layout_marginBottom="50dp"
-        android:fontFamily="@font/rubik_semibold"
-        android:letterSpacing="0"
+        style="@style/DownloadRoundButtons"
+        android:layout_marginBottom="40dp"
         android:text="@string/save"
-        android:textAllCaps="false"
-        android:textSize="24sp"
         app:backgroundTint="@color/blue"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:rippleColor="@color/blue"/>
+        app:rippleColor="@color/blue" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/shareBtn"
-        style="@style/SimpleRoundedButton"
-        android:layout_width="match_parent"
-        android:layout_height="54dp"
-        android:layout_gravity="bottom"
-        android:layout_marginStart="40dp"
-        android:layout_marginEnd="40dp"
-        android:layout_marginBottom="20dp"
-        android:fontFamily="@font/rubik_semibold"
-        android:letterSpacing="0"
-        android:text="Share"
-        android:textAllCaps="false"
-        android:textSize="24sp"
-        android:textColor="@color/blue"
+        style="@style/DownloadRoundButtons"
+        android:layout_marginBottom="16dp"
+        android:text="@string/share"
+        android:textColor="@color/black"
         app:backgroundTint="@color/white_background"
         app:layout_constraintBottom_toTopOf="@+id/saveBtn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:rippleColor="@color/white_background" />
+        app:rippleColor="@color/gray_background" />
 
     <ProgressBar
         android:id="@+id/progressBar"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_marginBottom="50dp"
-        android:progressTint="@color/blue"
+        style="@style/BaseRoundProgressBarStyle"
+        android:layout_marginBottom="40dp"
         android:indeterminateTint="@color/blue"
-        android:visibility="gone"
+        android:progressTint="@color/blue"
+        android:alpha="0"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

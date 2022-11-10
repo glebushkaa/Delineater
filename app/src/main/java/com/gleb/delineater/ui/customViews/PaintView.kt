@@ -34,7 +34,6 @@ class PaintView @JvmOverloads constructor(
         setPaint(brushColor)
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onTouchEvent(event: MotionEvent): Boolean {
         val x = event.x
         val y = event.y

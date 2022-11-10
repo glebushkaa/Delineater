@@ -16,17 +16,16 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/deleteImageBtn"
-        style="@style/SimpleRoundedButton"
+        style="@style/NoInsetsButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:alpha="0.9"
-        android:visibility="gone"
-        app:cornerRadius="0dp"
+        android:alpha="0"
         app:backgroundTint="@color/gray_background"
+        app:cornerRadius="0dp"
         app:icon="@drawable/ic_close"
-        app:iconPadding="0dp"
         app:iconGravity="textStart"
-        app:iconSize="40dp"/>
+        app:iconPadding="0dp"
+        app:iconSize="40dp" />
 
     <ProgressBar
         android:id="@+id/progressBar"

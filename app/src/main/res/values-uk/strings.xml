@@ -4,4 +4,7 @@
     <string name="allow_read_files">Будь ласка, дозвольте читати файли, нам це потрібно для збереження ваших картин!</string>
     <string name="confirm">Підтвердити</string>
     <string name="cancel">Відминити</string>
+    <string name="color_picker_dialog">ColorPicker Dialog</string>
+    <string name="share_via">Share via</string>
+    <string name="picture_saved">Picture saved</string>
 </resources>

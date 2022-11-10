@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="ColorButtonStyle">
-        <item name="android:insetBottom">0dp</item>
-        <item name="android:insetTop">0dp</item>
-        <item name="android:insetRight">0dp</item>
-        <item name="android:insetLeft">0dp</item>
+    <style name="ColorButtonStyle" parent="NoInsetsButtonStyle">
         <item name="cornerFamily">rounded</item>
         <item name="cornerRadius">60dp</item>
     </style>
@@ -21,19 +17,36 @@
         <item name="iconSize">32dp</item>
     </style>
 
-    <style name="SimpleRoundedButton">
+    <style name="NoInsetsButtonStyle">
         <item name="android:insetBottom">0dp</item>
         <item name="android:insetTop">0dp</item>
         <item name="android:insetRight">0dp</item>
         <item name="android:insetLeft">0dp</item>
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerRadius">20dp</item>
     </style>
 
     <style name="SocialsButtonStyle">
         <item name="android:layout_width">44dp</item>
         <item name="android:layout_height">44dp</item>
         <item name="android:layout_marginEnd">16dp</item>
+    </style>
+
+    <style name="DownloadRoundButtons" parent="NoInsetsButtonStyle">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerRadius">@dimen/simple_corner_button_size</item>
+        <item name="android:layout_height">@dimen/download_button_height</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="fontFamily">@font/rubik_semibold</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="textAllCaps">false</item>
+        <item name="android:textSize">@dimen/button_text_size</item>
+        <item name="android:layout_marginStart">@dimen/side_download_button_margin</item>
+        <item name="android:layout_marginEnd">@dimen/side_download_button_margin</item>
+    </style>
+
+    <style name="BaseRoundProgressBarStyle">
+        <item name="android:layout_height">@dimen/round_progress_bar_size</item>
+        <item name="android:layout_width">@dimen/round_progress_bar_size</item>
+
     </style>
 
 </resources>

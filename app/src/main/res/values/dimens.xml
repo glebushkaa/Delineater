@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="splash_text_size">52sp</dimen>
+    <dimen name="button_text_size">20sp</dimen>
+    <dimen name="download_button_height">54dp</dimen>
+    <dimen name="simple_corner_button_size">20dp</dimen>
+    <dimen name="side_download_button_margin">60dp</dimen>
+    <dimen name="round_progress_bar_size">50dp</dimen>
 </resources>

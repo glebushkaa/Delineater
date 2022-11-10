@@ -48,6 +48,10 @@ dependencies {
     def recycler = "1.2.0"
     def color_picker = "2.0.6"
     def room_version = "2.4.3"
+    def view_binding_property_delegate = "1.5.6"
+
+    //View binding property delegate
+    implementation "com.github.kirich1409:viewbindingpropertydelegate:$view_binding_property_delegate"
 
     //Room
     implementation("androidx.room:room-runtime:$room_version")

@@ -5,19 +5,17 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.os.bundleOf
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.gleb.delineater.ui.BaseFragment
 import com.gleb.delineater.R
 import com.gleb.delineater.data.constants.PICTURES_LIST
-import com.gleb.delineater.databinding.FragmentSplashBinding
-import com.gleb.delineater.extensions.showSnackBar
+import com.gleb.delineater.ui.extensions.showSnackBar
 import com.gleb.delineater.ui.viewModels.SplashViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SplashFragment : BaseFragment(R.layout.fragment_splash) {
+class SplashFragment : Fragment(R.layout.fragment_splash) {
 
     private val viewModel: SplashViewModel by viewModel()
-    private lateinit var binding: FragmentSplashBinding
 
     private val permissionsArray = arrayOf(
         Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -33,10 +31,6 @@ class SplashFragment : BaseFragment(R.layout.fragment_splash) {
             }
             viewModel.getAllUsers()
         }
-
-    override fun initBinding(view: View) {
-        binding = FragmentSplashBinding.bind(view)
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

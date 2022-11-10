@@ -18,8 +18,7 @@ class MyApp : Application() {
     private fun provideModules() = listOf(
         viewModelsModule,
         roomModule,
-        repositoryModule,
-        helpersModule
+        repositoryModule
     )
 
 }

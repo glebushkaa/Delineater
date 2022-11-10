@@ -2,6 +2,8 @@ package com.gleb.delineater.data.repositories
 
 import com.gleb.delineater.data.room.PictureDao
 import com.gleb.delineater.data.entities.PictureEntity
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlin.coroutines.suspendCoroutine
 
 class PictureRepository(
     private val pictureDao: PictureDao

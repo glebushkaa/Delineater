@@ -1,30 +1,26 @@
 package com.gleb.delineater.ui.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.core.os.bundleOf
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.gleb.delineater.R
-import com.gleb.delineater.data.constants.*
+import com.gleb.delineater.data.constants.PICTURE
+import com.gleb.delineater.data.constants.PICTURES_LIST
 import com.gleb.delineater.data.entities.PictureEntity
 import com.gleb.delineater.databinding.FragmentMenuBinding
-import com.gleb.delineater.extensions.showToast
 import com.gleb.delineater.listeners.MenuPictureListener
-import com.gleb.delineater.ui.BaseFragment
 import com.gleb.delineater.ui.recycler.adapter.MenuPictureAdapter
 import com.gleb.delineater.ui.viewModels.MenuViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class MenuFragment : BaseFragment(R.layout.fragment_menu) {
+class MenuFragment : Fragment(R.layout.fragment_menu) {
 
     private val viewModel: MenuViewModel by viewModel()
+    private val binding: FragmentMenuBinding by viewBinding()
     private val adapter = MenuPictureAdapter()
-    private lateinit var binding: FragmentMenuBinding
-
-    override fun initBinding(view: View) {
-        binding = FragmentMenuBinding.bind(view)
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -34,26 +30,23 @@ class MenuFragment : BaseFragment(R.layout.fragment_menu) {
     }
 
     private fun initAdapter() {
-        binding.menuRecycler.let {
+        binding.menuRecycler.also {
             it.adapter = adapter
-            it.itemAnimator = null
         }
         adapter.setOnItemClickedListener(
             object : MenuPictureListener {
-                override fun showAddPictureInfo(text: String) {
+                override fun openExistPicture(picture: PictureEntity) {
                     findNavController().navigate(
-                        R.id.menu_to_draw
+                        R.id.menu_to_draw,
+                        bundleOf(PICTURE to picture)
                     )
                 }
 
-                override fun showPictureInfo(text: String, picture: PictureEntity) {
-                    findNavController().navigate(
-                        R.id.menu_to_draw, bundleOf(
-                            PICTURE to picture
-                        )
-                    )
+                override fun openNewPicture() {
+                    findNavController().navigate(R.id.menu_to_draw)
                 }
-                override fun deleteImage(picture: PictureEntity) {
+
+                override fun deletePicture(picture: PictureEntity) {
                     viewModel.deleteImage(picture)
                 }
             }

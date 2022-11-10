@@ -1,57 +1,52 @@
 package com.gleb.delineater.ui.recycler.adapter
 
-import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.DataSource
-import com.bumptech.glide.load.engine.GlideException
-import com.bumptech.glide.request.RequestListener
-import com.bumptech.glide.request.target.Target
 import com.gleb.delineater.data.entities.PictureEntity
 import com.gleb.delineater.databinding.ItemAddPictureBinding
 import com.gleb.delineater.databinding.ItemMenuBinding
 import com.gleb.delineater.listeners.MenuPictureListener
+import com.gleb.delineater.listeners.getGlideProgressBarListener
+import com.gleb.delineater.ui.extensions.hideWithFadeAnimation
+import com.gleb.delineater.ui.extensions.showWithFadeAnimation
 import com.gleb.delineater.ui.recycler.diffUtil.MenuPictureDiffUtil
 import java.io.File
+
+private const val PICTURE_ITEM = 0
+private const val ADD_PICTURE_ITEM = 1
+private const val VISIBLE_DELETE_ALPHA = 0.9f
 
 class MenuPictureAdapter : RecyclerView.Adapter<ViewHolder>() {
 
     private val oldPictureList = arrayListOf<PictureEntity>()
     private var menuPictureListener: MenuPictureListener? = null
 
-    companion object {
-        const val PICTURE_ITEM = 0
-        const val ADD_PICTURE_ITEM = 1
-    }
-
     override fun getItemViewType(position: Int) =
-        if (oldPictureList[position].picturePath != null) {
+        oldPictureList[position].picturePath?.let {
             PICTURE_ITEM
-        } else {
+        } ?: run {
             ADD_PICTURE_ITEM
         }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
         when (viewType) {
-            PICTURE_ITEM -> PictureViewHolder(
+            PICTURE_ITEM -> ExistPictureViewHolder(
                 ItemMenuBinding.inflate(LayoutInflater.from(parent.context), parent, false)
             )
-            else -> AddPictureViewHolder(
+            else -> NewPictureViewHolder(
                 ItemAddPictureBinding.inflate(LayoutInflater.from(parent.context), parent, false)
             )
         }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         if (holder.itemViewType == PICTURE_ITEM) {
-            (holder as PictureViewHolder).bind()
+            (holder as ExistPictureViewHolder).bind()
         } else {
-            (holder as AddPictureViewHolder).bind()
+            (holder as NewPictureViewHolder).bind()
         }
     }
 
@@ -63,81 +58,47 @@ class MenuPictureAdapter : RecyclerView.Adapter<ViewHolder>() {
 
     fun setData(newPictureList: List<PictureEntity>) {
         val diffUtil = MenuPictureDiffUtil(oldPictureList, newPictureList)
-        val diffResults = DiffUtil.calculateDiff(diffUtil)
+        val diffResults = DiffUtil.calculateDiff(diffUtil,true)
         oldPictureList.clear()
         oldPictureList.addAll(newPictureList)
         oldPictureList.add(PictureEntity(picturePath = null))
         diffResults.dispatchUpdatesTo(this)
     }
 
-    fun getProgressBarListener(progressBar: View) = object : RequestListener<Drawable> {
-        override fun onLoadFailed(
-            e: GlideException?,
-            model: Any?,
-            target: Target<Drawable>?,
-            isFirstResource: Boolean
-        ): Boolean {
-            return false
-        }
-
-        override fun onResourceReady(
-            resource: Drawable?,
-            model: Any?,
-            target: Target<Drawable>?,
-            dataSource: DataSource?,
-            isFirstResource: Boolean
-        ): Boolean {
-            progressBar.visibility = View.GONE
-            return false
-        }
-
-    }
-
-    inner class PictureViewHolder(private val binding: ItemMenuBinding) : ViewHolder(binding.root) {
+    inner class ExistPictureViewHolder(private val binding: ItemMenuBinding) :
+        ViewHolder(binding.root) {
         fun bind() {
+            val pictureEntity = oldPictureList[bindingAdapterPosition]
+
             binding.apply {
                 Glide.with(imageContainer)
-                    .load(
-                        File(
-                            oldPictureList[bindingAdapterPosition].picturePath.orEmpty()
-                        )
-                    )
-                    .listener(getProgressBarListener(progressBar))
+                    .load(File(pictureEntity.picturePath.orEmpty()))
+                    .listener(progressBar.getGlideProgressBarListener())
                     .into(imageContainer)
 
                 deleteImageBtn.setOnLongClickListener {
-                    deleteImageBtn.visibility = View.GONE
+                    deleteImageBtn.hideWithFadeAnimation()
                     true
                 }
-
                 deleteImageBtn.setOnClickListener {
-                    menuPictureListener?.deleteImage(oldPictureList[bindingAdapterPosition])
+                    menuPictureListener?.deletePicture(pictureEntity)
                 }
-
                 root.setOnLongClickListener {
-                    deleteImageBtn.visibility = View.VISIBLE
+                    deleteImageBtn.showWithFadeAnimation(VISIBLE_DELETE_ALPHA)
                     true
                 }
-
                 root.setOnClickListener {
-                    oldPictureList[bindingAdapterPosition].let { picture ->
-                        menuPictureListener?.showPictureInfo(
-                            "Just picture rn",
-                            picture
-                        )
-                    }
+                    menuPictureListener?.openExistPicture(pictureEntity)
                 }
             }
         }
     }
 
-    inner class AddPictureViewHolder(private val binding: ItemAddPictureBinding) :
+    inner class NewPictureViewHolder(private val binding: ItemAddPictureBinding) :
         ViewHolder(binding.root) {
         fun bind() {
             binding.root.setOnClickListener {
-                menuPictureListener?.showAddPictureInfo(
-                    "Would be functionality to add a new drawing surface"
-                )
+                menuPictureListener?.openNewPicture()
             }
         }
     }

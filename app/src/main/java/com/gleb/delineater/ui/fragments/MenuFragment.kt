@@ -11,7 +11,7 @@ import com.gleb.delineater.data.constants.PICTURE
 import com.gleb.delineater.data.constants.PICTURES_LIST
 import com.gleb.delineater.data.entities.PictureEntity
 import com.gleb.delineater.databinding.FragmentMenuBinding
-import com.gleb.delineater.listeners.MenuPictureListener
+import com.gleb.delineater.ui.listeners.MenuPictureListener
 import com.gleb.delineater.ui.recycler.adapter.MenuPictureAdapter
 import com.gleb.delineater.ui.viewModels.MenuViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel

@@ -1,7 +1,5 @@
 package com.gleb.delineater.ui.fragments
 
-import android.annotation.SuppressLint
-import android.app.Dialog
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.View
@@ -12,41 +10,35 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.gleb.delineater.R
-import com.gleb.delineater.data.ColorPickerType
 import com.gleb.delineater.data.constants.DOWNLOAD_IMAGE
 import com.gleb.delineater.data.constants.PICTURE
-import com.gleb.delineater.data.saveAlbumImage
+import com.gleb.delineater.data.extensions.saveAlbumImage
+import com.gleb.delineater.data.sealedClasses.ColorPickerType
 import com.gleb.delineater.databinding.FragmentDrawBinding
-import com.gleb.delineater.extensions.*
-import com.gleb.delineater.ui.extensions.initColorPickerDialog
-import com.gleb.delineater.ui.extensions.enableBrush
-import com.gleb.delineater.ui.extensions.enableEraser
-import com.gleb.delineater.ui.extensions.getColorFromPicker
-import com.gleb.delineater.ui.extensions.setColors
+import com.gleb.delineater.ui.extensions.*
 import com.gleb.delineater.ui.viewModels.DrawViewModel
+import com.skydoves.colorpickerview.flag.BubbleFlag
+import com.skydoves.colorpickerview.flag.FlagMode
 import org.koin.androidx.viewmodel.ext.android.viewModel
-
 
 class DrawFragment : Fragment(R.layout.fragment_draw) {
 
     private val binding: FragmentDrawBinding by viewBinding()
     private val viewModel: DrawViewModel by viewModel()
 
-    private lateinit var dialog: Dialog
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         getArgs()
+        setColorPickView()
         binding.initListeners()
         binding.setColors()
-        initColorDialog()
+        binding.setColorDialogClickListeners()
         setBackground()
     }
 
     private fun setBackground() {
         viewModel.currentPicture?.let {
-            binding.paintView.background =
-                BitmapFactory.decodeFile(it.picturePath).toDrawable(resources)
+            binding.paintView.background = BitmapFactory.decodeFile(it.picturePath).toDrawable(resources)
         }
     }
 
@@ -54,11 +46,12 @@ class DrawFragment : Fragment(R.layout.fragment_draw) {
         viewModel.currentPicture = arguments?.getParcelable(PICTURE)
     }
 
-    @SuppressLint("SetTextI18n")
     private fun FragmentDrawBinding.initListeners() {
-
         backBtn.setOnClickListener {
             findNavController().popBackStack()
+        }
+        downloadBtn.setOnClickListener {
+            saveAlbumImage()
         }
         paintSizeSlider.addOnChangeListener { _, size, _ ->
             paintSize.text = "${size.toInt()}dp"
@@ -72,17 +65,14 @@ class DrawFragment : Fragment(R.layout.fragment_draw) {
         }
         colorPickerBtn.setOnClickListener {
             viewModel.colorPickerType = ColorPickerType.BrushColorPicker
-            dialog.show()
+            showColorPickerDialog()
         }
         refreshBtn.setOnClickListener {
             paintView.resetSurface()
         }
         fillBackBtn.setOnClickListener {
             viewModel.colorPickerType = ColorPickerType.BackgroundColorPicker
-            dialog.show()
-        }
-        downloadBtn.setOnClickListener {
-            saveAlbumImage()
+            showColorPickerDialog()
         }
         stepBackBtn.setOnClickListener {
             paintView.removeLastStep()
@@ -90,6 +80,27 @@ class DrawFragment : Fragment(R.layout.fragment_draw) {
         restoreStepBtn.setOnClickListener {
             paintView.restoreDeletedStep()
         }
+    }
+
+    private fun FragmentDrawBinding.setColorDialogClickListeners() {
+        colorPickDialog.apply {
+            cancelBtn.setOnClickListener {
+                hideColorPickerDialog()
+            }
+            confirmBtn.setOnClickListener {
+                hideColorPickerDialog()
+                getColorFromPicker(viewModel.colorPickerType, colorPickerView.color)
+            }
+            backgroundBlurCard.setOnClickListener {
+                hideColorPickerDialog()
+            }
+        }
+    }
+
+    private fun setColorPickView() {
+        val bubbleFlag = BubbleFlag(requireContext())
+        bubbleFlag.flagMode = FlagMode.FADE
+        binding.colorPickDialog.colorPickerView.flagView = bubbleFlag
     }
 
     private fun saveAlbumImage() {
@@ -104,12 +115,6 @@ class DrawFragment : Fragment(R.layout.fragment_draw) {
             R.id.draw_to_download,
             bundleOf(DOWNLOAD_IMAGE to downloadImage)
         )
-    }
-
-    private fun initColorDialog() {
-        dialog = requireContext().initColorPickerDialog {
-            binding.getColorFromPicker(viewModel.colorPickerType, it)
-        }
     }
 
     override fun onDestroyView() {

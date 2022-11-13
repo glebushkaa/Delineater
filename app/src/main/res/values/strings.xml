@@ -7,7 +7,7 @@
     <string name="save">Save</string>
     <string name="download_head">This is your painting!</string>
     <string name="share">Share</string>
-    <string name="color_picker_dialog">ColorPicker Dialog</string>
+    <string name="select_color">Pick color</string>
     <string name="share_via">Share via</string>
     <string name="picture_saved">Picture saved</string>
 </resources>

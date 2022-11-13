@@ -5,14 +5,11 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Path
-import android.os.Build
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
-import androidx.annotation.RequiresApi
-import com.gleb.delineater.data.PaintType
+import com.gleb.delineater.data.sealedClasses.PaintType
 import com.gleb.delineater.data.entities.PaintEntity
-import java.util.Stack
 
 class PaintView @JvmOverloads constructor(
     context: Context,

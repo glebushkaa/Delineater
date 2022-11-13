@@ -11,7 +11,7 @@ private const val isAttachedSlideBar = false
 
 fun Context.initColorPickerDialog(successListener: (Int) -> Unit) =
     ColorPickerDialog.Builder(this)
-        .setTitle(getString(R.string.color_picker_dialog))
+        .setTitle(getString(R.string.select_color))
         .setPreferenceName(preferencesName)
         .attachAlphaSlideBar(isAttachedSlideBar)
         .setPositiveButton(getString(R.string.confirm),

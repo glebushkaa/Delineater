@@ -1,6 +1,7 @@
 package com.gleb.delineater.ui.fragments
 
 import android.content.Intent
+import android.graphics.drawable.AnimationDrawable
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
@@ -102,7 +103,13 @@ class DownloadFragment : Fragment(R.layout.fragment_download) {
             type = SHARE_TYPE
             flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
         }
-        startActivity(Intent.createChooser(shareIntent, getString(R.string.share_via)))
+        startActivity(
+            Intent.createChooser(
+                shareIntent, getString(
+                    R.string.share_via
+                )
+            )
+        )
     }
 
 }

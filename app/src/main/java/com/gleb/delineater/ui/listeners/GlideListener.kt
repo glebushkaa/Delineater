@@ -1,4 +1,4 @@
-package com.gleb.delineater.listeners
+package com.gleb.delineater.ui.listeners
 
 import android.graphics.drawable.Drawable
 import android.view.View

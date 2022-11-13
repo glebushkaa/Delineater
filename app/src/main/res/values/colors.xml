@@ -12,4 +12,6 @@
     <color name="gray_background">#898989</color>
     <color name="blue">#3951CB</color>
     <color name="snackbar_blue">#0055D3</color>
+    <color name="cancel_red">#FC6A6A</color>
+    <color name="poor_white">#EBE8E8</color>
 </resources>

@@ -2,12 +2,11 @@ package com.gleb.delineater.ui.viewModels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.gleb.delineater.data.ColorPickerType
+import com.gleb.delineater.data.sealedClasses.ColorPickerType
 import com.gleb.delineater.data.entities.PictureEntity
 import com.gleb.delineater.data.repositories.PictureRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.parcelize.parcelableCreator
 
 class DrawViewModel(private val pictureRepository: PictureRepository) : ViewModel() {
 

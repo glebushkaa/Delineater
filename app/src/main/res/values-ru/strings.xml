@@ -4,7 +4,11 @@
     <string name="allow_read_files">Пожалуйста, разрешите чтение файлов, нам это необходимо для сохранения ваших картин!</string>
     <string name="confirm">Подтвердить</string>
     <string name="cancel">Отменить</string>
-    <string name="color_picker_dialog">ColorPicker Dialog</string>
-    <string name="share_via">Share via</string>
-    <string name="picture_saved">Picture saved</string>
+    <string name="select_color">Выберите цвет</string>
+    <string name="share_via">Поделиться c помощью</string>
+    <string name="picture_saved">Изображение сохранено</string>
+    <string name="my_paintings">Мои рисунки</string>
+    <string name="save">Сохранить</string>
+    <string name="download_head">Это ваш рисунок!</string>
+    <string name="share">Поделиться</string>
 </resources>

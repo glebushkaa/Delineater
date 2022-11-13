@@ -3,7 +3,7 @@ package com.gleb.delineater.ui.viewModels
 import android.content.ContentResolver
 import android.graphics.Bitmap
 import androidx.lifecycle.ViewModel
-import com.gleb.delineater.data.saveGalleryPicture
+import com.gleb.delineater.data.extensions.saveGalleryPicture
 
 class DownloadViewModel: ViewModel() {
 

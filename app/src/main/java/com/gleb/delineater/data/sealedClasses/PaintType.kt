@@ -1,4 +1,4 @@
-package com.gleb.delineater.data
+package com.gleb.delineater.data.sealedClasses
 
 sealed class PaintType {
     object Brush : PaintType()

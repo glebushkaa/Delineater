@@ -2,7 +2,7 @@ package com.gleb.delineater.data.entities
 
 import android.graphics.Paint
 import android.graphics.Path
-import com.gleb.delineater.data.PaintType
+import com.gleb.delineater.data.sealedClasses.PaintType
 
 class PaintEntity(
     var path: Path,

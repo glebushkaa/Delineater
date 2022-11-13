@@ -7,10 +7,10 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
 import com.gleb.delineater.data.entities.PictureEntity
-import com.gleb.delineater.databinding.ItemAddPictureBinding
-import com.gleb.delineater.databinding.ItemMenuBinding
-import com.gleb.delineater.listeners.MenuPictureListener
-import com.gleb.delineater.listeners.getGlideProgressBarListener
+import com.gleb.delineater.databinding.ItemExistPictureBinding
+import com.gleb.delineater.databinding.ItemNewPictureBinding
+import com.gleb.delineater.ui.listeners.MenuPictureListener
+import com.gleb.delineater.ui.listeners.getGlideProgressBarListener
 import com.gleb.delineater.ui.extensions.hideWithFadeAnimation
 import com.gleb.delineater.ui.extensions.showWithFadeAnimation
 import com.gleb.delineater.ui.recycler.diffUtil.MenuPictureDiffUtil
@@ -35,10 +35,10 @@ class MenuPictureAdapter : RecyclerView.Adapter<ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
         when (viewType) {
             PICTURE_ITEM -> ExistPictureViewHolder(
-                ItemMenuBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                ItemExistPictureBinding.inflate(LayoutInflater.from(parent.context), parent, false)
             )
             else -> NewPictureViewHolder(
-                ItemAddPictureBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                ItemNewPictureBinding.inflate(LayoutInflater.from(parent.context), parent, false)
             )
         }
 
@@ -65,7 +65,7 @@ class MenuPictureAdapter : RecyclerView.Adapter<ViewHolder>() {
         diffResults.dispatchUpdatesTo(this)
     }
 
-    inner class ExistPictureViewHolder(private val binding: ItemMenuBinding) :
+    inner class ExistPictureViewHolder(private val binding: ItemExistPictureBinding) :
         ViewHolder(binding.root) {
         fun bind() {
             val pictureEntity = oldPictureList[bindingAdapterPosition]
@@ -94,7 +94,7 @@ class MenuPictureAdapter : RecyclerView.Adapter<ViewHolder>() {
         }
     }
 
-    inner class NewPictureViewHolder(private val binding: ItemAddPictureBinding) :
+    inner class NewPictureViewHolder(private val binding: ItemNewPictureBinding) :
         ViewHolder(binding.root) {
         fun bind() {
             binding.root.setOnClickListener {

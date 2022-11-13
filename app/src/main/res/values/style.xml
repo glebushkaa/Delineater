@@ -12,6 +12,7 @@
         <item name="backgroundTint">@color/black_background</item>
         <item name="rippleColor">@color/black_background</item>
         <item name="elevation">0dp</item>
+        <item name="iconTint">@color/poor_white</item>
         <item name="iconGravity">textStart</item>
         <item name="iconPadding">0dp</item>
         <item name="iconSize">32dp</item>
@@ -46,7 +47,21 @@
     <style name="BaseRoundProgressBarStyle">
         <item name="android:layout_height">@dimen/round_progress_bar_size</item>
         <item name="android:layout_width">@dimen/round_progress_bar_size</item>
+    </style>
 
+    <style name="ColorPickDialogButtonStyle" parent="NoInsetsButtonStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="textAllCaps">false</item>
+        <item name="cornerRadius">10dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:letterSpacing">0</item>
+
+    </style>
+
+    <style name="PauseDialogAnimation">
+        <item name="android:windowEnterAnimation">@android:anim/slide_out_right</item>
+        <item name="android:windowExitAnimation">@android:anim/slide_in_left</item>
     </style>
 
 </resources>

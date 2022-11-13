@@ -13,7 +13,7 @@
         android:text="@string/my_paintings"
         android:textSize="24sp"
         android:fontFamily="@font/rubik_bold"
-        android:textColor="@color/white"
+        android:textColor="@color/poor_white"
         android:layout_gravity="top|start"
         android:layout_marginStart="60dp"
         android:layout_marginTop="40dp"/>
@@ -25,7 +25,7 @@
         tools:itemCount="30"
         android:layout_gravity="center"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        tools:listitem="@layout/item_menu"
+        tools:listitem="@layout/item_exist_picture"
         app:spanCount="2"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"

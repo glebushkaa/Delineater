@@ -1,4 +1,4 @@
-package com.gleb.delineater.data
+package com.gleb.delineater.data.extensions
 
 import android.content.ContentResolver
 import android.content.ContentValues
@@ -27,11 +27,11 @@ fun Bitmap.saveAlbumImage(callback: (String) -> Unit) {
     val uuid = UUID.randomUUID().toString()
     val name = "picture$uuid$jpgType"
     val fileName = file.absolutePath + "/" + name
+    val newFile = File(fileName)
 
     try {
-        File(fileName).outputStream().use {
-            compress(Bitmap.CompressFormat.JPEG, 100, it)
-        }
+        val a = newFile.outputStream()
+        compress(Bitmap.CompressFormat.JPEG, 100, a)
         callback(fileName)
     } catch (e: Exception) {
         e.printStackTrace()
@@ -39,7 +39,9 @@ fun Bitmap.saveAlbumImage(callback: (String) -> Unit) {
 }
 
 private fun getPictureDisc(): File {
-    val file = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+    val file = Environment.getExternalStoragePublicDirectory(
+        Environment.DIRECTORY_PICTURES
+    )
     return File(file, albumName)
 }
 

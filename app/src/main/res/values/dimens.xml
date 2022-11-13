@@ -6,4 +6,6 @@
     <dimen name="simple_corner_button_size">20dp</dimen>
     <dimen name="side_download_button_margin">60dp</dimen>
     <dimen name="round_progress_bar_size">50dp</dimen>
+    <dimen name="dialog_head_text_size">24sp</dimen>
+    <dimen name="color_picker_button_divider_size">8dp</dimen>`
 </resources>

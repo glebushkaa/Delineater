@@ -1,8 +1,8 @@
 package com.gleb.delineater.ui.extensions
 
 import com.gleb.delineater.R
-import com.gleb.delineater.data.ColorPickerType
-import com.gleb.delineater.data.PaintType
+import com.gleb.delineater.data.sealedClasses.ColorPickerType
+import com.gleb.delineater.data.sealedClasses.PaintType
 import com.gleb.delineater.databinding.FragmentDrawBinding
 
 
@@ -41,4 +41,14 @@ private fun FragmentDrawBinding.setEraseColor(color: Int) {
     paintView.eraserColor = color
     paintView.setBackgroundColor(color)
     paintView.updateEraseColor(color)
+}
+
+fun FragmentDrawBinding.showColorPickerDialog() {
+    backgroundBlurCard.showWithFadeAnimation()
+    colorPickDialog.dialogCardView.translateDialogByXCenter()
+}
+
+fun FragmentDrawBinding.hideColorPickerDialog() {
+    backgroundBlurCard.hideWithFadeAnimation()
+    colorPickDialog.dialogCardView.translateDialogByXOverBorder()
 }

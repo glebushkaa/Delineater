@@ -1,4 +1,4 @@
-package com.gleb.delineater.listeners
+package com.gleb.delineater.ui.listeners
 
 import com.gleb.delineater.data.entities.PictureEntity
 

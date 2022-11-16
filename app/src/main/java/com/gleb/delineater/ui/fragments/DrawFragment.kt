@@ -1,5 +1,6 @@
 package com.gleb.delineater.ui.fragments
 
+import android.annotation.SuppressLint
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.View
@@ -10,16 +11,17 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.gleb.delineater.R
-import com.gleb.delineater.data.constants.PICTURE
 import com.gleb.delineater.data.entities.PictureEntity
 import com.gleb.delineater.data.extensions.saveAlbumImage
-import com.gleb.delineater.data.sealedClasses.ColorPickerType
+import com.gleb.delineater.data.types.ColorPickerType
 import com.gleb.delineater.databinding.FragmentDrawBinding
 import com.gleb.delineater.ui.extensions.*
 import com.gleb.delineater.ui.viewModels.DrawViewModel
 import com.skydoves.colorpickerview.flag.BubbleFlag
 import com.skydoves.colorpickerview.flag.FlagMode
 import org.koin.androidx.viewmodel.ext.android.viewModel
+
+private const val PICTURE = "picture"
 
 class DrawFragment : Fragment(R.layout.fragment_draw) {
 
@@ -47,6 +49,7 @@ class DrawFragment : Fragment(R.layout.fragment_draw) {
         viewModel.currentPicture = arguments?.getParcelable(PICTURE)
     }
 
+    @SuppressLint("SetTextI18n")
     private fun FragmentDrawBinding.initListeners() {
         backBtn.setOnClickListener {
             findNavController().popBackStack()

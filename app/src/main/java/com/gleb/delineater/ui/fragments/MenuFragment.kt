@@ -7,13 +7,14 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.gleb.delineater.R
-import com.gleb.delineater.data.constants.PICTURE
 import com.gleb.delineater.data.entities.PictureEntity
 import com.gleb.delineater.databinding.FragmentMenuBinding
 import com.gleb.delineater.ui.listeners.MenuPictureListener
 import com.gleb.delineater.ui.recycler.adapter.MenuPictureAdapter
 import com.gleb.delineater.ui.viewModels.MenuViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
+
+private const val PICTURE = "picture"
 
 class MenuFragment : Fragment(R.layout.fragment_menu) {
 

@@ -1,4 +1,4 @@
-package com.gleb.delineater.data.sealedClasses
+package com.gleb.delineater.data.types
 
 sealed class ColorPickerType {
     object BrushColorPicker: ColorPickerType()

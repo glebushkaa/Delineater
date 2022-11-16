@@ -22,11 +22,6 @@ class MenuViewModel(private val pictureRepository: PictureRepository) : ViewMode
         }
     }
 
-    fun initPictureList(list: List<PictureEntity>) {
-        pictureList.addAll(list)
-        pictureLiveData.value = list
-    }
-
     fun deleteImage(pictureEntity: PictureEntity) {
         viewModelScope.launch(Dispatchers.IO) {
             pictureRepository.deletePicture(pictureEntity)

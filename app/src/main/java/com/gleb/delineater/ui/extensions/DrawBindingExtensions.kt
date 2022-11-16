@@ -1,8 +1,8 @@
 package com.gleb.delineater.ui.extensions
 
 import com.gleb.delineater.R
-import com.gleb.delineater.data.sealedClasses.ColorPickerType
-import com.gleb.delineater.data.sealedClasses.PaintType
+import com.gleb.delineater.data.types.ColorPickerType
+import com.gleb.delineater.data.types.PaintType
 import com.gleb.delineater.databinding.FragmentDrawBinding
 
 

@@ -1,7 +1,6 @@
 package com.gleb.delineater.ui.fragments
 
 import android.content.Intent
-import android.graphics.drawable.AnimationDrawable
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
@@ -12,12 +11,13 @@ import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.bumptech.glide.Glide
 import com.gleb.delineater.R
-import com.gleb.delineater.data.constants.DOWNLOAD_IMAGE
+import com.gleb.delineater.data.constants.PICTURE
+import com.gleb.delineater.data.entities.PictureEntity
 import com.gleb.delineater.databinding.FragmentDownloadBinding
-import com.gleb.delineater.ui.extensions.showSnackBar
+import com.gleb.delineater.ui.extensions.increaseSaveBtnXSize
 import com.gleb.delineater.ui.extensions.progressFadeAnimation
-import com.gleb.delineater.ui.extensions.increaseButtonSizeX
-import com.gleb.delineater.ui.extensions.reduceButtonSizeX
+import com.gleb.delineater.ui.extensions.reduceSaveBtnXSize
+import com.gleb.delineater.ui.extensions.showSnackBar
 import com.gleb.delineater.ui.viewModels.DownloadViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
@@ -37,14 +37,15 @@ class DownloadFragment : Fragment(R.layout.fragment_download) {
     }
 
     private fun getArgs() {
-        arguments?.getString(DOWNLOAD_IMAGE)?.let {
-            viewModel.picturePath = it
-            setDownloadImage(it)
+        arguments?.getParcelable<PictureEntity>(PICTURE)?.let {
+            viewModel.pictureEntity = it
+            setDownloadImage(it.picturePath.orEmpty())
         }
     }
 
     private fun FragmentDownloadBinding.initClickListeners() {
         backBtn.setOnClickListener {
+            arguments?.putParcelable(PICTURE, viewModel.pictureEntity)
             findNavController().popBackStack()
         }
         menuBtn.setOnClickListener {
@@ -67,7 +68,7 @@ class DownloadFragment : Fragment(R.layout.fragment_download) {
     )
 
     private fun reduceButtonX() {
-        binding.saveBtn.reduceButtonSizeX {
+        binding.saveBtn.reduceSaveBtnXSize {
             binding.progressBar.progressFadeAnimation()
             increaseButtonX()
         }
@@ -80,7 +81,7 @@ class DownloadFragment : Fragment(R.layout.fragment_download) {
     }
 
     private fun increaseButtonX() {
-        binding.saveBtn.increaseButtonSizeX {
+        binding.saveBtn.increaseSaveBtnXSize {
             showSaveSuccessMessage()
         }
     }
@@ -98,7 +99,8 @@ class DownloadFragment : Fragment(R.layout.fragment_download) {
         val shareIntent = Intent().apply {
             action = Intent.ACTION_SEND
             putExtra(
-                Intent.EXTRA_STREAM, getContentUri(File(viewModel.picturePath.orEmpty()))
+                Intent.EXTRA_STREAM,
+                getContentUri(File(viewModel.pictureEntity?.picturePath.orEmpty()))
             )
             type = SHARE_TYPE
             flags = Intent.FLAG_GRANT_READ_URI_PERMISSION

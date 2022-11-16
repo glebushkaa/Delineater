@@ -13,10 +13,10 @@
         <action
             android:id="@+id/splash_to_menu"
             app:destination="@id/menuFragment"
-            app:enterAnim="@android:anim/fade_in"
-            app:exitAnim="@android:anim/fade_out"
-            app:popEnterAnim="@android:anim/fade_in"
-            app:popExitAnim="@android:anim/fade_out"
+            app:enterAnim="@anim/left_in_transition"
+            app:exitAnim="@anim/left_out_transition"
+            app:popEnterAnim="@anim/left_in_transition"
+            app:popExitAnim="@anim/left_out_transition"
             app:popUpTo="@id/splashFragment"
             app:popUpToInclusive="true" />
     </fragment>
@@ -28,10 +28,10 @@
         <action
             android:id="@+id/menu_to_draw"
             app:destination="@id/drawFragment"
-            app:enterAnim="@android:anim/fade_in"
-            app:exitAnim="@android:anim/fade_out"
-            app:popEnterAnim="@android:anim/fade_in"
-            app:popExitAnim="@android:anim/fade_out" />
+            app:enterAnim="@anim/left_in_transition"
+            app:exitAnim="@anim/unmoving_out_transition"
+            app:popEnterAnim="@anim/unmoving_in_transition"
+            app:popExitAnim="@anim/right_out_transition" />
     </fragment>
     <fragment
         android:id="@+id/drawFragment"
@@ -41,10 +41,10 @@
         <action
             android:id="@+id/draw_to_download"
             app:destination="@id/downloadFragment"
-            app:enterAnim="@android:anim/fade_in"
-            app:exitAnim="@android:anim/fade_out"
-            app:popEnterAnim="@android:anim/fade_in"
-            app:popExitAnim="@android:anim/fade_out" />
+            app:enterAnim="@anim/left_in_transition"
+            app:exitAnim="@anim/left_out_transition"
+            app:popEnterAnim="@anim/right_in_transition"
+            app:popExitAnim="@anim/right_out_transition" />
     </fragment>
     <fragment
         android:id="@+id/downloadFragment"
@@ -54,10 +54,8 @@
         <action
             android:id="@+id/download_to_menu"
             app:destination="@id/menuFragment"
-            app:enterAnim="@android:anim/fade_in"
-            app:exitAnim="@android:anim/fade_out"
-            app:popEnterAnim="@android:anim/fade_in"
-            app:popExitAnim="@android:anim/fade_out"
+            app:enterAnim="@anim/unmoving_in_transition"
+            app:exitAnim="@anim/right_out_transition"
             app:popUpTo="@id/menuFragment"
             app:popUpToInclusive="true" />
     </fragment>

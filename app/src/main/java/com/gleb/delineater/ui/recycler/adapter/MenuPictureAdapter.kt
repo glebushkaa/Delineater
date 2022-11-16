@@ -58,7 +58,7 @@ class MenuPictureAdapter : RecyclerView.Adapter<ViewHolder>() {
 
     fun setData(newPictureList: List<PictureEntity>) {
         val diffUtil = MenuPictureDiffUtil(oldPictureList, newPictureList)
-        val diffResults = DiffUtil.calculateDiff(diffUtil,true)
+        val diffResults = DiffUtil.calculateDiff(diffUtil, true)
         oldPictureList.clear()
         oldPictureList.addAll(newPictureList)
         oldPictureList.add(PictureEntity(picturePath = null))
@@ -71,6 +71,8 @@ class MenuPictureAdapter : RecyclerView.Adapter<ViewHolder>() {
             val pictureEntity = oldPictureList[bindingAdapterPosition]
 
             binding.apply {
+                imageContainer.transitionName = pictureEntity.uid.toString()
+
                 Glide.with(imageContainer)
                     .load(File(pictureEntity.picturePath.orEmpty()))
                     .listener(progressBar.getGlideProgressBarListener())

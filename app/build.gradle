@@ -44,7 +44,7 @@ dependencies {
     def koin_version = "3.2.0"
     def lifecycle = "2.4.1"
     def material = "1.7.0"
-    def navigation = "2.5.1"
+    def navigation = "2.5.3"
     def recycler = "1.2.0"
     def color_picker = "2.0.6"
     def room_version = "2.4.3"

@@ -13,7 +13,8 @@ class DrawViewModel(private val pictureRepository: PictureRepository) : ViewMode
     var currentPicture: PictureEntity? = null
     var colorPickerType: ColorPickerType = ColorPickerType.BrushColorPicker
 
-    fun addCurrentPicture(picturePath: String) {
+    fun addCurrentPicture(picturePath: String){
+        currentPicture?.picturePath = picturePath
         currentPicture?.let {
             updatePicture(PictureEntity(uid = it.uid, picturePath = picturePath))
         } ?: run {

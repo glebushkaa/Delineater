@@ -16,12 +16,12 @@ fun FragmentDrawBinding.getColorFromPicker(colorPickerType: ColorPickerType, col
 fun FragmentDrawBinding.enableBrush() {
     paintView.paintType = PaintType.Brush
     eraseBtn.setIconTint(R.color.gray_background)
-    brushBtn.setIconTint(R.color.white)
+    brushBtn.setIconTint(R.color.poor_white)
 }
 
 fun FragmentDrawBinding.enableEraser() {
     paintView.paintType = PaintType.Eraser
-    eraseBtn.setIconTint(R.color.white)
+    eraseBtn.setIconTint(R.color.poor_white)
     brushBtn.setIconTint(R.color.gray_background)
 }
 

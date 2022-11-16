@@ -6,11 +6,14 @@ import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.gleb.delineater.R
 import com.gleb.delineater.data.constants.PICTURES_LIST
 import com.gleb.delineater.ui.extensions.showSnackBar
 import com.gleb.delineater.ui.viewModels.SplashViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SplashFragment : Fragment(R.layout.fragment_splash) {
@@ -40,12 +43,13 @@ class SplashFragment : Fragment(R.layout.fragment_splash) {
 
     private fun initObservers() {
         viewModel.picturesLiveData.observe(viewLifecycleOwner) { picturesList ->
-            findNavController().navigate(
-                R.id.splash_to_menu,
-                bundleOf(
-                    PICTURES_LIST to picturesList
+            lifecycleScope.launch {
+                delay(1000)
+                findNavController().navigate(
+                    R.id.splash_to_menu,
+                    bundleOf(PICTURES_LIST to picturesList)
                 )
-            )
+            }
         }
     }
 

@@ -1,5 +1,6 @@
 package com.gleb.delineater.ui.customViews
 
+
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
@@ -8,8 +9,8 @@ import android.graphics.Path
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
-import com.gleb.delineater.data.sealedClasses.PaintType
 import com.gleb.delineater.data.entities.PaintEntity
+import com.gleb.delineater.data.sealedClasses.PaintType
 
 class PaintView @JvmOverloads constructor(
     context: Context,
@@ -37,10 +38,7 @@ class PaintView @JvmOverloads constructor(
 
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
-                path = Path()
-                paint = Paint()
-                path.moveTo(x, y)
-                paintList.add(PaintEntity(path, paint, paintType))
+                onDownAction(x, y)
                 return true
             }
             MotionEvent.ACTION_MOVE -> {
@@ -95,6 +93,13 @@ class PaintView @JvmOverloads constructor(
             }
         }
         invalidate()
+    }
+
+    private fun onDownAction(x: Float, y: Float) {
+        path = Path()
+        paint = Paint()
+        path.moveTo(x, y)
+        paintList.add(PaintEntity(path, paint, paintType))
     }
 
     private fun setPaint(paintColor: Int) {

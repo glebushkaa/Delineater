@@ -10,8 +10,8 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.gleb.delineater.R
-import com.gleb.delineater.data.constants.DOWNLOAD_IMAGE
 import com.gleb.delineater.data.constants.PICTURE
+import com.gleb.delineater.data.entities.PictureEntity
 import com.gleb.delineater.data.extensions.saveAlbumImage
 import com.gleb.delineater.data.sealedClasses.ColorPickerType
 import com.gleb.delineater.databinding.FragmentDrawBinding
@@ -33,12 +33,13 @@ class DrawFragment : Fragment(R.layout.fragment_draw) {
         binding.initListeners()
         binding.setColors()
         binding.setColorDialogClickListeners()
-        setBackground()
+        setPaintBackgroundPicture()
     }
 
-    private fun setBackground() {
+    private fun setPaintBackgroundPicture() {
         viewModel.currentPicture?.let {
-            binding.paintView.background = BitmapFactory.decodeFile(it.picturePath).toDrawable(resources)
+            binding.paintView.background =
+                BitmapFactory.decodeFile(it.picturePath).toDrawable(resources)
         }
     }
 
@@ -106,14 +107,14 @@ class DrawFragment : Fragment(R.layout.fragment_draw) {
     private fun saveAlbumImage() {
         binding.paintView.drawToBitmap().saveAlbumImage {
             viewModel.addCurrentPicture(it)
-            navigateDownloadFragment(it)
+            navigateDownloadFragment(viewModel.currentPicture)
         }
     }
 
-    private fun navigateDownloadFragment(downloadImage: String) {
+    private fun navigateDownloadFragment(downloadImage: PictureEntity?) {
         findNavController().navigate(
             R.id.draw_to_download,
-            bundleOf(DOWNLOAD_IMAGE to downloadImage)
+            bundleOf(PICTURE to downloadImage)
         )
     }
 

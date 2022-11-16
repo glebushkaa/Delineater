@@ -28,8 +28,12 @@
         android:layout_marginBottom="60dp"
         android:background="@color/white" />
 
-    <HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_gravity="bottom"
@@ -48,7 +52,7 @@
                 android:layout_gravity="center"
                 android:layout_marginStart="12dp"
                 app:backgroundTint="#880000"
-                app:strokeColor="@color/white"
+                app:strokeColor="@color/poor_white"
                 app:strokeWidth="1dp" />
 
             <com.google.android.material.slider.Slider
@@ -62,11 +66,11 @@
                 android:value="10"
                 android:valueFrom="1"
                 android:valueTo="200"
-                app:haloColor="@color/white"
+                app:haloColor="@color/poor_white"
                 app:labelBehavior="gone"
-                app:thumbColor="@color/white"
+                app:thumbColor="@color/poor_white"
                 app:tickColor="@color/gray_background"
-                app:trackColor="@color/white"
+                app:trackColor="@color/poor_white"
                 app:trackHeight="5dp" />
 
             <TextView
@@ -76,7 +80,7 @@
                 android:layout_marginEnd="10dp"
                 android:gravity="end"
                 android:text="10dp"
-                android:textColor="@color/white"
+                android:textColor="@color/poor_white"
                 android:textSize="20sp" />
 
             <com.google.android.material.button.MaterialButton
@@ -89,31 +93,31 @@
                 android:id="@+id/brushBtn"
                 style="@style/BottomDrawButton"
                 app:icon="@drawable/ic_brush"
-                app:iconTint="@color/white_background" />
+                app:iconTint="@color/poor_white" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/fillBackBtn"
                 style="@style/BottomDrawButton"
                 app:icon="@drawable/ic_fill_back"
-                app:iconTint="@color/white_background" />
+                app:iconTint="@color/poor_white" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/stepBackBtn"
                 style="@style/BottomDrawButton"
                 app:icon="@drawable/ic_back_step"
-                app:iconTint="@color/white_background" />
+                app:iconTint="@color/poor_white" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/restore_step_btn"
                 style="@style/BottomDrawButton"
                 app:icon="@drawable/ic_next_step"
-                app:iconTint="@color/white_background" />
+                app:iconTint="@color/poor_white" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/refreshBtn"
                 style="@style/BottomDrawButton"
                 app:icon="@drawable/ic_refresh"
-                app:iconTint="@color/white_background" />
+                app:iconTint="@color/poor_white" />
         </LinearLayout>
     </HorizontalScrollView>
 

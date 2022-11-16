@@ -11,21 +11,23 @@ private const val COLOR_DIALOG_TRANSLATION_DURATION = 300L
 
 private const val REDUCE_VALUE = 0f
 private const val INCREASE_VALUE = 1f
+private const val REDUCE_SAVE_BUTTON_VALUE = 0.2f
 
 private const val OUT_RIGHT_BORDER_TRANSLATION_X = -1000f
 private const val CENTER_TRANSLATION_X = 0f
 
 private const val ACTIVE_COLOR_BACKGROUND_BLUR_ALPHA = 0.6f
 
-fun Button.reduceButtonSizeX(endAction: () -> Unit) {
-    this.animate().scaleX(REDUCE_VALUE).alpha(REDUCE_VALUE).also {
+fun Button.reduceSaveBtnXSize(endAction: () -> Unit) {
+    this.animate().scaleX(REDUCE_SAVE_BUTTON_VALUE).alpha(REDUCE_VALUE).also {
         it.startDelay = 0
+        it.duration = 500
         it.withEndAction(endAction)
         it.start()
     }
 }
 
-fun Button.increaseButtonSizeX(endAction: () -> Unit) {
+fun Button.increaseSaveBtnXSize(endAction: () -> Unit) {
     this.animate().scaleX(INCREASE_VALUE).alpha(INCREASE_VALUE).also {
         it.startDelay = CHANGE_BTN_SIZE_DURATION
         it.withEndAction(endAction)

@@ -8,7 +8,6 @@ import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.gleb.delineater.R
 import com.gleb.delineater.data.constants.PICTURE
-import com.gleb.delineater.data.constants.PICTURES_LIST
 import com.gleb.delineater.data.entities.PictureEntity
 import com.gleb.delineater.databinding.FragmentMenuBinding
 import com.gleb.delineater.ui.listeners.MenuPictureListener
@@ -26,7 +25,7 @@ class MenuFragment : Fragment(R.layout.fragment_menu) {
         super.onViewCreated(view, savedInstanceState)
         initAdapter()
         initObservers()
-        getArgs()
+        viewModel.getAllPictures()
     }
 
     private fun initAdapter() {
@@ -56,14 +55,6 @@ class MenuFragment : Fragment(R.layout.fragment_menu) {
     private fun initObservers() {
         viewModel.pictureLiveData.observe(viewLifecycleOwner) {
             adapter.setData(it)
-        }
-    }
-
-    private fun getArgs() {
-        arguments?.getParcelableArrayList<PictureEntity>(PICTURES_LIST)?.let { pictureEntities ->
-            viewModel.initPictureList(pictureEntities)
-        } ?: run {
-            viewModel.getAllPictures()
         }
     }
 }

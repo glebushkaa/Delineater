@@ -20,7 +20,7 @@
         android:layout_marginTop="24sp"
         android:text="@string/select_color"
         android:textColor="@color/poor_white"
-        android:textSize="@dimen/dialog_head_text_size" />
+        android:textSize="@dimen/head_text_size" />
 
     <com.skydoves.colorpickerview.ColorPickerView
         android:id="@+id/colorPickerView"

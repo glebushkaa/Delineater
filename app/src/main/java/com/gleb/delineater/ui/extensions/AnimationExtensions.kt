@@ -18,7 +18,7 @@ private const val CENTER_TRANSLATION_X = 0f
 
 private const val ACTIVE_COLOR_BACKGROUND_BLUR_ALPHA = 0.6f
 
-fun Button.reduceSaveBtnXSize(endAction: () -> Unit) {
+fun Button.downscaleSaveBtnX(endAction: () -> Unit) {
     this.animate().scaleX(REDUCE_SAVE_BUTTON_VALUE).alpha(REDUCE_VALUE).also {
         it.startDelay = 0
         it.duration = 500
@@ -27,7 +27,7 @@ fun Button.reduceSaveBtnXSize(endAction: () -> Unit) {
     }
 }
 
-fun Button.increaseSaveBtnXSize(endAction: () -> Unit) {
+fun Button.upscaleSaveBtnX(endAction: () -> Unit) {
     this.animate().scaleX(INCREASE_VALUE).alpha(INCREASE_VALUE).also {
         it.startDelay = CHANGE_BTN_SIZE_DURATION
         it.withEndAction(endAction)

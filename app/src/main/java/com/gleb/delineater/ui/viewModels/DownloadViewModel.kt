@@ -1,6 +1,7 @@
 package com.gleb.delineater.ui.viewModels
 
 import android.content.ContentResolver
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Picture
 import androidx.lifecycle.ViewModel
@@ -11,8 +12,8 @@ class DownloadViewModel : ViewModel() {
 
     var pictureEntity: PictureEntity? = null
 
-    fun saveGalleryPicture(bitmap: Bitmap, contentResolver: ContentResolver) {
-        bitmap.saveGalleryPicture(contentResolver)
+    fun saveGalleryPicture(bitmap: Bitmap, context: Context) {
+        context.saveGalleryPicture(bitmap)
     }
 
 }

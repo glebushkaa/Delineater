@@ -9,7 +9,7 @@ import org.koin.dsl.module
 
 const val TABLE_NAME = "images_table"
 
-val roomModule = module {
+val databaseModule = module {
 
     fun buildPictureDatabase(context: Context) = Room.databaseBuilder(
         context, PictureDatabase::class.java, TABLE_NAME

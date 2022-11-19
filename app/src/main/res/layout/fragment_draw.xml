@@ -69,7 +69,7 @@
                 app:haloColor="@color/poor_white"
                 app:labelBehavior="gone"
                 app:thumbColor="@color/poor_white"
-                app:tickColor="@color/gray_background"
+                app:tickColor="@color/poor_gray"
                 app:trackColor="@color/poor_white"
                 app:trackHeight="5dp" />
 
@@ -87,7 +87,7 @@
                 android:id="@+id/eraseBtn"
                 style="@style/BottomDrawButton"
                 app:icon="@drawable/ic_eraser"
-                app:iconTint="@color/gray_background" />
+                app:iconTint="@color/poor_gray" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/brushBtn"

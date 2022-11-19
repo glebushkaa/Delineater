@@ -21,7 +21,7 @@
         android:layout_height="match_parent"
         android:alpha="0"
         android:visibility="gone"
-        app:backgroundTint="@color/gray_background"
+        app:backgroundTint="@color/poor_gray"
         app:cornerRadius="0dp"
         app:icon="@drawable/ic_close"
         app:iconGravity="textStart"
@@ -33,6 +33,6 @@
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_gravity="center"
-        android:indeterminateTint="@color/gray_background" />
+        android:indeterminateTint="@color/poor_gray" />
 
 </com.google.android.material.card.MaterialCardView>

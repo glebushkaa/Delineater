@@ -10,7 +10,7 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import com.gleb.delineater.data.entities.PaintEntity
-import com.gleb.delineater.data.types.PaintType
+import com.gleb.delineater.ui.types.PaintType
 
 class PaintView @JvmOverloads constructor(
     context: Context,

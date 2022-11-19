@@ -11,7 +11,7 @@ import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.bumptech.glide.Glide
 import com.gleb.delineater.R
-import com.gleb.delineater.data.constants.PICTURE
+import com.gleb.delineater.ui.constants.PICTURE
 import com.gleb.delineater.data.entities.PictureEntity
 import com.gleb.delineater.databinding.FragmentDownloadBinding
 import com.gleb.delineater.ui.extensions.*
@@ -49,10 +49,10 @@ class DownloadFragment : Fragment(R.layout.fragment_download) {
             findNavController().navigate(R.id.download_to_menu)
         }
         saveBtn.setOnClickListener {
-            reduceButtonX()
+            downscaleSaveBtn()
             viewModel.saveGalleryPicture(
                 bitmap = downloadImage.drawToBitmap(),
-                requireContext().contentResolver
+                context = requireContext()
             )
         }
         shareBtn.setOnClickListener {
@@ -64,10 +64,10 @@ class DownloadFragment : Fragment(R.layout.fragment_download) {
         requireContext(), PROVIDER_AUTHORITY, file
     )
 
-    private fun reduceButtonX() {
-        binding.saveBtn.reduceSaveBtnXSize {
+    private fun downscaleSaveBtn() {
+        binding.saveBtn.downscaleSaveBtnX {
             binding.progressBar.progressFadeAnimation()
-            increaseButtonX()
+            upscaleSaveBtn()
         }
     }
 
@@ -77,8 +77,8 @@ class DownloadFragment : Fragment(R.layout.fragment_download) {
             .into(binding.downloadImage)
     }
 
-    private fun increaseButtonX() {
-        binding.saveBtn.increaseSaveBtnXSize {
+    private fun upscaleSaveBtn() {
+        binding.saveBtn.upscaleSaveBtnX {
             showSaveSuccessMessage()
         }
     }

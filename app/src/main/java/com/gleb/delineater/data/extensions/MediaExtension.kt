@@ -8,9 +8,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
-import android.util.Log
 import androidx.annotation.RequiresApi
-import com.gleb.delineater.ui.extensions.showToast
 import java.io.File
 import java.io.FileOutputStream
 import java.io.OutputStream
@@ -21,7 +19,7 @@ private const val jpgType = ".jpg"
 private const val jpgMimeType = "image/jpg"
 
 fun Bitmap.saveAlbumImage(callback: (String) -> Unit) {
-    val file = getPictureDisc()
+    val file = getPictureDir(albumName)
 
     if (!file.exists() && !file.mkdirs()) {
         file.mkdir()
@@ -33,42 +31,34 @@ fun Bitmap.saveAlbumImage(callback: (String) -> Unit) {
     val newFile = File(fileName)
 
     try {
-        val a = newFile.outputStream()
-        compress(Bitmap.CompressFormat.JPEG, 100, a)
+        compress(Bitmap.CompressFormat.JPEG, 100, newFile.outputStream())
         callback(fileName)
     } catch (e: Exception) {
         e.printStackTrace()
     }
 }
 
-private fun getPictureDisc(): File {
-    val file = Environment.getExternalStoragePublicDirectory(
-        Environment.DIRECTORY_PICTURES
-    )
-    return File(file, albumName)
+private fun getPictureDir(fileName: String): File {
+    val file = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+    return File(file, fileName)
 }
 
-fun Bitmap.saveGalleryPicture(contentResolver: ContentResolver) {
+fun Context.saveGalleryPicture(bitmap: Bitmap) {
     val uuid = UUID.randomUUID().toString()
     val filename = uuid + jpgType
-    var fos: OutputStream?
-
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-        contentResolver.also { resolver ->
+    val fos: OutputStream? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        contentResolver.let { resolver ->
             val contentValues = getContentValues(filename)
             val imageUri: Uri? = resolver.insert(
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues
             )
-            fos = imageUri?.let { resolver.openOutputStream(it) }
+            imageUri?.let { resolver.openOutputStream(it) }
         }
     } else {
-        val imagesDir =
-            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-        val image = File(imagesDir, filename)
-        fos = FileOutputStream(image)
+        FileOutputStream(getPictureDir(filename))
     }
     fos?.use {
-        compress(Bitmap.CompressFormat.JPEG, 100, it)
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, it)
     }
 
 }

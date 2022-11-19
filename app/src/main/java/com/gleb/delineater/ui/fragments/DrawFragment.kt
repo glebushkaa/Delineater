@@ -20,8 +20,9 @@ import com.gleb.delineater.ui.viewModels.DrawViewModel
 import com.skydoves.colorpickerview.flag.BubbleFlag
 import com.skydoves.colorpickerview.flag.FlagMode
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import com.gleb.delineater.data.constants.PICTURE
+import com.gleb.delineater.data.extensions.deletePictureFile
 
-private const val PICTURE = "picture"
 
 class DrawFragment : Fragment(R.layout.fragment_draw) {
 
@@ -108,6 +109,7 @@ class DrawFragment : Fragment(R.layout.fragment_draw) {
     }
 
     private fun saveAlbumImage() {
+        deletePictureFile(viewModel.currentPicture?.picturePath.orEmpty())
         binding.paintView.drawToBitmap().saveAlbumImage {
             viewModel.addCurrentPicture(it)
             navigateDownloadFragment(viewModel.currentPicture)

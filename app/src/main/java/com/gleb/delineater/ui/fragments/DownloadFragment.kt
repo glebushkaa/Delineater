@@ -11,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.bumptech.glide.Glide
 import com.gleb.delineater.R
+import com.gleb.delineater.data.constants.PICTURE
 import com.gleb.delineater.data.entities.PictureEntity
 import com.gleb.delineater.databinding.FragmentDownloadBinding
 import com.gleb.delineater.ui.extensions.*
@@ -20,7 +21,6 @@ import java.io.File
 
 private const val PROVIDER_AUTHORITY = "com.gleb.fileprovider.delineater"
 private const val SHARE_TYPE = "image/*"
-private const val PICTURE = "picture"
 
 class DownloadFragment : Fragment(R.layout.fragment_download) {
 

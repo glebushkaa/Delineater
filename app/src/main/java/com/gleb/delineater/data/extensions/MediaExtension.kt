@@ -2,12 +2,15 @@ package com.gleb.delineater.data.extensions
 
 import android.content.ContentResolver
 import android.content.ContentValues
+import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
+import android.util.Log
 import androidx.annotation.RequiresApi
+import com.gleb.delineater.ui.extensions.showToast
 import java.io.File
 import java.io.FileOutputStream
 import java.io.OutputStream
@@ -75,4 +78,11 @@ private fun getContentValues(fileName: String) = ContentValues().apply {
     put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
     put(MediaStore.MediaColumns.MIME_TYPE, jpgMimeType)
     put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
+}
+
+fun deletePictureFile(filePath: String) {
+    val file = File(filePath)
+    if (file.exists()) {
+        file.delete()
+    }
 }

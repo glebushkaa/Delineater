@@ -3,6 +3,7 @@ package com.gleb.delineater.ui.fragments
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
+import android.widget.ImageView
 import androidx.core.view.drawToBitmap
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -17,6 +18,7 @@ import com.gleb.delineater.ui.intents.sharePicture
 import com.gleb.delineater.ui.viewModels.DownloadViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
+import kotlin.math.PI
 
 class DownloadFragment : Fragment(R.layout.fragment_download) {
 
@@ -32,14 +34,13 @@ class DownloadFragment : Fragment(R.layout.fragment_download) {
     private fun getArgs() {
         arguments?.getParcelable<PictureEntity>(PICTURE)?.let {
             viewModel.pictureEntity = it
-            setDownloadImage(it.picturePath)
+            binding.downloadImage.setDownloadImage(it.picturePath)
         }
     }
 
     private fun FragmentDownloadBinding.initClickListeners() {
         backBtn.setOnClickListener {
             arguments?.putParcelable(PICTURE, viewModel.pictureEntity)
-            requireContext().showToast(viewModel.pictureEntity?.picturePath.toString())
             findNavController().popBackStack()
         }
         menuBtn.setOnClickListener {
@@ -65,10 +66,11 @@ class DownloadFragment : Fragment(R.layout.fragment_download) {
         }
     }
 
-    private fun setDownloadImage(picturePath: String) {
-        Glide.with(binding.downloadImage)
-            .load(File(picturePath))
-            .into(binding.downloadImage)
+    private fun ImageView.setDownloadImage(picturePath: String) {
+        val file = File(picturePath)
+        Glide.with(this)
+            .load(file)
+            .into(this)
     }
 
     private fun upscaleSaveBtn() {

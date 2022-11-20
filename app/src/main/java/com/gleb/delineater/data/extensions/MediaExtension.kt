@@ -1,14 +1,16 @@
 package com.gleb.delineater.data.extensions
 
-import android.content.ContentResolver
 import android.content.ContentValues
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
 import androidx.annotation.RequiresApi
+import androidx.core.graphics.drawable.toDrawable
 import java.io.File
 import java.io.FileOutputStream
 import java.io.OutputStream
@@ -76,3 +78,14 @@ fun deletePictureFile(filePath: String) {
         file.delete()
     }
 }
+
+fun Context.decodePictureFile(picturePath: String, completeCallback: (BitmapDrawable) -> Unit) {
+    val file = File(picturePath)
+    if (file.exists()) {
+        val picture = BitmapFactory.decodeFile(picturePath).toDrawable(resources)
+        completeCallback(picture)
+    } else {
+        return
+    }
+}
+

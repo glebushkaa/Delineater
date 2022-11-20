@@ -12,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.gleb.delineater.R
 import com.gleb.delineater.data.entities.PictureEntity
+import com.gleb.delineater.data.extensions.decodePictureFile
 import com.gleb.delineater.data.extensions.saveAlbumImage
 import com.gleb.delineater.ui.types.ColorPickerType
 import com.gleb.delineater.ui.extensions.*
@@ -41,13 +42,16 @@ class DrawFragment : Fragment(R.layout.fragment_draw) {
 
     private fun setPaintBackgroundPicture() {
         viewModel.currentPicture?.let {
-            binding.paintView.background =
-                BitmapFactory.decodeFile(it.picturePath).toDrawable(resources)
+            requireContext().decodePictureFile(it.picturePath) { picture ->// MUST BE DONE ERROR MESSAGE
+                binding.paintView.background = picture
+            }
         }
     }
 
     private fun getArgs() {
-        viewModel.currentPicture = arguments?.getParcelable(PICTURE)
+        arguments?.getParcelable<PictureEntity>(PICTURE)?.let {
+            viewModel.currentPicture = it
+        }
     }
 
     @SuppressLint("SetTextI18n")
@@ -177,7 +181,9 @@ class DrawFragment : Fragment(R.layout.fragment_draw) {
         deletePictureFile(viewModel.currentPicture?.picturePath.orEmpty())
         binding.paintView.drawToBitmap().saveAlbumImage {
             viewModel.addCurrentPicture(it)
-            navigateDownloadFragment(viewModel.currentPicture)
+            requireContext().showToast(viewModel.currentPicture?.picturePath.toString())
+            arguments?.putParcelable(PICTURE, viewModel.currentPicture)
+            navigateDownloadFragment(PictureEntity(picturePath = it))
         }
     }
 

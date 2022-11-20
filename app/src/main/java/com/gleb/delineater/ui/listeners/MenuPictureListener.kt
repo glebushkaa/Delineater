@@ -1,6 +1,5 @@
 package com.gleb.delineater.ui.listeners
 
-import android.widget.ImageView
 import com.gleb.delineater.data.entities.PictureEntity
 
 interface MenuPictureListener {

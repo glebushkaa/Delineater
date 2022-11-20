@@ -54,7 +54,7 @@ class MenuFragment : Fragment(R.layout.fragment_menu) {
 
     private fun initObservers() {
         viewModel.pictureLiveData.observe(viewLifecycleOwner) {
-            adapter.setData(it)
+            adapter.submitList(it)
         }
     }
 }

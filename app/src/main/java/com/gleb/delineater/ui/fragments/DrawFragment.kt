@@ -14,7 +14,6 @@ import com.gleb.delineater.R
 import com.gleb.delineater.data.entities.PictureEntity
 import com.gleb.delineater.data.extensions.saveAlbumImage
 import com.gleb.delineater.ui.types.ColorPickerType
-import com.gleb.delineater.databinding.FragmentDrawBinding
 import com.gleb.delineater.ui.extensions.*
 import com.gleb.delineater.ui.viewModels.DrawViewModel
 import com.skydoves.colorpickerview.flag.BubbleFlag
@@ -22,6 +21,7 @@ import com.skydoves.colorpickerview.flag.FlagMode
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import com.gleb.delineater.ui.constants.PICTURE
 import com.gleb.delineater.data.extensions.deletePictureFile
+import com.gleb.delineater.databinding.FragmentDrawBinding
 import com.gleb.delineater.ui.types.PaintType
 
 class DrawFragment : Fragment(R.layout.fragment_draw) {
@@ -107,6 +107,7 @@ class DrawFragment : Fragment(R.layout.fragment_draw) {
             backgroundBlurCard.setOnClickListener {
                 hideColorPickerDialog()
             }
+            dialogCardView.isClickable = true
         }
     }
 

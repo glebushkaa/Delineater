@@ -4,7 +4,7 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import com.gleb.delineater.data.entities.PictureEntity
 
-@Database(entities = [PictureEntity::class], version = 1, exportSchema = false)
+@Database(entities = [PictureEntity::class], version = 2, exportSchema = false)
 abstract class PictureDatabase : RoomDatabase() {
 
     abstract fun pictureDao(): PictureDao

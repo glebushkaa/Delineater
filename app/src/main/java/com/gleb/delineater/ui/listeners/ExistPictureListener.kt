@@ -2,12 +2,10 @@ package com.gleb.delineater.ui.listeners
 
 import com.gleb.delineater.data.entities.PictureEntity
 
-interface MenuPictureListener {
-
-    fun openExistPicture(picture: PictureEntity)
-
-    fun openNewPicture()
+interface ExistPictureListener : BaseAdapterListener {
 
     fun deletePicture(picture: PictureEntity)
+
+    fun openPicture(picture: PictureEntity)
 
 }

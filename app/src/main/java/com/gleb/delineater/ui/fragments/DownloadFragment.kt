@@ -12,10 +12,7 @@ import com.gleb.delineater.R
 import com.gleb.delineater.data.entities.PictureEntity
 import com.gleb.delineater.databinding.FragmentDownloadBinding
 import com.gleb.delineater.ui.constants.PICTURE
-import com.gleb.delineater.ui.extensions.downscaleSaveBtnX
-import com.gleb.delineater.ui.extensions.progressFadeAnimation
-import com.gleb.delineater.ui.extensions.showSnackBar
-import com.gleb.delineater.ui.extensions.upscaleSaveBtnX
+import com.gleb.delineater.ui.extensions.*
 import com.gleb.delineater.ui.intents.sharePicture
 import com.gleb.delineater.ui.viewModels.DownloadViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -35,13 +32,14 @@ class DownloadFragment : Fragment(R.layout.fragment_download) {
     private fun getArgs() {
         arguments?.getParcelable<PictureEntity>(PICTURE)?.let {
             viewModel.pictureEntity = it
-            setDownloadImage(it.picturePath.orEmpty())
+            setDownloadImage(it.picturePath)
         }
     }
 
     private fun FragmentDownloadBinding.initClickListeners() {
         backBtn.setOnClickListener {
             arguments?.putParcelable(PICTURE, viewModel.pictureEntity)
+            requireContext().showToast(viewModel.pictureEntity?.picturePath.toString())
             findNavController().popBackStack()
         }
         menuBtn.setOnClickListener {

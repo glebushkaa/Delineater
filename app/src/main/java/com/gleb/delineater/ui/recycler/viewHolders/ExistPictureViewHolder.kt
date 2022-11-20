@@ -6,7 +6,7 @@ import com.gleb.delineater.data.entities.PictureEntity
 import com.gleb.delineater.databinding.ItemExistPictureBinding
 import com.gleb.delineater.ui.extensions.hideWithFadeAnimation
 import com.gleb.delineater.ui.extensions.showWithFadeAnimation
-import com.gleb.delineater.ui.listeners.MenuPictureListener
+import com.gleb.delineater.ui.listeners.ExistPictureListener
 import com.gleb.delineater.ui.listeners.getGlideProgressBarListener
 import com.gleb.delineater.ui.recycler.BaseViewHolder
 import java.io.File
@@ -14,15 +14,13 @@ import java.io.File
 private const val VISIBLE_DELETE_ALPHA = 0.9f
 
 class ExistPictureViewHolder(private val view: View) :
-    BaseViewHolder<MenuPictureListener, PictureEntity>(view) {
+    BaseViewHolder<ExistPictureListener, PictureEntity>(view) {
 
-    override fun bind(listener: MenuPictureListener, item: PictureEntity) {
+    override fun bind(listener: ExistPictureListener, item: PictureEntity) {
         val binding = ItemExistPictureBinding.bind(view)
         binding.apply {
-            imageContainer.transitionName = item.uid.toString()
-
             Glide.with(imageContainer)
-                .load(File(item.picturePath.orEmpty()))
+                .load(File(item.picturePath))
                 .listener(progressBar.getGlideProgressBarListener())
                 .into(imageContainer)
 
@@ -38,7 +36,7 @@ class ExistPictureViewHolder(private val view: View) :
                 true
             }
             root.setOnClickListener {
-                listener.openExistPicture(item)
+                listener.openPicture(item)
             }
         }
     }

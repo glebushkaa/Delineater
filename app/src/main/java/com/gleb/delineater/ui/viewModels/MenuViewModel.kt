@@ -16,8 +16,8 @@ class MenuViewModel(private val pictureRepository: PictureRepository) : ViewMode
     fun getAllPictures() {
         viewModelScope.launch(Dispatchers.IO) {
             pictureRepository.getAllPictures().let {
+                pictureList.clear()
                 pictureList.addAll(it)
-                pictureList.add(PictureEntity(picturePath = null))
                 pictureLiveData.postValue(pictureList)
             }
         }

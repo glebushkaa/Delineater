@@ -1,7 +1,6 @@
 package com.gleb.delineater.ui.recycler.viewHolders
 
 import android.view.View
-import com.gleb.delineater.data.entities.PictureEntity
 import com.gleb.delineater.databinding.ItemNewPictureBinding
 import com.gleb.delineater.ui.listeners.NewPictureListener
 import com.gleb.delineater.ui.recycler.BaseViewHolder

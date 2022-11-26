@@ -134,4 +134,7 @@
         android:id="@+id/colorPickDialog"
         layout="@layout/color_pick_dialog" />
 
+    <include android:id="@+id/saveProjectDialog"
+        layout="@layout/save_project_dialog"/>
+
 </FrameLayout>

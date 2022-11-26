@@ -1,6 +1,7 @@
 package com.gleb.delineater.ui.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
@@ -52,6 +53,7 @@ class MenuFragment : Fragment(R.layout.fragment_menu) {
         }
 
         override fun openPicture(picture: PictureEntity) {
+            Log.d("Start picture", picture.picturePath)
             findNavController().navigate(
                 R.id.menu_to_draw,
                 bundleOf(PICTURE to picture)

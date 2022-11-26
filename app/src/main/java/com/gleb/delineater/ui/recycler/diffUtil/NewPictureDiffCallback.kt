@@ -1,7 +1,6 @@
 package com.gleb.delineater.ui.recycler.diffUtil
 
 import androidx.recyclerview.widget.DiffUtil
-import com.gleb.delineater.data.entities.PictureEntity
 
 class NewPictureDiffCallback : DiffUtil.ItemCallback<Boolean>() {
 

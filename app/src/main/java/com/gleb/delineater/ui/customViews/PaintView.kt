@@ -12,6 +12,8 @@ import android.view.View
 import com.gleb.delineater.data.entities.PaintEntity
 import com.gleb.delineater.ui.types.PaintType
 
+private const val DEFAULT_BRUSH_SIZE = 10f
+
 class PaintView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
@@ -23,7 +25,7 @@ class PaintView @JvmOverloads constructor(
     private var paintList = arrayListOf<PaintEntity>()
     private var deletedItemsList = arrayListOf<PaintEntity>()
 
-    var brushWidth = 10f
+    var brushWidth = DEFAULT_BRUSH_SIZE
     var brushColor = Color.BLACK
     var eraserColor = Color.WHITE
     var paintType: PaintType = PaintType.Brush
@@ -61,7 +63,7 @@ class PaintView @JvmOverloads constructor(
 
     fun resetPaint() {
         brushColor = Color.BLACK
-        brushWidth = 10f
+        brushWidth = DEFAULT_BRUSH_SIZE
         paintList.clear()
     }
 

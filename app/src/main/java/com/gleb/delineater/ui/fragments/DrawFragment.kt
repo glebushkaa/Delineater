@@ -1,10 +1,8 @@
 package com.gleb.delineater.ui.fragments
 
 import android.annotation.SuppressLint
-import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.View
-import androidx.core.graphics.drawable.toDrawable
 import androidx.core.os.bundleOf
 import androidx.core.view.drawToBitmap
 import androidx.fragment.app.Fragment
@@ -14,21 +12,25 @@ import com.gleb.delineater.R
 import com.gleb.delineater.data.entities.PictureEntity
 import com.gleb.delineater.data.extensions.decodePictureFile
 import com.gleb.delineater.data.extensions.saveAlbumImage
-import com.gleb.delineater.ui.types.ColorPickerType
+import com.gleb.delineater.databinding.FragmentDrawBinding
+import com.gleb.delineater.ui.constants.PICTURE
 import com.gleb.delineater.ui.extensions.*
+import com.gleb.delineater.ui.types.ColorPickerType
+import com.gleb.delineater.ui.types.PaintType
 import com.gleb.delineater.ui.viewModels.DrawViewModel
 import com.skydoves.colorpickerview.flag.BubbleFlag
 import com.skydoves.colorpickerview.flag.FlagMode
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import com.gleb.delineater.ui.constants.PICTURE
-import com.gleb.delineater.data.extensions.deletePictureFile
-import com.gleb.delineater.databinding.FragmentDrawBinding
-import com.gleb.delineater.ui.types.PaintType
 
 class DrawFragment : Fragment(R.layout.fragment_draw) {
 
     private val binding: FragmentDrawBinding by viewBinding()
     private val viewModel: DrawViewModel by viewModel()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        requireContext().showToast("Create")
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -57,7 +59,10 @@ class DrawFragment : Fragment(R.layout.fragment_draw) {
     @SuppressLint("SetTextI18n")
     private fun FragmentDrawBinding.initListeners() {
         backBtn.setOnClickListener {
-            findNavController().popBackStack()
+            binding.backgroundBlurCard.showWithFadeAnimation()
+            binding.saveProjectDialog.saveDialogCard.visibility = View.VISIBLE
+            binding.saveProjectDialog.saveDialogCard.animate().alpha(1f).start()
+//            findNavController().popBackStack()
         }
         downloadBtn.setOnClickListener {
             saveAlbumImage()
@@ -178,25 +183,24 @@ class DrawFragment : Fragment(R.layout.fragment_draw) {
     }
 
     private fun saveAlbumImage() {
-        deletePictureFile(viewModel.currentPicture?.picturePath.orEmpty())
+//        deletePictureFile(viewModel.currentPicture?.picturePath.orEmpty())
         binding.paintView.drawToBitmap().saveAlbumImage {
             viewModel.addCurrentPicture(it)
-            requireContext().showToast(viewModel.currentPicture?.picturePath.toString())
             arguments?.putParcelable(PICTURE, viewModel.currentPicture)
-            navigateDownloadFragment(PictureEntity(picturePath = it))
+            navigateDownloadFragment()
         }
     }
 
-    private fun navigateDownloadFragment(downloadImage: PictureEntity?) {
+    private fun navigateDownloadFragment() {
         findNavController().navigate(
             R.id.draw_to_download,
-            bundleOf(PICTURE to downloadImage)
+            bundleOf(PICTURE to viewModel.currentPicture)
         )
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        binding.paintView.resetPaint()
+//        binding.paintView.resetPaint()
     }
 
 }

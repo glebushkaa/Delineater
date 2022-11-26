@@ -1,5 +1,6 @@
 package com.gleb.delineater.ui.viewModels
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gleb.delineater.ui.types.ColorPickerType
@@ -16,8 +17,11 @@ class DrawViewModel(private val pictureRepository: PictureRepository) : ViewMode
     fun addCurrentPicture(picturePath: String) {
         currentPicture?.let {
             updatePicture(PictureEntity(uid = it.uid, picturePath = picturePath))
+            Log.d("Update picture", it.picturePath)
+            Log.d("Update picture new", picturePath)
         } ?: run {
             addNewPicture(PictureEntity(picturePath = picturePath))
+            Log.d("New add picture:", picturePath)
         }
         currentPicture = PictureEntity(picturePath = picturePath)
     }

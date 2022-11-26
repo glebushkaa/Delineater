@@ -26,18 +26,13 @@ fun Bitmap.saveAlbumImage(callback: (String) -> Unit) {
     if (!file.exists() && !file.mkdirs()) {
         file.mkdir()
     }
-
     val uuid = UUID.randomUUID().toString()
     val name = "picture$uuid$jpgType"
     val fileName = file.absolutePath + "/" + name
     val newFile = File(fileName)
 
-    try {
-        compress(Bitmap.CompressFormat.JPEG, 100, newFile.outputStream())
-        callback(fileName)
-    } catch (e: Exception) {
-        e.printStackTrace()
-    }
+    compress(Bitmap.CompressFormat.JPEG, 100, newFile.outputStream())
+    callback(fileName)
 }
 
 private fun getPictureDir(fileName: String): File {

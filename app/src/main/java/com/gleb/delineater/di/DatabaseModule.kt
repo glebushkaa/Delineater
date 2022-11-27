@@ -1,7 +1,6 @@
 package com.gleb.delineater.di
 
 import androidx.room.Room
-import com.gleb.delineater.data.repositories.PictureRepository
 import com.gleb.delineater.data.room.PictureDatabase
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
@@ -17,8 +16,4 @@ val databaseModule = module {
     }
     single { (get() as PictureDatabase).pictureDao() }
 
-}
-
-val repositoryModule = module {
-    single { PictureRepository(pictureDao = get()) }
 }

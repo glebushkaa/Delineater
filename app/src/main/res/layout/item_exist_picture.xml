@@ -30,7 +30,7 @@
         app:iconSize="40dp" />
 
     <ProgressBar
-        android:id="@+id/progressBar"
+        android:id="@+id/loadProgress"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_gravity="center"

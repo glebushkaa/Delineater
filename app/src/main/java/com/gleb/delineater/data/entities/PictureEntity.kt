@@ -9,6 +9,6 @@ import kotlinx.parcelize.Parcelize
 @Entity(tableName = "picture_entity")
 @Parcelize
 class PictureEntity(
-    @PrimaryKey(autoGenerate = true) val uid: Int = 0,
+    @PrimaryKey(autoGenerate = true) val number: Long = 0,
     @ColumnInfo(name = "picture_path") var picturePath: String
 ) : Parcelable

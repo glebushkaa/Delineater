@@ -15,6 +15,9 @@ val viewModelsModule = module {
         DrawViewModel(pictureRepository = get())
     }
     viewModel {
-        DownloadViewModel()
+        DownloadViewModel(
+            newPictureUseCase = get(),
+            updatePictureUseCase = get()
+        )
     }
 }

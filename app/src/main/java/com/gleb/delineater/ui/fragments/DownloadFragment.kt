@@ -4,19 +4,22 @@ import android.os.Bundle
 import android.view.Gravity
 import android.view.View
 import android.widget.ImageView
+import androidx.core.os.bundleOf
 import androidx.core.view.drawToBitmap
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResult
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.bumptech.glide.Glide
 import com.gleb.delineater.R
 import com.gleb.delineater.data.entities.PictureEntity
 import com.gleb.delineater.databinding.FragmentDownloadBinding
+import com.gleb.delineater.ui.constants.IS_NEW_PICTURE
+import com.gleb.delineater.ui.constants.NEW_SAVED_PICTURE
 import com.gleb.delineater.ui.constants.PICTURE
-import com.gleb.delineater.ui.extensions.downscaleSaveBtnX
-import com.gleb.delineater.ui.extensions.progressFadeAnimation
+import com.gleb.delineater.ui.constants.PICTURE_REQUEST_KEY
+import com.gleb.delineater.ui.extensions.animSaving
 import com.gleb.delineater.ui.extensions.showSnackBar
-import com.gleb.delineater.ui.extensions.upscaleSaveBtnX
 import com.gleb.delineater.ui.intents.sharePicture
 import com.gleb.delineater.ui.viewModels.DownloadViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -31,25 +34,31 @@ class DownloadFragment : Fragment(R.layout.fragment_download) {
         super.onViewCreated(view, savedInstanceState)
         getArgs()
         binding.initClickListeners()
+        viewModel.addCurrentPicture()
     }
 
     private fun getArgs() {
-        arguments?.getParcelable<PictureEntity>(PICTURE)?.let {
-            viewModel.currentPicture = it
-            binding.downloadImage.setDownloadImage(it.picturePath)
+        arguments?.also {
+            it.getParcelable<PictureEntity>(PICTURE)?.also { picture ->
+                viewModel.currentPicture = picture
+                binding.downloadImage.setDownloadImage(picture.picturePath)
+            }
+            viewModel.isNewPicture = it.getBoolean(IS_NEW_PICTURE)
         }
     }
 
     private fun FragmentDownloadBinding.initClickListeners() {
         backBtn.setOnClickListener {
-            arguments?.putParcelable(PICTURE, viewModel.currentPicture)
+            setSavedPictureResult()
             findNavController().popBackStack()
         }
         menuBtn.setOnClickListener {
             findNavController().navigate(R.id.download_to_menu)
         }
         saveBtn.setOnClickListener {
-            downscaleSaveBtn()
+            saveBtn.animSaving(saveProgress) {
+                showSaveSuccessMessage()
+            }
             viewModel.saveGalleryPicture(
                 bitmap = downloadImage.drawToBitmap(),
                 context = requireContext()
@@ -62,12 +71,11 @@ class DownloadFragment : Fragment(R.layout.fragment_download) {
         }
     }
 
-
-    private fun downscaleSaveBtn() {
-        binding.saveBtn.downscaleSaveBtnX {
-            binding.progressBar.progressFadeAnimation()
-            upscaleSaveBtn()
-        }
+    private fun setSavedPictureResult() {
+        setFragmentResult(
+            PICTURE_REQUEST_KEY,
+            bundleOf(NEW_SAVED_PICTURE to viewModel.currentPicture)
+        )
     }
 
     private fun ImageView.setDownloadImage(picturePath: String) {
@@ -75,12 +83,6 @@ class DownloadFragment : Fragment(R.layout.fragment_download) {
         Glide.with(this)
             .load(file)
             .into(this)
-    }
-
-    private fun upscaleSaveBtn() {
-        binding.saveBtn.upscaleSaveBtnX {
-            showSaveSuccessMessage()
-        }
     }
 
     private fun showSaveSuccessMessage() {

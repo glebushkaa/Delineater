@@ -21,7 +21,7 @@ class ExistPictureViewHolder(private val view: View) :
         binding.apply {
             Glide.with(imageContainer)
                 .load(File(item.picturePath))
-                .listener(progressBar.getGlideProgressBarListener())
+                .listener(loadProgress.getGlideProgressBarListener())
                 .into(imageContainer)
 
             deleteImageBtn.setOnLongClickListener {

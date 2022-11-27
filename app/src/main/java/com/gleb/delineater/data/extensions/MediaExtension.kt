@@ -67,13 +67,6 @@ private fun getContentValues(fileName: String) = ContentValues().apply {
     put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
 }
 
-fun deletePictureFile(filePath: String) {
-    val file = File(filePath)
-    if (file.exists()) {
-        file.delete()
-    }
-}
-
 fun Context.decodePictureFile(picturePath: String, completeCallback: (BitmapDrawable) -> Unit) {
     val file = File(picturePath)
     if (file.exists()) {

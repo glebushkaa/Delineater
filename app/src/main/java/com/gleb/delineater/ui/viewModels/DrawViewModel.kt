@@ -1,27 +1,24 @@
 package com.gleb.delineater.ui.viewModels
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gleb.delineater.ui.types.ColorPickerType
 import com.gleb.delineater.data.entities.PictureEntity
-import com.gleb.delineater.data.repositories.PictureRepository
+import com.gleb.delineater.data.repositories.PictureRepositoryImpl
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class DrawViewModel(private val pictureRepository: PictureRepository) : ViewModel() {
+class DrawViewModel(private val pictureRepository: PictureRepositoryImpl) : ViewModel() {
 
     var currentPicture: PictureEntity? = null
+    var isNewPicture = true
     var colorPickerType: ColorPickerType = ColorPickerType.BrushColorPicker
 
     fun addCurrentPicture(picturePath: String) {
         currentPicture?.let {
-            updatePicture(PictureEntity(uid = it.uid, picturePath = picturePath))
-            Log.d("Update picture", it.picturePath)
-            Log.d("Update picture new", picturePath)
+            updatePicture(PictureEntity(number = it.number, picturePath = picturePath))
         } ?: run {
             addNewPicture(PictureEntity(picturePath = picturePath))
-            Log.d("New add picture:", picturePath)
         }
         currentPicture = PictureEntity(picturePath = picturePath)
     }

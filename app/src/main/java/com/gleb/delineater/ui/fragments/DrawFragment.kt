@@ -6,6 +6,7 @@ import android.view.View
 import androidx.core.os.bundleOf
 import androidx.core.view.drawToBitmap
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.gleb.delineater.R
@@ -13,7 +14,10 @@ import com.gleb.delineater.data.entities.PictureEntity
 import com.gleb.delineater.data.extensions.decodePictureFile
 import com.gleb.delineater.data.extensions.saveAlbumImage
 import com.gleb.delineater.databinding.FragmentDrawBinding
+import com.gleb.delineater.ui.constants.IS_NEW_PICTURE
+import com.gleb.delineater.ui.constants.NEW_SAVED_PICTURE
 import com.gleb.delineater.ui.constants.PICTURE
+import com.gleb.delineater.ui.constants.PICTURE_REQUEST_KEY
 import com.gleb.delineater.ui.extensions.*
 import com.gleb.delineater.ui.types.ColorPickerType
 import com.gleb.delineater.ui.types.PaintType
@@ -27,25 +31,31 @@ class DrawFragment : Fragment(R.layout.fragment_draw) {
     private val binding: FragmentDrawBinding by viewBinding()
     private val viewModel: DrawViewModel by viewModel()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        requireContext().showToast("Create")
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         getArgs()
+        setSavedPictureResultListener()
         setColorPickView()
         binding.initListeners()
         binding.setColors()
         binding.setColorDialogClickListeners()
+        binding.setSaveEditsClickListeners()
         setPaintBackgroundPicture()
     }
 
     private fun setPaintBackgroundPicture() {
         viewModel.currentPicture?.let {
-            requireContext().decodePictureFile(it.picturePath) { picture ->// MUST BE DONE ERROR MESSAGE
+            requireContext().decodePictureFile(it.picturePath) { picture ->
+                viewModel.isNewPicture = false
                 binding.paintView.background = picture
+            }
+        }
+    }
+
+    private fun setSavedPictureResultListener() {
+        setFragmentResultListener(PICTURE_REQUEST_KEY) { _, bundle ->
+            bundle.getParcelable<PictureEntity>(NEW_SAVED_PICTURE)?.let {
+                viewModel.currentPicture = it
             }
         }
     }
@@ -59,10 +69,11 @@ class DrawFragment : Fragment(R.layout.fragment_draw) {
     @SuppressLint("SetTextI18n")
     private fun FragmentDrawBinding.initListeners() {
         backBtn.setOnClickListener {
-            binding.backgroundBlurCard.showWithFadeAnimation()
-            binding.saveProjectDialog.saveDialogCard.visibility = View.VISIBLE
-            binding.saveProjectDialog.saveDialogCard.animate().alpha(1f).start()
-//            findNavController().popBackStack()
+            if (paintView.checkEdits()) {
+                findNavController().popBackStack()
+            } else {
+                showSaveEditsDialog()
+            }
         }
         downloadBtn.setOnClickListener {
             saveAlbumImage()
@@ -80,7 +91,7 @@ class DrawFragment : Fragment(R.layout.fragment_draw) {
         }
         eraseBtn.setOnClickListener {
             setPaintTypeIcon(
-                paintType = PaintType.Brush,
+                paintType = PaintType.Eraser,
                 eraseColor = R.color.poor_white,
                 brushColor = R.color.poor_gray
             )
@@ -113,21 +124,28 @@ class DrawFragment : Fragment(R.layout.fragment_draw) {
                 hideColorPickerDialog()
                 getColorFromPicker(viewModel.colorPickerType, colorPickerView.color)
             }
-            backgroundBlurCard.setOnClickListener {
+            colorPickerBlur.setOnClickListener {
                 hideColorPickerDialog()
             }
             dialogCardView.isClickable = true
         }
     }
 
-    private fun FragmentDrawBinding.showColorPickerDialog() {
-        backgroundBlurCard.showWithFadeAnimation()
-        colorPickDialog.dialogCardView.translateDialogByXCenter()
-    }
-
-    private fun FragmentDrawBinding.hideColorPickerDialog() {
-        backgroundBlurCard.hideWithFadeAnimation()
-        colorPickDialog.dialogCardView.translateDialogByXOverBorder()
+    private fun FragmentDrawBinding.setSaveEditsClickListeners() {
+        saveEditsDialog.apply {
+            discardEditsBtn.setOnClickListener {
+                hideSaveEditsDialog {
+                    findNavController().popBackStack()
+                }
+            }
+            saveEditsBtn.setOnClickListener {
+                hideSaveEditsDialog()
+            }
+            saveEditsBlur.setOnClickListener {
+                hideSaveEditsDialog()
+            }
+            saveDialogCard.isClickable = true
+        }
     }
 
     private fun FragmentDrawBinding.setColors() {
@@ -157,7 +175,7 @@ class DrawFragment : Fragment(R.layout.fragment_draw) {
 
     private fun FragmentDrawBinding.setEraseColor(color: Int) {
         setPaintTypeIcon(
-            paintType = PaintType.Brush,
+            paintType = PaintType.Eraser,
             eraseColor = R.color.poor_gray,
             brushColor = R.color.poor_white
         )
@@ -183,10 +201,12 @@ class DrawFragment : Fragment(R.layout.fragment_draw) {
     }
 
     private fun saveAlbumImage() {
-//        deletePictureFile(viewModel.currentPicture?.picturePath.orEmpty())
         binding.paintView.drawToBitmap().saveAlbumImage {
-            viewModel.addCurrentPicture(it)
-            arguments?.putParcelable(PICTURE, viewModel.currentPicture)
+            if (viewModel.isNewPicture) {
+                viewModel.currentPicture = PictureEntity(picturePath = it)
+            } else {
+                viewModel.currentPicture?.picturePath = it
+            }
             navigateDownloadFragment()
         }
     }
@@ -194,13 +214,33 @@ class DrawFragment : Fragment(R.layout.fragment_draw) {
     private fun navigateDownloadFragment() {
         findNavController().navigate(
             R.id.draw_to_download,
-            bundleOf(PICTURE to viewModel.currentPicture)
+            bundleOf(
+                PICTURE to viewModel.currentPicture,
+                IS_NEW_PICTURE to viewModel.isNewPicture
+            )
         )
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-//        binding.paintView.resetPaint()
+    private fun FragmentDrawBinding.showColorPickerDialog() {
+        colorPickDialog.colorPickerBlur.showWithFadeAnimation(0.8f)
+        colorPickDialog.dialogCardView.translateDialogByXCenter()
+    }
+
+    private fun FragmentDrawBinding.hideColorPickerDialog() {
+        colorPickDialog.colorPickerBlur.hideWithFadeAnimation()
+        colorPickDialog.dialogCardView.translateDialogByXOverBorder()
+    }
+
+    private fun FragmentDrawBinding.showSaveEditsDialog() {
+        saveEditsDialog.saveEditsBlur.showWithFadeAnimation(0.8f)
+        saveEditsDialog.saveDialogCard.showWithFadeAnimation()
+    }
+
+    private fun FragmentDrawBinding.hideSaveEditsDialog(endAction: (() -> Unit)? = null) {
+        saveEditsDialog.saveEditsBlur.hideWithFadeAnimation()
+        saveEditsDialog.saveDialogCard.hideWithFadeAnimation {
+            endAction?.invoke()
+        }
     }
 
 }

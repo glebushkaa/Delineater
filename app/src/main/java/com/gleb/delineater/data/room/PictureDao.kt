@@ -16,7 +16,7 @@ interface PictureDao {
     suspend fun getAllPictures(): List<PictureEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun addPicture(pictureEntity: PictureEntity)
+    suspend fun addPicture(pictureEntity: PictureEntity) : Long
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
     suspend fun updatePicture(pictureEntity: PictureEntity)

@@ -1,12 +1,12 @@
-package com.gleb.delineater.data.repositories
+package com.gleb.delineater.domain
 
 import com.gleb.delineater.data.entities.PictureEntity
 
-interface PictureRepositoryInterface {
+interface PictureRepository {
 
     suspend fun getAllPictures(): List<PictureEntity>
 
-    suspend fun addNewPicture(picture: PictureEntity)
+    suspend fun addNewPicture(picture: PictureEntity): Long
 
     suspend fun updatePicture(picture: PictureEntity)
 

@@ -22,8 +22,8 @@ class PaintView @JvmOverloads constructor(
 
     private var paint = Paint()
     private var path = Path()
-    private var paintList = arrayListOf<PaintEntity>()
     private var deletedItemsList = arrayListOf<PaintEntity>()
+    private var paintList = arrayListOf<PaintEntity>()
 
     var brushWidth = DEFAULT_BRUSH_SIZE
     var brushColor = Color.BLACK
@@ -96,6 +96,8 @@ class PaintView @JvmOverloads constructor(
         }
         invalidate()
     }
+
+    fun checkEdits() = paintList.isEmpty()
 
     private fun onDownAction(x: Float, y: Float) {
         path = Path()

@@ -4,8 +4,8 @@ import android.view.View
 import com.bumptech.glide.Glide
 import com.gleb.delineater.data.entities.PictureEntity
 import com.gleb.delineater.databinding.ItemExistPictureBinding
-import com.gleb.delineater.ui.extensions.hideWithFadeAnimation
-import com.gleb.delineater.ui.extensions.showWithFadeAnimation
+import com.gleb.delineater.ui.extensions.hideFadeAnim
+import com.gleb.delineater.ui.extensions.defaultFadeAnim
 import com.gleb.delineater.ui.listeners.ExistPictureListener
 import com.gleb.delineater.ui.listeners.getGlideProgressBarListener
 import com.gleb.delineater.ui.recycler.BaseViewHolder
@@ -25,14 +25,14 @@ class ExistPictureViewHolder(private val view: View) :
                 .into(imageContainer)
 
             deleteImageBtn.setOnLongClickListener {
-                deleteImageBtn.hideWithFadeAnimation()
+                deleteImageBtn.hideFadeAnim()
                 true
             }
             deleteImageBtn.setOnClickListener {
                 listener.deletePicture(item)
             }
             root.setOnLongClickListener {
-                deleteImageBtn.showWithFadeAnimation(VISIBLE_DELETE_ALPHA)
+                deleteImageBtn.defaultFadeAnim(VISIBLE_DELETE_ALPHA)
                 true
             }
             root.setOnClickListener {

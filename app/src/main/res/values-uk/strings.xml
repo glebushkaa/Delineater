@@ -11,4 +11,7 @@
     <string name="save">Зберегти</string>
     <string name="download_head">Це ваш малюнок!</string>
     <string name="share">Поділитися</string>
+    <string name="discard">Скинути</string>
+    <string name="content_changed">Малюнок змінено</string>
+    <string name="do_you_want_to_save_your_edits">Ви хочете зберегти свої зміни?</string>
 </resources>

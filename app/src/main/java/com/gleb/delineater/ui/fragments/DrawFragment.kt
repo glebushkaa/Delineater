@@ -3,8 +3,10 @@ package com.gleb.delineater.ui.fragments
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
+import androidx.activity.OnBackPressedCallback
 import androidx.core.os.bundleOf
 import androidx.core.view.drawToBitmap
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.fragment.findNavController
@@ -37,9 +39,10 @@ class DrawFragment : Fragment(R.layout.fragment_draw) {
         setSavedPictureResultListener()
         setColorPickView()
         binding.initListeners()
-        binding.setColors()
         binding.setColorDialogClickListeners()
         binding.setSaveEditsClickListeners()
+        binding.setColors()
+        binding.backPressed()
         setPaintBackgroundPicture()
     }
 
@@ -70,13 +73,22 @@ class DrawFragment : Fragment(R.layout.fragment_draw) {
     private fun FragmentDrawBinding.initListeners() {
         backBtn.setOnClickListener {
             if (paintView.checkEdits()) {
-                findNavController().popBackStack()
-            } else {
                 showSaveEditsDialog()
+            } else {
+                findNavController().popBackStack()
             }
         }
         downloadBtn.setOnClickListener {
-            saveAlbumImage()
+            saveAlbumImage {
+                viewModel.setNewPicturePath(it)
+                findNavController().navigate(
+                    R.id.draw_to_download,
+                    bundleOf(
+                        PICTURE to viewModel.currentPicture,
+                        IS_NEW_PICTURE to viewModel.isNewPicture
+                    )
+                )
+            }
         }
         paintSizeSlider.addOnChangeListener { _, size, _ ->
             paintSize.text = "${size.toInt()}dp"
@@ -139,7 +151,11 @@ class DrawFragment : Fragment(R.layout.fragment_draw) {
                 }
             }
             saveEditsBtn.setOnClickListener {
-                hideSaveEditsDialog()
+                saveAlbumImage {
+                    viewModel.setNewPicturePath(it)
+                    viewModel.addCurrentPicture()
+                }
+                binding.hideSaveEditsDialog { findNavController().popBackStack() }
             }
             saveEditsBlur.setOnClickListener {
                 hideSaveEditsDialog()
@@ -158,7 +174,7 @@ class DrawFragment : Fragment(R.layout.fragment_draw) {
         color: Int
     ) {
         when (colorPickerType) {
-            is ColorPickerType.BackgroundColorPicker -> setEraseColor(color)
+            is ColorPickerType.BackgroundColorPicker -> setEraserColor(color)
             is ColorPickerType.BrushColorPicker -> setBrushColor(color)
         }
     }
@@ -173,15 +189,13 @@ class DrawFragment : Fragment(R.layout.fragment_draw) {
         colorPickerBtn.setBackgroundColor(color)
     }
 
-    private fun FragmentDrawBinding.setEraseColor(color: Int) {
+    private fun FragmentDrawBinding.setEraserColor(color: Int) {
         setPaintTypeIcon(
             paintType = PaintType.Eraser,
             eraseColor = R.color.poor_gray,
             brushColor = R.color.poor_white
         )
-        paintView.eraserColor = color
-        paintView.setBackgroundColor(color)
-        paintView.updateEraseColor(color)
+        paintView.setEraser(color)
     }
 
     private fun FragmentDrawBinding.setPaintTypeIcon(
@@ -200,47 +214,48 @@ class DrawFragment : Fragment(R.layout.fragment_draw) {
         binding.colorPickDialog.colorPickerView.flagView = bubbleFlag
     }
 
-    private fun saveAlbumImage() {
-        binding.paintView.drawToBitmap().saveAlbumImage {
-            if (viewModel.isNewPicture) {
-                viewModel.currentPicture = PictureEntity(picturePath = it)
-            } else {
-                viewModel.currentPicture?.picturePath = it
-            }
-            navigateDownloadFragment()
-        }
-    }
-
-    private fun navigateDownloadFragment() {
-        findNavController().navigate(
-            R.id.draw_to_download,
-            bundleOf(
-                PICTURE to viewModel.currentPicture,
-                IS_NEW_PICTURE to viewModel.isNewPicture
-            )
-        )
+    private fun saveAlbumImage(endAction: (String) -> Unit) {
+        binding.paintView.drawToBitmap().saveAlbumImage(endAction)
     }
 
     private fun FragmentDrawBinding.showColorPickerDialog() {
-        colorPickDialog.colorPickerBlur.showWithFadeAnimation(0.8f)
+        colorPickDialog.colorPickerBlur.blurFadeAnim()
         colorPickDialog.dialogCardView.translateDialogByXCenter()
     }
 
     private fun FragmentDrawBinding.hideColorPickerDialog() {
-        colorPickDialog.colorPickerBlur.hideWithFadeAnimation()
+        colorPickDialog.colorPickerBlur.hideFadeAnim()
         colorPickDialog.dialogCardView.translateDialogByXOverBorder()
     }
 
     private fun FragmentDrawBinding.showSaveEditsDialog() {
-        saveEditsDialog.saveEditsBlur.showWithFadeAnimation(0.8f)
-        saveEditsDialog.saveDialogCard.showWithFadeAnimation()
+        saveEditsDialog.saveEditsBlur.blurFadeAnim()
+        saveEditsDialog.saveDialogCard.defaultFadeAnim()
     }
 
     private fun FragmentDrawBinding.hideSaveEditsDialog(endAction: (() -> Unit)? = null) {
-        saveEditsDialog.saveEditsBlur.hideWithFadeAnimation()
-        saveEditsDialog.saveDialogCard.hideWithFadeAnimation {
+        saveEditsDialog.saveEditsBlur.hideFadeAnim()
+        saveEditsDialog.saveDialogCard.hideFadeAnim {
             endAction?.invoke()
         }
+    }
+
+    private fun FragmentDrawBinding.backPressed() {
+        val backPressedCallback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (saveEditsDialog.saveDialogCard.isVisible) {
+                    hideSaveEditsDialog()
+                } else if (colorPickDialog.dialogCardView.isVisible) {
+                    hideColorPickerDialog()
+                } else {
+                    findNavController().popBackStack()
+                }
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            backPressedCallback
+        )
     }
 
 }

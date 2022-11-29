@@ -5,33 +5,38 @@ import androidx.lifecycle.viewModelScope
 import com.gleb.delineater.ui.types.ColorPickerType
 import com.gleb.delineater.data.entities.PictureEntity
 import com.gleb.delineater.data.repositories.PictureRepositoryImpl
+import com.gleb.delineater.domain.usecases.NewPictureUseCase
+import com.gleb.delineater.domain.usecases.UpdatePictureUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class DrawViewModel(private val pictureRepository: PictureRepositoryImpl) : ViewModel() {
+class DrawViewModel(
+    private val updatePictureUseCase: UpdatePictureUseCase,
+    private val newPictureUseCase: NewPictureUseCase
+) : ViewModel() {
 
     var currentPicture: PictureEntity? = null
     var isNewPicture = true
     var colorPickerType: ColorPickerType = ColorPickerType.BrushColorPicker
 
-    fun addCurrentPicture(picturePath: String) {
-        currentPicture?.let {
-            updatePicture(PictureEntity(number = it.number, picturePath = picturePath))
-        } ?: run {
-            addNewPicture(PictureEntity(picturePath = picturePath))
-        }
-        currentPicture = PictureEntity(picturePath = picturePath)
-    }
-
-    private fun addNewPicture(picture: PictureEntity) {
+    fun addCurrentPicture() {
         viewModelScope.launch(Dispatchers.IO) {
-            pictureRepository.addNewPicture(picture)
+            if (isNewPicture) {
+                currentPicture?.let {
+                    val number = newPictureUseCase.addNewPicture(it)
+                    currentPicture = PictureEntity(number = number, picturePath = it.picturePath)
+                }
+            } else {
+                currentPicture?.let { updatePictureUseCase.updatePicture(it) }
+            }
         }
     }
 
-    private fun updatePicture(picture: PictureEntity) {
-        viewModelScope.launch(Dispatchers.IO) {
-            pictureRepository.updatePicture(picture)
+    fun setNewPicturePath(picturePath: String) {
+        if (isNewPicture) {
+            currentPicture = PictureEntity(picturePath = picturePath)
+        } else {
+            currentPicture?.picturePath = picturePath
         }
     }
 

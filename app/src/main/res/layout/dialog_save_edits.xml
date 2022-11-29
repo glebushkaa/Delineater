@@ -11,7 +11,7 @@
         android:layout_height="match_parent"
         android:alpha="0"
         android:backgroundTint="@color/black"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/saveDialogCard"
@@ -32,7 +32,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="32dp"
             android:layout_marginEnd="20dp"
-            android:text="Content changed"
+            android:text="@string/content_changed"
             android:textColor="@color/poor_white"
             android:textSize="24sp" />
 
@@ -44,7 +44,7 @@
             android:layout_marginTop="76dp"
             android:layout_marginEnd="20dp"
             android:alpha="0.8"
-            android:text="Do you want to save your edits?"
+            android:text="@string/do_you_want_to_save_your_edits"
             android:textColor="@color/poor_white"
             android:textSize="14sp" />
 
@@ -57,32 +57,32 @@
             android:layout_marginBottom="20dp">
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/saveEditsBtn"
+                android:id="@+id/discardEditsBtn"
                 style="@style/NoInsetsButtonStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="4dp"
                 android:layout_weight="1"
                 android:letterSpacing="0"
-                android:text="Save"
+                android:text="@string/discard"
                 android:textAllCaps="false"
-                android:textColor="@color/black"
                 android:textSize="16sp"
-                app:backgroundTint="@color/poor_white"
+                app:backgroundTint="@color/cancel_red"
                 app:cornerRadius="30dp" />
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/discardEditsBtn"
+                android:id="@+id/saveEditsBtn"
                 style="@style/NoInsetsButtonStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
                 android:layout_weight="1"
                 android:letterSpacing="0"
-                android:text="Discard"
+                android:text="@string/save"
                 android:textAllCaps="false"
+                android:textColor="@color/black"
                 android:textSize="16sp"
-                app:backgroundTint="@color/cancel_red"
+                app:backgroundTint="@color/poor_white"
                 app:cornerRadius="30dp" />
 
         </LinearLayout>

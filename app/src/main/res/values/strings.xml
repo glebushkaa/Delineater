@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Delineater</string>
-    <string name="allow_read_files">Please allow reading files, we need it for saving your paintings!</string>
+    <string name="allow_read_files">Picture will not be saved without this permission</string>
     <string name="confirm">Confirm</string>
     <string name="cancel">Cancel</string>
     <string name="my_paintings">My paintings</string>
@@ -10,4 +10,7 @@
     <string name="select_color">Pick color</string>
     <string name="share_via">Share via</string>
     <string name="picture_saved">Picture saved</string>
+    <string name="discard">Discard</string>
+    <string name="content_changed">Content changed</string>
+    <string name="do_you_want_to_save_your_edits">Do you want to save your edits?</string>
 </resources>

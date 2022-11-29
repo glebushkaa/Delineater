@@ -9,10 +9,16 @@ import org.koin.dsl.module
 
 val viewModelsModule = module {
     viewModel {
-        MenuViewModel(pictureRepository = get())
+        MenuViewModel(
+            allPicturesUseCase = get(),
+            deletePictureUseCase = get()
+        )
     }
     viewModel {
-        DrawViewModel(pictureRepository = get())
+        DrawViewModel(
+            updatePictureUseCase = get(),
+            newPictureUseCase = get()
+        )
     }
     viewModel {
         DownloadViewModel(

@@ -13,7 +13,7 @@ private const val SAVE_BUTTON_DURATION = 500L
 
 //Size
 private const val DEFAULT_SCALE_SIZE = 1f
-private const val REDUCE_SAVE_BUTTON_VALUE = 0.2f
+private const val REDUCE_SAVE_BUTTON_VALUE = 0.6f
 
 //Translation position
 private const val OUT_RIGHT_BORDER_TRANSLATION_X = -1000f
@@ -28,23 +28,23 @@ private const val ACTIVE_COLOR_BACKGROUND_BLUR_ALPHA = 0.6f
 private const val DEFAULT_START_DELAY = 0L
 
 fun Button.animSaving(progressBar: ProgressBar, endAction: () -> Unit) {
-    this.downscaleSaveBtnX {
+    this.hideSaveBtn {
         progressBar.animSaveProgress()
-        this.upscaleSaveBtnX(endAction)
+        this.showSaveBtn(endAction)
     }
 }
 
-fun Button.downscaleSaveBtnX(endAction: () -> Unit) {
-    this.animate().scaleX(REDUCE_SAVE_BUTTON_VALUE).alpha(DEFAULT_REDUCE_ALPHA).also {
-        it.startDelay = DEFAULT_START_DELAY
-        it.duration = SAVE_BUTTON_DURATION
-        it.withEndAction(endAction)
-        it.start()
-    }
+fun Button.hideSaveBtn(endAction: () -> Unit) {
+    this.animate().alpha(DEFAULT_REDUCE_ALPHA).also {
+            it.startDelay = DEFAULT_START_DELAY
+            it.duration = SAVE_BUTTON_DURATION
+            it.withEndAction(endAction)
+            it.start()
+        }
 }
 
-fun Button.upscaleSaveBtnX(endAction: () -> Unit) {
-    this.animate().scaleX(DEFAULT_SCALE_SIZE).alpha(DEFAULT_ALPHA).also {
+fun Button.showSaveBtn(endAction: () -> Unit) {
+    this.animate().alpha(DEFAULT_ALPHA).also {
         it.startDelay = CHANGE_BTN_SIZE_DURATION
         it.withEndAction(endAction)
         it.start()
@@ -61,14 +61,14 @@ fun ProgressBar.animSaveProgress() {
     }
 }
 
-fun Button.showWithFadeAnimation(alpha: Float) {
+fun Button.defaultFadeAnim(alpha: Float) {
     this.visibility = View.VISIBLE
     this.animate().alpha(alpha).also {
         it.start()
     }
 }
 
-fun Button.hideWithFadeAnimation() {
+fun Button.hideFadeAnim() {
     this.animate().alpha(DEFAULT_REDUCE_ALPHA).also {
         it.withEndAction {
             this.visibility = View.GONE
@@ -96,12 +96,17 @@ fun MaterialCardView.translateDialogByXOverBorder() {
     }
 }
 
-fun View.showWithFadeAnimation(alpha: Float = DEFAULT_ALPHA) {
+fun View.blurFadeAnim() {
     this.visibility = View.VISIBLE
-    this.animate().alpha(alpha).start()
+    this.animate().alpha(ACTIVE_COLOR_BACKGROUND_BLUR_ALPHA).start()
 }
 
-fun View.hideWithFadeAnimation(endAction: (() -> Unit)? = null) {
+fun View.defaultFadeAnim() {
+    this.visibility = View.VISIBLE
+    this.animate().alpha(DEFAULT_ALPHA).start()
+}
+
+fun View.hideFadeAnim(endAction: (() -> Unit)? = null) {
     this.animate().alpha(DEFAULT_REDUCE_ALPHA).also {
         it.withEndAction {
             this.visibility = View.GONE

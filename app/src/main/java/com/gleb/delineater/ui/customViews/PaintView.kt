@@ -24,6 +24,7 @@ class PaintView @JvmOverloads constructor(
     private var path = Path()
     private var deletedItemsList = arrayListOf<PaintEntity>()
     private var paintList = arrayListOf<PaintEntity>()
+    private var isFilled = false
 
     var brushWidth = DEFAULT_BRUSH_SIZE
     var brushColor = Color.BLACK
@@ -61,12 +62,6 @@ class PaintView @JvmOverloads constructor(
         }
     }
 
-    fun resetPaint() {
-        brushColor = Color.BLACK
-        brushWidth = DEFAULT_BRUSH_SIZE
-        paintList.clear()
-    }
-
     fun resetSurface() {
         paintList.clear()
         deletedItemsList.clear()
@@ -88,16 +83,27 @@ class PaintView @JvmOverloads constructor(
         }
     }
 
-    fun updateEraseColor(color: Int) {
+    fun checkEdits() = paintList.isNotEmpty() || isFilled
+
+    fun setEraser(color: Int) {
+        eraserColor = color
+        fill(color)
+        updateEraseColor(color)
+    }
+
+    private fun fill(color: Int) {
+        setBackgroundColor(color)
+        isFilled = true
+    }
+
+    private fun updateEraseColor(color: Int) {
         paintList.forEach {
             if (it.paintType == PaintType.Eraser) {
                 it.paint.color = color
             }
         }
-        invalidate()
+        postInvalidate()
     }
-
-    fun checkEdits() = paintList.isEmpty()
 
     private fun onDownAction(x: Float, y: Float) {
         path = Path()

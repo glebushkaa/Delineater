@@ -135,6 +135,6 @@
         layout="@layout/dialog_color_pick" />
 
     <include android:id="@+id/save_edits_dialog"
-        layout="@layout/dialog_save_project"/>
+        layout="@layout/dialog_save_edits"/>
 
 </FrameLayout>

@@ -3,7 +3,7 @@
 
     <!--Global-->
     <dimen name="button_text_size">18sp</dimen>
-    <dimen name="head_text_size">20sp</dimen>
+    <dimen name="head_text_size">24sp</dimen>
     <dimen name="top_icon_size">24dp</dimen>
     <dimen name="bar_size">48dp</dimen>
     <!--Global-->
@@ -13,13 +13,13 @@
     <!--Splash screen-->
 
     <!--Download screen-->
-    <dimen name="download_button_height">80dp</dimen>
+    <dimen name="download_button_height">48dp</dimen>
     <dimen name="simple_corner_button_size">10dp</dimen>
     <dimen name="side_download_button_margin">80dp</dimen>
     <dimen name="round_progress_bar_size">48dp</dimen>
-    <dimen name="download_image_height">220dp</dimen>
+    <dimen name="download_image_height">240dp</dimen>
     <dimen name="download_image_width">160dp</dimen>
-    <dimen name="download_head_top_margin">100dp</dimen>
+    <dimen name="download_head_top_margin">80dp</dimen>
     <!--Download screen-->
 
     <!--Draw screen-->
@@ -39,7 +39,12 @@
     <!--Save edits dialog-->
 
     <!--Color picker dialog-->
-    <dimen name="color_pick_dialog_margin">120dp</dimen>
+    <dimen name="color_pick_dialog_margin">80dp</dimen>
+    <dimen name="color_pick_place_size">280dp</dimen>
+    <dimen name="color_pick_place_margin">20dp</dimen>
+    <dimen name="color_pick_button_height">32dp</dimen>
+    <dimen name="color_pick_button_side_margin_size">24dp</dimen>
+    <dimen name="color_pick_button_text_size">14sp</dimen>
     <!--Color picker dialog-->
 
 </resources>

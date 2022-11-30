@@ -53,7 +53,6 @@ class MenuFragment : Fragment(R.layout.fragment_menu) {
         }
 
         override fun openPicture(picture: PictureEntity) {
-            Log.d("Start picture", picture.picturePath)
             findNavController().navigate(
                 R.id.menu_to_draw,
                 bundleOf(PICTURE to picture)

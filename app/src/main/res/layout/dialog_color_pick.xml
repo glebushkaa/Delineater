@@ -19,8 +19,8 @@
         android:layout_marginTop="@dimen/color_pick_dialog_margin"
         android:layout_marginEnd="@dimen/color_pick_button_side_margin_size"
         android:layout_marginBottom="@dimen/color_pick_dialog_margin"
-        android:alpha="1"
-        android:visibility="visible"
+        android:alpha="0"
+        android:visibility="gone"
         app:cardBackgroundColor="@color/black_background"
         app:cardCornerRadius="30dp"
         app:rippleColor="@android:color/transparent">
@@ -38,8 +38,8 @@
             android:id="@+id/colorPickerView"
             android:layout_width="@dimen/color_pick_place_size"
             android:layout_height="@dimen/color_pick_place_size"
-            android:layout_gravity="center"
-            android:layout_marginBottom="@dimen/color_pick_place_top_margin"/>
+            android:layout_marginBottom="@dimen/color_pick_place_margin"
+            android:layout_gravity="center" />
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"

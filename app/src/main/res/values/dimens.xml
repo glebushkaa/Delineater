@@ -18,7 +18,7 @@
     <dimen name="round_progress_bar_size">54dp</dimen>
     <dimen name="download_image_height">280dp</dimen>
     <dimen name="download_image_width">200dp</dimen>
-    <dimen name="download_head_top_margin">100dp</dimen>
+    <dimen name="download_head_top_margin">80dp</dimen>
     <!--Download screen-->
 
     <!--Draw screen-->
@@ -33,6 +33,7 @@
     <dimen name="save_edits_head_top_margin">32dp</dimen>
     <dimen name="save_edits_body_top_margin">76dp</dimen>
     <dimen name="save_edits_button_height">40dp</dimen>
+    <dimen name="save_edits_body_side_margin">20dp</dimen>
     <dimen name="save_edits_button_side_margin_size">40dp</dimen>
     <dimen name="save_edits_button_text_size">16sp</dimen>
     <!--Save edits dialog-->
@@ -40,7 +41,7 @@
     <!--Color picker dialog-->
     <dimen name="color_pick_dialog_margin">120dp</dimen>
     <dimen name="color_pick_place_size">280dp</dimen>
-    <dimen name="color_pick_place_top_margin">30dp</dimen>
+    <dimen name="color_pick_place_margin">30dp</dimen>
     <dimen name="color_pick_button_height">40dp</dimen>
     <dimen name="color_pick_button_side_margin_size">16dp</dimen>
     <dimen name="color_pick_button_text_size">16sp</dimen>

@@ -1,9 +1,11 @@
 package com.gleb.delineater.ui.fragments
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.os.bundleOf
 import androidx.core.view.drawToBitmap
 import androidx.core.view.isVisible
@@ -33,6 +35,23 @@ class DrawFragment : Fragment(R.layout.fragment_draw) {
     private val binding: FragmentDrawBinding by viewBinding()
     private val viewModel: DrawViewModel by viewModel()
 
+
+    // Should be done
+    private val permissionsArray = arrayOf(
+        Manifest.permission.READ_EXTERNAL_STORAGE,
+        Manifest.permission.WRITE_EXTERNAL_STORAGE
+    )
+
+    private var storagePermissionLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.RequestMultiplePermissions()
+        ) { permissions ->
+            if (permissions.all { !it.value }) {
+                view?.showSnackBar(text = getString(R.string.allow_read_files))
+            }
+        }
+    // Should be done
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         getArgs()
@@ -44,7 +63,8 @@ class DrawFragment : Fragment(R.layout.fragment_draw) {
         binding.setColors()
         binding.backPressed()
         setPaintBackgroundPicture()
-    }
+        storagePermissionLauncher.launch(permissionsArray)
+    }       
 
     private fun setPaintBackgroundPicture() {
         viewModel.currentPicture?.let {

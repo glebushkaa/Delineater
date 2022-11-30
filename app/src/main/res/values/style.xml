@@ -7,15 +7,15 @@
     </style>
 
     <style name="BottomDrawButton" parent="Widget.MaterialComponents.Button.UnelevatedButton">
-        <item name="android:layout_width">60dp</item>
-        <item name="android:layout_height">60dp</item>
+        <item name="android:layout_width">@dimen/bar_size</item>
+        <item name="android:layout_height">@dimen/bar_size</item>
         <item name="backgroundTint">@color/black_background</item>
         <item name="rippleColor">@color/black_background</item>
         <item name="elevation">0dp</item>
         <item name="iconTint">@color/poor_white</item>
         <item name="iconGravity">textStart</item>
         <item name="iconPadding">0dp</item>
-        <item name="iconSize">32dp</item>
+        <item name="iconSize">@dimen/top_icon_size</item>
     </style>
 
     <style name="NoInsetsButtonStyle">
@@ -51,8 +51,9 @@
 
     <style name="ColorPickDialogButtonStyle" parent="NoInsetsButtonStyle">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">40dp</item>
+        <item name="android:layout_height">@dimen/color_pick_button_height</item>
         <item name="textAllCaps">false</item>
+        <item name="android:textSize">@dimen/color_pick_button_text_size</item>
         <item name="cornerRadius">10dp</item>
         <item name="android:layout_weight">1</item>
         <item name="android:letterSpacing">0</item>

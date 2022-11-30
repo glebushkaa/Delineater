@@ -1,32 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black_background"
+    app:cardBackgroundColor="@color/black_background"
+    app:cardElevation="0dp"
+    app:cardCornerRadius="0dp"
     tools:context=".ui.fragments.DrawFragment">
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/backBtn"
-        style="@style/BottomDrawButton"
-        app:icon="@drawable/ic_back"
-        app:iconSize="24dp" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/downloadBtn"
-        style="@style/BottomDrawButton"
-        android:layout_gravity="end"
-        app:icon="@drawable/ic_download"
-        app:iconSize="24dp" />
 
     <com.gleb.delineater.ui.customViews.PaintView
         android:id="@+id/paintView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="60dp"
-        android:layout_marginBottom="60dp"
         android:background="@color/white" />
+
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/bar_size"
+        app:cardBackgroundColor="@color/black_background"
+        app:cardCornerRadius="0dp"
+        app:cardElevation="0dp">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/backBtn"
+            style="@style/BottomDrawButton"
+            app:icon="@drawable/ic_back"
+            app:iconSize="@dimen/top_icon_size" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/downloadBtn"
+            style="@style/BottomDrawButton"
+            android:layout_gravity="end"
+            app:icon="@drawable/ic_download"
+            app:iconSize="@dimen/top_icon_size" />
+    </com.google.android.material.card.MaterialCardView>
 
     <ImageView
         android:id="@+id/imageView"
@@ -35,20 +45,20 @@
 
     <HorizontalScrollView
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="@dimen/bar_size"
         android:layout_gravity="bottom"
         android:background="@color/black_background">
 
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="60dp"
+            android:layout_height="@dimen/bar_size"
             android:layout_gravity="bottom|end">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/colorPickerBtn"
                 style="@style/ColorButtonStyle"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="@dimen/top_icon_size"
+                android:layout_height="@dimen/top_icon_size"
                 android:layout_gravity="center"
                 android:layout_marginStart="12dp"
                 app:backgroundTint="#880000"
@@ -57,11 +67,10 @@
 
             <com.google.android.material.slider.Slider
                 android:id="@+id/paintSizeSlider"
-                android:layout_width="120dp"
-                android:layout_height="60dp"
+                android:layout_width="@dimen/slider_width"
+                android:layout_height="@dimen/bar_size"
                 android:layout_gravity="center"
                 android:layout_marginStart="20dp"
-                android:layout_weight="1.6"
                 android:stepSize="1"
                 android:value="10"
                 android:valueFrom="1"
@@ -75,13 +84,14 @@
 
             <TextView
                 android:id="@+id/paintSize"
-                android:layout_width="70dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
                 android:gravity="end"
-                android:text="10dp"
+                android:paddingStart="20dp"
+                android:text="@string/start_brush_size"
                 android:textColor="@color/poor_white"
-                android:textSize="20sp" />
+                android:textSize="@dimen/brush_size_text_size" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/eraseBtn"
@@ -121,20 +131,12 @@
         </LinearLayout>
     </HorizontalScrollView>
 
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/backgroundBlurCard"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:alpha="0"
-        android:visibility="gone"
-        app:rippleColor="@android:color/transparent"
-        app:cardBackgroundColor="@color/black" />
-
     <include
-        android:id="@+id/colorPickDialog"
+        android:id="@+id/colorPickerDialog"
         layout="@layout/dialog_color_pick" />
 
-    <include android:id="@+id/save_edits_dialog"
-        layout="@layout/dialog_save_edits"/>
+    <include
+        android:id="@+id/saveEditsDialog"
+        layout="@layout/dialog_save_edits" />
 
-</FrameLayout>
+</com.google.android.material.card.MaterialCardView>

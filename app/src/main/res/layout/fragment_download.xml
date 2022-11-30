@@ -11,7 +11,7 @@
         android:id="@+id/backBtn"
         style="@style/BottomDrawButton"
         app:icon="@drawable/ic_back"
-        app:iconSize="30dp"
+        app:iconSize="@dimen/top_icon_size"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -20,7 +20,7 @@
         style="@style/BottomDrawButton"
         android:layout_gravity="end"
         app:icon="@drawable/ic_menu"
-        app:iconSize="32dp"
+        app:iconSize="@dimen/top_icon_size"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -28,7 +28,7 @@
         android:id="@+id/headText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="@dimen/download_head_top_margin"
         android:fontFamily="@font/rubik_bold"
         android:gravity="center"
         android:text="@string/download_head"

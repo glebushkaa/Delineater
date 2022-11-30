@@ -128,7 +128,7 @@ class DrawFragment : Fragment(R.layout.fragment_draw) {
     }
 
     private fun FragmentDrawBinding.setColorDialogClickListeners() {
-        colorPickDialog.apply {
+        colorPickerDialog.apply {
             cancelBtn.setOnClickListener {
                 hideColorPickerDialog()
             }
@@ -211,7 +211,7 @@ class DrawFragment : Fragment(R.layout.fragment_draw) {
     private fun setColorPickView() {
         val bubbleFlag = BubbleFlag(requireContext())
         bubbleFlag.flagMode = FlagMode.FADE
-        binding.colorPickDialog.colorPickerView.flagView = bubbleFlag
+        binding.colorPickerDialog.colorPickerView.flagView = bubbleFlag
     }
 
     private fun saveAlbumImage(endAction: (String) -> Unit) {
@@ -219,13 +219,13 @@ class DrawFragment : Fragment(R.layout.fragment_draw) {
     }
 
     private fun FragmentDrawBinding.showColorPickerDialog() {
-        colorPickDialog.colorPickerBlur.blurFadeAnim()
-        colorPickDialog.dialogCardView.translateDialogByXCenter()
+        colorPickerDialog.colorPickerBlur.blurFadeAnim()
+        colorPickerDialog.dialogCardView.translateDialogByXCenter()
     }
 
     private fun FragmentDrawBinding.hideColorPickerDialog() {
-        colorPickDialog.colorPickerBlur.hideFadeAnim()
-        colorPickDialog.dialogCardView.translateDialogByXOverBorder()
+        colorPickerDialog.colorPickerBlur.hideFadeAnim()
+        colorPickerDialog.dialogCardView.translateDialogByXOverBorder()
     }
 
     private fun FragmentDrawBinding.showSaveEditsDialog() {
@@ -245,7 +245,7 @@ class DrawFragment : Fragment(R.layout.fragment_draw) {
             override fun handleOnBackPressed() {
                 if (saveEditsDialog.saveDialogCard.isVisible) {
                     hideSaveEditsDialog()
-                } else if (colorPickDialog.dialogCardView.isVisible) {
+                } else if (colorPickerDialog.dialogCardView.isVisible) {
                     hideColorPickerDialog()
                 } else {
                     findNavController().popBackStack()

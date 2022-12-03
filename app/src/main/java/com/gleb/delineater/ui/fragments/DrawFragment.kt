@@ -63,7 +63,7 @@ class DrawFragment : Fragment(R.layout.fragment_draw) {
         binding.setColors()
         binding.backPressed()
         setPaintBackgroundPicture()
-        storagePermissionLauncher.launch(permissionsArray)
+       // storagePermissionLauncher.launch(permissionsArray)
     }       
 
     private fun setPaintBackgroundPicture() {

@@ -31,10 +31,11 @@
     <dimen name="save_edits_dialog_height">180dp</dimen>
     <dimen name="save_edits_head_text_size">24sp</dimen>
     <dimen name="save_edits_head_top_margin">32dp</dimen>
-    <dimen name="save_edits_body_top_margin">76dp</dimen>
-    <dimen name="save_edits_button_height">40dp</dimen>
+    <dimen name="save_edits_body_top_margin">68dp</dimen>
+    <dimen name="save_edits_button_height">36dp</dimen>
     <dimen name="save_edits_button_side_margin_size">20dp</dimen>
-    <dimen name="save_edits_button_text_size">16sp</dimen>
+    <dimen name="save_edits_button_text_size">14sp</dimen>
+    <dimen name="save_edits_body_text_size">16sp</dimen>
     <!--Save edits dialog-->
 
     <!--Color picker dialog-->
@@ -43,7 +44,7 @@
     <dimen name="color_pick_place_margin">20dp</dimen>
     <dimen name="color_pick_button_height">40dp</dimen>
     <dimen name="color_pick_button_side_margin_size">24dp</dimen>
-    <dimen name="color_pick_button_text_size">18sp</dimen>
+    <dimen name="color_pick_button_text_size">14sp</dimen>
     <!--Color picker dialog-->
 
 </resources>

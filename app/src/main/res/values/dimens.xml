@@ -9,10 +9,15 @@
 
     <!--Splash screen-->
     <dimen name="splash_text_size">52sp</dimen>
+    <dimen name="splash_image_size">180dp</dimen>
+    <dimen name="splash_image_margin">100dp</dimen>
     <!--Splash screen-->
 
     <!--Menu screen-->
     <dimen name="head_text_margin">60dp</dimen>
+    <dimen name="menu_item_width">120dp</dimen>
+    <dimen name="menu_item_height">180dp</dimen>
+    <dimen name="menu_item_margin">20dp</dimen>
     <!--Menu screen-->
 
     <!--Download screen-->
@@ -33,13 +38,14 @@
 
     <!--Save edits dialog-->
     <dimen name="save_edits_dialog_height">180dp</dimen>
-    <dimen name="save_edits_head_text_size">24sp</dimen>
+    <dimen name="save_edits_head_text_size">20sp</dimen>
     <dimen name="save_edits_head_top_margin">32dp</dimen>
-    <dimen name="save_edits_body_top_margin">76dp</dimen>
+    <dimen name="save_edits_body_top_margin">68dp</dimen>
     <dimen name="save_edits_button_height">40dp</dimen>
     <dimen name="save_edits_body_side_margin">20dp</dimen>
     <dimen name="save_edits_button_side_margin_size">40dp</dimen>
-    <dimen name="save_edits_button_text_size">16sp</dimen>
+    <dimen name="save_edits_button_text_size">14sp</dimen>
+    <dimen name="save_edits_body_text_size">14sp</dimen>
     <!--Save edits dialog-->
 
     <!--Color picker dialog-->
@@ -48,13 +54,7 @@
     <dimen name="color_pick_place_margin">30dp</dimen>
     <dimen name="color_pick_button_height">40dp</dimen>
     <dimen name="color_pick_button_side_margin_size">16dp</dimen>
-    <dimen name="color_pick_button_text_size">16sp</dimen>
+    <dimen name="color_pick_button_text_size">14sp</dimen>
     <!--Color picker dialog-->
-
-    <!--Item exist picture-->
-    <dimen name="exist_picture_width">120dp</dimen>
-    <dimen name="exist_picture_height">180dp</dimen>
-    <dimen name="exist_picture_margin">20dp</dimen>
-    <!--Item exist picture-->
 
 </resources>

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="@dimen/exist_picture_width"
-    android:layout_height="@dimen/exist_picture_height"
+    android:layout_width="@dimen/menu_item_width"
+    android:layout_height="@dimen/menu_item_height"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_margin="@dimen/exist_picture_margin"
+    android:layout_margin="@dimen/menu_item_margin"
     app:cardBackgroundColor="@color/white_background"
     app:cardCornerRadius="10dp">
 

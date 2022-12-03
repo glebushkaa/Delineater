@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <!--Menu screen-->
     <dimen name="head_text_margin">48dp</dimen>
-    <dimen name="menu_item_width">100dp</dimen>
-    <dimen name="menu_item_margin">10dp</dimen>
-    <dimen name="menu_item_height">140dp</dimen>
+    <dimen name="menu_item_width">120dp</dimen>
+    <dimen name="menu_item_height">180dp</dimen>
+    <dimen name="menu_item_margin">20dp</dimen>
     <!--Menu screen-->
 
 </resources>

@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <!--Item exist picture-->
-    <dimen name="exist_picture_width">120dp</dimen>
-    <dimen name="exist_picture_height">180dp</dimen>
-    <dimen name="exist_picture_margin">16dp</dimen>
-    <!--Item exist picture-->
-
     <!--Menu screen-->
     <dimen name="head_text_margin">48dp</dimen>
+    <dimen name="menu_item_width">120dp</dimen>
+    <dimen name="menu_item_margin">12dp</dimen>
+    <dimen name="menu_item_height">180dp</dimen>
     <!--Menu screen-->
 
 </resources>

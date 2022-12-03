@@ -26,7 +26,8 @@ fun View.showSnackBar(
     @Duration duration: Int = Snackbar.LENGTH_SHORT,
     backgroundColor: Int? = null,
     textColor: Int? = null,
-    @GravityInt gravity: Int = Gravity.BOTTOM
+    @GravityInt gravity: Int = Gravity.BOTTOM,
+    action: Pair<String, View.OnClickListener>? = null
 ) {
     val snackBar = Snackbar.make(this, text, duration)
     backgroundColor?.let {
@@ -36,6 +37,9 @@ fun View.showSnackBar(
         snackBar.setTextColor(resources.getColor(textColor, null))
     }
     snackBar.setGravity(gravity)
+    action?.let {
+        snackBar.setAction(it.first, it.second)
+    }
     snackBar.show()
 }
 

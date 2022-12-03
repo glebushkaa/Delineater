@@ -1,11 +1,16 @@
 package com.gleb.delineater.ui.fragments
 
-import android.Manifest
+import android.Manifest.permission.READ_EXTERNAL_STORAGE
+import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.annotation.SuppressLint
+import android.content.Intent
+import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.core.os.bundleOf
 import androidx.core.view.drawToBitmap
 import androidx.core.view.isVisible
@@ -35,22 +40,38 @@ class DrawFragment : Fragment(R.layout.fragment_draw) {
     private val binding: FragmentDrawBinding by viewBinding()
     private val viewModel: DrawViewModel by viewModel()
 
-
-    // Should be done
-    private val permissionsArray = arrayOf(
-        Manifest.permission.READ_EXTERNAL_STORAGE,
-        Manifest.permission.WRITE_EXTERNAL_STORAGE
+    private val storagePermissionsArray = arrayOf(
+        READ_EXTERNAL_STORAGE,
+        WRITE_EXTERNAL_STORAGE
     )
 
-    private var storagePermissionLauncher =
-        registerForActivityResult(
-            ActivityResultContracts.RequestMultiplePermissions()
-        ) { permissions ->
-            if (permissions.all { !it.value }) {
-                view?.showSnackBar(text = getString(R.string.allow_read_files))
+    private var camera = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {}
+
+    private var saveEditsStoragePermission = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        if (permissions.all { !it.value }) {
+            binding.hideSaveEditsDialog {
+                showStoragePermissionMessage()
             }
+            return@registerForActivityResult
         }
-    // Should be done
+        saveAlbumImage {
+            viewModel.setNewPicturePath(it)
+            viewModel.addCurrentPicture()
+        }
+        binding.hideSaveEditsDialog { findNavController().popBackStack() }
+    }
+
+    private var downloadStoragePermission = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        if (permissions.all { !it.value }) {
+            showStoragePermissionMessage()
+            return@registerForActivityResult
+        }
+        downloadStoragePermissionAction()
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -63,8 +84,7 @@ class DrawFragment : Fragment(R.layout.fragment_draw) {
         binding.setColors()
         binding.backPressed()
         setPaintBackgroundPicture()
-       // storagePermissionLauncher.launch(permissionsArray)
-    }       
+    }
 
     private fun setPaintBackgroundPicture() {
         viewModel.currentPicture?.let {
@@ -99,16 +119,7 @@ class DrawFragment : Fragment(R.layout.fragment_draw) {
             }
         }
         downloadBtn.setOnClickListener {
-            saveAlbumImage {
-                viewModel.setNewPicturePath(it)
-                findNavController().navigate(
-                    R.id.draw_to_download,
-                    bundleOf(
-                        PICTURE to viewModel.currentPicture,
-                        IS_NEW_PICTURE to viewModel.isNewPicture
-                    )
-                )
-            }
+            downloadStoragePermission.launch(storagePermissionsArray)
         }
         paintSizeSlider.addOnChangeListener { _, size, _ ->
             paintSize.text = "${size.toInt()}dp"
@@ -171,11 +182,8 @@ class DrawFragment : Fragment(R.layout.fragment_draw) {
                 }
             }
             saveEditsBtn.setOnClickListener {
-                saveAlbumImage {
-                    viewModel.setNewPicturePath(it)
-                    viewModel.addCurrentPicture()
-                }
-                binding.hideSaveEditsDialog { findNavController().popBackStack() }
+                saveEditsStoragePermission.launch(storagePermissionsArray)
+
             }
             saveEditsBlur.setOnClickListener {
                 hideSaveEditsDialog()
@@ -276,6 +284,38 @@ class DrawFragment : Fragment(R.layout.fragment_draw) {
             viewLifecycleOwner,
             backPressedCallback
         )
+    }
+
+    private fun downloadStoragePermissionAction() {
+        saveAlbumImage {
+            viewModel.setNewPicturePath(it)
+            findNavController().navigate(
+                R.id.draw_to_download,
+                bundleOf(
+                    PICTURE to viewModel.currentPicture,
+                    IS_NEW_PICTURE to viewModel.isNewPicture
+                )
+            )
+        }
+    }
+
+    private fun showStoragePermissionMessage() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            view?.showSnackBar(
+                text = getString(R.string.allow_read_files),
+                action = Pair("Provide", provideStorageMessageAction())
+            )
+        } else {
+            view?.showSnackBar(
+                text = getString(R.string.allow_read_files)
+            )
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.R)
+    private fun provideStorageMessageAction() = View.OnClickListener {
+        val intent = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION)
+        camera.launch(intent)
     }
 
 }

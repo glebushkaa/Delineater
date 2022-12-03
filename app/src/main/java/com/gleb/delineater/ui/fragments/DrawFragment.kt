@@ -27,12 +27,12 @@ import com.gleb.delineater.ui.constants.IS_NEW_PICTURE
 import com.gleb.delineater.ui.constants.NEW_SAVED_PICTURE
 import com.gleb.delineater.ui.constants.PICTURE
 import com.gleb.delineater.ui.constants.PICTURE_REQUEST_KEY
+import com.gleb.delineater.ui.dialogs.ColorPickerDialog
+import com.gleb.delineater.ui.dialogs.SaveEditsDialog
 import com.gleb.delineater.ui.extensions.*
 import com.gleb.delineater.ui.types.ColorPickerType
 import com.gleb.delineater.ui.types.PaintType
 import com.gleb.delineater.ui.viewModels.DrawViewModel
-import com.skydoves.colorpickerview.flag.BubbleFlag
-import com.skydoves.colorpickerview.flag.FlagMode
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class DrawFragment : Fragment(R.layout.fragment_draw) {
@@ -40,27 +40,27 @@ class DrawFragment : Fragment(R.layout.fragment_draw) {
     private val binding: FragmentDrawBinding by viewBinding()
     private val viewModel: DrawViewModel by viewModel()
 
+    private val colorPickDialog by lazy { ColorPickerDialog(binding.colorPickerCard) }
+    private val saveEditsDialog by lazy { SaveEditsDialog(binding.saveEditsCard) }
+
     private val storagePermissionsArray = arrayOf(
         READ_EXTERNAL_STORAGE,
         WRITE_EXTERNAL_STORAGE
     )
 
-    private var camera = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {}
+    private var settingsActivityResult =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {}
 
     private var saveEditsStoragePermission = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
         if (permissions.all { !it.value }) {
-            binding.hideSaveEditsDialog {
+            saveEditsDialog.hide {
                 showStoragePermissionMessage()
             }
             return@registerForActivityResult
         }
-        saveAlbumImage {
-            viewModel.setNewPicturePath(it)
-            viewModel.addCurrentPicture()
-        }
-        binding.hideSaveEditsDialog { findNavController().popBackStack() }
+        saveEditsStoragePermissionAction()
     }
 
     private var downloadStoragePermission = registerForActivityResult(
@@ -77,10 +77,9 @@ class DrawFragment : Fragment(R.layout.fragment_draw) {
         super.onViewCreated(view, savedInstanceState)
         getArgs()
         setSavedPictureResultListener()
-        setColorPickView()
+        initColorPickerDialog()
+        initSaveEditsDialog()
         binding.initListeners()
-        binding.setColorDialogClickListeners()
-        binding.setSaveEditsClickListeners()
         binding.setColors()
         binding.backPressed()
         setPaintBackgroundPicture()
@@ -109,11 +108,29 @@ class DrawFragment : Fragment(R.layout.fragment_draw) {
         }
     }
 
+    private fun initColorPickerDialog() {
+        colorPickDialog.initClickListeners()
+        colorPickDialog.setColorPickView()
+        colorPickDialog.colorListener = { color ->
+            binding.getColorFromPicker(viewModel.colorPickerType, color)
+        }
+    }
+
+    private fun initSaveEditsDialog() {
+        saveEditsDialog.initClickListeners()
+        saveEditsDialog.saveEditsListener = {
+            saveEditsStoragePermission.launch(storagePermissionsArray)
+        }
+        saveEditsDialog.discardEditsListener = {
+            findNavController().popBackStack()
+        }
+    }
+
     @SuppressLint("SetTextI18n")
     private fun FragmentDrawBinding.initListeners() {
         backBtn.setOnClickListener {
             if (paintView.checkEdits()) {
-                showSaveEditsDialog()
+                saveEditsDialog.show()
             } else {
                 findNavController().popBackStack()
             }
@@ -126,69 +143,27 @@ class DrawFragment : Fragment(R.layout.fragment_draw) {
             paintView.brushWidth = size
         }
         brushBtn.setOnClickListener {
-            setPaintTypeIcon(
-                paintType = PaintType.Brush,
-                eraseColor = R.color.poor_gray,
-                brushColor = R.color.poor_white
-            )
+            setPaintIconColor(PaintType.Brush)
         }
         eraseBtn.setOnClickListener {
-            setPaintTypeIcon(
-                paintType = PaintType.Eraser,
-                eraseColor = R.color.poor_white,
-                brushColor = R.color.poor_gray
-            )
+            setPaintIconColor(PaintType.Eraser)
         }
         colorPickerBtn.setOnClickListener {
             viewModel.colorPickerType = ColorPickerType.BrushColorPicker
-            showColorPickerDialog()
+            colorPickDialog.show()
         }
         refreshBtn.setOnClickListener {
             paintView.resetSurface()
         }
         fillBackBtn.setOnClickListener {
             viewModel.colorPickerType = ColorPickerType.BackgroundColorPicker
-            showColorPickerDialog()
+            colorPickDialog.show()
         }
         stepBackBtn.setOnClickListener {
             paintView.removeLastStep()
         }
         restoreStepBtn.setOnClickListener {
             paintView.restoreDeletedStep()
-        }
-    }
-
-    private fun FragmentDrawBinding.setColorDialogClickListeners() {
-        colorPickerDialog.apply {
-            cancelBtn.setOnClickListener {
-                hideColorPickerDialog()
-            }
-            confirmBtn.setOnClickListener {
-                hideColorPickerDialog()
-                getColorFromPicker(viewModel.colorPickerType, colorPickerView.color)
-            }
-            colorPickerBlur.setOnClickListener {
-                hideColorPickerDialog()
-            }
-            dialogCardView.isClickable = true
-        }
-    }
-
-    private fun FragmentDrawBinding.setSaveEditsClickListeners() {
-        saveEditsDialog.apply {
-            discardEditsBtn.setOnClickListener {
-                hideSaveEditsDialog {
-                    findNavController().popBackStack()
-                }
-            }
-            saveEditsBtn.setOnClickListener {
-                saveEditsStoragePermission.launch(storagePermissionsArray)
-
-            }
-            saveEditsBlur.setOnClickListener {
-                hideSaveEditsDialog()
-            }
-            saveDialogCard.isClickable = true
         }
     }
 
@@ -202,81 +177,43 @@ class DrawFragment : Fragment(R.layout.fragment_draw) {
         color: Int
     ) {
         when (colorPickerType) {
-            is ColorPickerType.BackgroundColorPicker -> setEraserColor(color)
-            is ColorPickerType.BrushColorPicker -> setBrushColor(color)
+            is ColorPickerType.BackgroundColorPicker -> {
+                setPaintIconColor(paintType = PaintType.Eraser)
+                paintView.setEraser(color)
+            }
+            is ColorPickerType.BrushColorPicker -> {
+                setPaintIconColor(paintType = PaintType.Brush)
+                paintView.brushColor = color
+                colorPickerBtn.setBackgroundColor(color)
+            }
         }
     }
 
-    private fun FragmentDrawBinding.setBrushColor(color: Int) {
-        setPaintTypeIcon(
-            paintType = PaintType.Brush,
-            eraseColor = R.color.poor_gray,
-            brushColor = R.color.poor_white
+    private fun FragmentDrawBinding.setPaintIconColor(paintType: PaintType) {
+        val paintIconsList = mapOf(
+            PaintType.Eraser to eraseBtn, PaintType.Brush to brushBtn
         )
-        paintView.brushColor = color
-        colorPickerBtn.setBackgroundColor(color)
-    }
-
-    private fun FragmentDrawBinding.setEraserColor(color: Int) {
-        setPaintTypeIcon(
-            paintType = PaintType.Eraser,
-            eraseColor = R.color.poor_gray,
-            brushColor = R.color.poor_white
-        )
-        paintView.setEraser(color)
-    }
-
-    private fun FragmentDrawBinding.setPaintTypeIcon(
-        paintType: PaintType,
-        eraseColor: Int,
-        brushColor: Int
-    ) {
         paintView.paintType = paintType
-        eraseBtn.setIconTint(eraseColor)
-        brushBtn.setIconTint(brushColor)
-    }
-
-    private fun setColorPickView() {
-        val bubbleFlag = BubbleFlag(requireContext())
-        bubbleFlag.flagMode = FlagMode.FADE
-        binding.colorPickerDialog.colorPickerView.flagView = bubbleFlag
+        paintIconsList.forEach {
+            if (it.key == paintType) {
+                it.value.setIconTint(R.color.poor_white)
+            } else {
+                it.value.setIconTint(R.color.poor_gray)
+            }
+        }
     }
 
     private fun saveAlbumImage(endAction: (String) -> Unit) {
         binding.paintView.drawToBitmap().saveAlbumImage(endAction)
     }
 
-    private fun FragmentDrawBinding.showColorPickerDialog() {
-        colorPickerDialog.colorPickerBlur.blurFadeAnim()
-        colorPickerDialog.dialogCardView.translateDialogByXCenter()
-    }
-
-    private fun FragmentDrawBinding.hideColorPickerDialog() {
-        colorPickerDialog.colorPickerBlur.hideFadeAnim()
-        colorPickerDialog.dialogCardView.translateDialogByXOverBorder()
-    }
-
-    private fun FragmentDrawBinding.showSaveEditsDialog() {
-        saveEditsDialog.saveEditsBlur.blurFadeAnim()
-        saveEditsDialog.saveDialogCard.defaultFadeAnim()
-    }
-
-    private fun FragmentDrawBinding.hideSaveEditsDialog(endAction: (() -> Unit)? = null) {
-        saveEditsDialog.saveEditsBlur.hideFadeAnim()
-        saveEditsDialog.saveDialogCard.hideFadeAnim {
-            endAction?.invoke()
-        }
-    }
-
     private fun FragmentDrawBinding.backPressed() {
         val backPressedCallback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                if (saveEditsDialog.saveDialogCard.isVisible) {
-                    hideSaveEditsDialog()
-                } else if (colorPickerDialog.dialogCardView.isVisible) {
-                    hideColorPickerDialog()
-                } else {
-                    findNavController().popBackStack()
+                when {
+                    saveEditsCard.saveDialogCard.isVisible -> saveEditsDialog.hide()
+                    colorPickerCard.dialogCardView.isVisible -> colorPickDialog.hide()
+                    else -> findNavController().popBackStack()
                 }
             }
         }
@@ -299,6 +236,14 @@ class DrawFragment : Fragment(R.layout.fragment_draw) {
         }
     }
 
+    private fun saveEditsStoragePermissionAction() {
+        saveAlbumImage {
+            viewModel.setNewPicturePath(it)
+            viewModel.addCurrentPicture()
+        }
+        saveEditsDialog.hide { findNavController().popBackStack() }
+    }
+
     private fun showStoragePermissionMessage() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             view?.showSnackBar(
@@ -315,7 +260,7 @@ class DrawFragment : Fragment(R.layout.fragment_draw) {
     @RequiresApi(Build.VERSION_CODES.R)
     private fun provideStorageMessageAction() = View.OnClickListener {
         val intent = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION)
-        camera.launch(intent)
+        settingsActivityResult.launch(intent)
     }
 
 }

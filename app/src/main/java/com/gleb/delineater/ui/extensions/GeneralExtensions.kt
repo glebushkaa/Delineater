@@ -6,8 +6,10 @@ import android.content.res.ColorStateList
 import android.view.Gravity
 import android.view.View
 import android.widget.FrameLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.GravityInt
+import com.gleb.delineater.R
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.snackbar.BaseTransientBottomBar.Duration
 import com.google.android.material.snackbar.Snackbar
@@ -38,6 +40,9 @@ fun View.showSnackBar(
     }
     snackBar.setGravity(gravity)
     action?.let {
+        snackBar.view.findViewById<TextView>(
+            com.google.android.material.R.id.snackbar_action
+        ).isAllCaps = false
         snackBar.setAction(it.first, it.second)
     }
     snackBar.show()

@@ -132,11 +132,11 @@
     </HorizontalScrollView>
 
     <include
-        android:id="@+id/colorPickerDialog"
+        android:id="@+id/colorPickerCard"
         layout="@layout/dialog_color_pick" />
 
     <include
-        android:id="@+id/saveEditsDialog"
+        android:id="@+id/saveEditsCard"
         layout="@layout/dialog_save_edits" />
 
 </com.google.android.material.card.MaterialCardView>

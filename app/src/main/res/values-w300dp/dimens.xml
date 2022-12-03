@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--Item exist picture-->
+    <dimen name="exist_picture_width">100dp</dimen>
+    <dimen name="exist_picture_height">140dp</dimen>
+    <dimen name="exist_picture_margin">10dp</dimen>
+    <!--Item exist picture-->
+
+    <!--Menu screen-->
+    <dimen name="head_text_margin">48dp</dimen>
+    <!--Menu screen-->
+
+</resources>

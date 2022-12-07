@@ -3,11 +3,14 @@ package com.gleb.delineater.ui.fragments
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
+import android.widget.Button
 import android.widget.ImageView
+import android.widget.ProgressBar
 import androidx.core.os.bundleOf
 import androidx.core.view.drawToBitmap
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.bumptech.glide.Glide
@@ -18,12 +21,14 @@ import com.gleb.delineater.ui.constants.IS_NEW_PICTURE
 import com.gleb.delineater.ui.constants.NEW_SAVED_PICTURE
 import com.gleb.delineater.ui.constants.PICTURE
 import com.gleb.delineater.ui.constants.PICTURE_REQUEST_KEY
-import com.gleb.delineater.ui.extensions.animSaving
-import com.gleb.delineater.ui.extensions.showSnackBar
+import com.gleb.delineater.ui.extensions.*
 import com.gleb.delineater.ui.intents.sharePicture
 import com.gleb.delineater.ui.viewModels.DownloadViewModel
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 class DownloadFragment : Fragment(R.layout.fragment_download) {
 
@@ -56,7 +61,8 @@ class DownloadFragment : Fragment(R.layout.fragment_download) {
             findNavController().navigate(R.id.download_to_menu)
         }
         saveBtn.setOnClickListener {
-            saveBtn.animSaving(saveProgress) {
+            lifecycleScope.launch {
+                saveBtn.animSaving(saveProgress)
                 showSaveSuccessMessage()
             }
             viewModel.saveGalleryPicture(
@@ -86,12 +92,53 @@ class DownloadFragment : Fragment(R.layout.fragment_download) {
     }
 
     private fun showSaveSuccessMessage() {
-        view?.showSnackBar(
+        binding.coordinator.showSnackBar(
             text = getString(R.string.picture_saved),
             backgroundColor = R.color.snackbar_blue,
             textColor = R.color.white_background,
             gravity = Gravity.TOP
         )
+    }
+
+    private suspend fun Button.animSaving(progressBar: ProgressBar) {
+        hideSaveBtn()
+        progressBar.animSaveProgress()
+        showSaveBtn()
+    }
+
+    private suspend fun Button.hideSaveBtn() = suspendCoroutine<Unit> { continuation ->
+        val alpha = 0f
+        val delay = 0L
+        val duration = 500L
+        animate().alpha(alpha).also {
+            it.startDelay = delay
+            it.duration = duration
+            it.withEndAction { continuation.resume(Unit) }
+            it.start()
+        }
+    }
+
+    private suspend fun Button.showSaveBtn() = suspendCoroutine<Unit> { continuation ->
+        val duration = 3000L
+        val alpha = 1f
+        animate().alpha(alpha).also {
+            it.startDelay = duration
+            it.withEndAction { continuation.resume(Unit) }
+            it.start()
+        }
+    }
+
+    private fun ProgressBar.animSaveProgress() {
+        val scaleSize = 1f
+        val duration = 1400L
+        val alpha = 0f
+        animate().alpha(scaleSize).also {
+            it.duration = duration
+            it.withEndAction {
+                animate().alpha(alpha).start()
+            }
+            it.start()
+        }
     }
 
 }

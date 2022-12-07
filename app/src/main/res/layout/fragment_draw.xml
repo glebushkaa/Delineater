@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:cardBackgroundColor="@color/black_background"
-    app:cardElevation="0dp"
     app:cardCornerRadius="0dp"
+    app:cardElevation="0dp"
     tools:context=".ui.fragments.DrawFragment">
 
 
@@ -131,12 +131,4 @@
         </LinearLayout>
     </HorizontalScrollView>
 
-    <include
-        android:id="@+id/colorPickerDialog"
-        layout="@layout/dialog_color_pick" />
-
-    <include
-        android:id="@+id/saveEditsDialog"
-        layout="@layout/dialog_save_edits" />
-
-</com.google.android.material.card.MaterialCardView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

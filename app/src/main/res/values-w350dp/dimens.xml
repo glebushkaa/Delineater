@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--Menu screen-->
+    <dimen name="head_text_margin">48dp</dimen>
+    <dimen name="menu_item_width">120dp</dimen>
+    <dimen name="menu_item_margin">12dp</dimen>
+    <dimen name="menu_item_height">180dp</dimen>
+    <!--Menu screen-->
+
+    <!--Color picker dialog-->
+    <dimen name="color_picker_width">320dp</dimen>
+    <!--Color picker dialog-->
+
+    <!--Color picker dialog-->
+    <dimen name="save_edits_dialog_width">320dp</dimen>
+    <!--Color picker dialog-->
+
+</resources>

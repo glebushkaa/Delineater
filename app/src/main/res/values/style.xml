@@ -65,4 +65,8 @@
         <item name="android:windowExitAnimation">@android:anim/slide_in_left</item>
     </style>
 
+    <style name="ColorPickerDialogAnim" parent="@android:style/Animation.Activity">
+        <item name="android:windowEnterAnimation">@anim/color_picker_enter_anim</item>
+        <item name="android:windowExitAnimation">@anim/color_picker_exit_anim</item>
+    </style>
 </resources>

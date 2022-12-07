@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Delineater</string>
-    <string name="allow_read_files">Picture will not be saved without this permission</string>
+    <string name="allow_read_files">To save your projects, we need this permission</string>
     <string name="confirm">Confirm</string>
     <string name="cancel">Cancel</string>
     <string name="my_paintings">My paintings</string>
@@ -13,5 +13,6 @@
     <string name="discard">Discard</string>
     <string name="content_changed">Content changed</string>
     <string name="do_you_want_to_save_your_edits">Do you want to save your edits?</string>
-    <string name="start_brush_size">10dp</string>
+    <string name="start_brush_size" translatable="false">10dp</string>
+    <string name="provide_storage_access">Provide access</string>
 </resources>

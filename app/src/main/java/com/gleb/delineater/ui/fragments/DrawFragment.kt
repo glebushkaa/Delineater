@@ -1,14 +1,20 @@
 package com.gleb.delineater.ui.fragments
 
-import android.Manifest
+import android.Manifest.permission.*
 import android.annotation.SuppressLint
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.view.View
-import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
+import androidx.core.content.PackageManagerCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.drawToBitmap
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.fragment.findNavController
@@ -22,12 +28,13 @@ import com.gleb.delineater.ui.constants.IS_NEW_PICTURE
 import com.gleb.delineater.ui.constants.NEW_SAVED_PICTURE
 import com.gleb.delineater.ui.constants.PICTURE
 import com.gleb.delineater.ui.constants.PICTURE_REQUEST_KEY
+import com.gleb.delineater.ui.dialogs.ColorPickerDialog
+import com.gleb.delineater.ui.dialogs.SaveEditsDialog
 import com.gleb.delineater.ui.extensions.*
+import com.gleb.delineater.ui.listeners.SaveEditsListener
 import com.gleb.delineater.ui.types.ColorPickerType
 import com.gleb.delineater.ui.types.PaintType
 import com.gleb.delineater.ui.viewModels.DrawViewModel
-import com.skydoves.colorpickerview.flag.BubbleFlag
-import com.skydoves.colorpickerview.flag.FlagMode
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class DrawFragment : Fragment(R.layout.fragment_draw) {
@@ -35,50 +42,64 @@ class DrawFragment : Fragment(R.layout.fragment_draw) {
     private val binding: FragmentDrawBinding by viewBinding()
     private val viewModel: DrawViewModel by viewModel()
 
+    private val colorPickDialog = ColorPickerDialog()
+    private val saveEditsDialog = SaveEditsDialog()
 
-    // Should be done
-    private val permissionsArray = arrayOf(
-        Manifest.permission.READ_EXTERNAL_STORAGE,
-        Manifest.permission.WRITE_EXTERNAL_STORAGE
+    private val storagePermissionsArray = arrayOf(
+        READ_EXTERNAL_STORAGE,
+        WRITE_EXTERNAL_STORAGE
     )
 
-    private var storagePermissionLauncher =
-        registerForActivityResult(
-            ActivityResultContracts.RequestMultiplePermissions()
-        ) { permissions ->
-            if (permissions.all { !it.value }) {
-                view?.showSnackBar(text = getString(R.string.allow_read_files))
-            }
+    private var settingsActivityResult =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {}
+
+    private var downloadStoragePermission = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        if (permissions.all { !it.value }) {
+            showStoragePermissionMessage()
+            return@registerForActivityResult
         }
-    // Should be done
+        downloadStoragePermissionAction()
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
         getArgs()
         setSavedPictureResultListener()
-        setColorPickView()
-        binding.initListeners()
-        binding.setColorDialogClickListeners()
-        binding.setSaveEditsClickListeners()
+        binding.initClickListeners()
         binding.setColors()
-        binding.backPressed()
+        initColorPickerDialogListener()
+        initSaveEditsDialogListener()
         setPaintBackgroundPicture()
-        storagePermissionLauncher.launch(permissionsArray)
-    }       
-
-    private fun setPaintBackgroundPicture() {
-        viewModel.currentPicture?.let {
-            requireContext().decodePictureFile(it.picturePath) { picture ->
-                viewModel.isNewPicture = false
-                binding.paintView.background = picture
-            }
-        }
     }
+
 
     private fun setSavedPictureResultListener() {
         setFragmentResultListener(PICTURE_REQUEST_KEY) { _, bundle ->
-            bundle.getParcelable<PictureEntity>(NEW_SAVED_PICTURE)?.let {
-                viewModel.currentPicture = it
+            viewModel.currentPicture = bundle.getParcelable(NEW_SAVED_PICTURE)
+        }
+    }
+
+    private fun initColorPickerDialogListener() {
+        colorPickDialog.colorListener = {
+            binding.getColorFromPicker(viewModel.colorPickerType, it)
+        }
+    }
+
+    private fun initSaveEditsDialogListener() {
+        saveEditsDialog.editsListener = object : SaveEditsListener {
+            override fun saveEdits() {
+                binding.paintView.drawToBitmap().saveAlbumImage {
+                    findNavController().popBackStack()
+                }
+            }
+
+            override fun discardEdits() {
+                findNavController().popBackStack()
+            }
+
+            override fun deniedPermission() {
+                showStoragePermissionMessage()
             }
         }
     }
@@ -90,24 +111,30 @@ class DrawFragment : Fragment(R.layout.fragment_draw) {
     }
 
     @SuppressLint("SetTextI18n")
-    private fun FragmentDrawBinding.initListeners() {
+    private fun FragmentDrawBinding.initClickListeners() {
         backBtn.setOnClickListener {
             if (paintView.checkEdits()) {
-                showSaveEditsDialog()
+                saveEditsDialog.show(parentFragmentManager, "")
             } else {
                 findNavController().popBackStack()
             }
         }
         downloadBtn.setOnClickListener {
-            saveAlbumImage {
-                viewModel.setNewPicturePath(it)
-                findNavController().navigate(
-                    R.id.draw_to_download,
-                    bundleOf(
-                        PICTURE to viewModel.currentPicture,
-                        IS_NEW_PICTURE to viewModel.isNewPicture
-                    )
-                )
+            if (ContextCompat.checkSelfPermission(
+                    requireContext(),
+                    READ_EXTERNAL_STORAGE
+                ) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(
+                    requireContext(),
+                    WRITE_EXTERNAL_STORAGE
+                ) == PackageManager.PERMISSION_GRANTED
+            ) {
+                downloadStoragePermissionAction()
+            }else{
+                requireContext().showToast("READ: ${ContextCompat.checkSelfPermission(
+                    requireContext(),
+                    MANAGE_EXTERNAL_STORAGE
+                ) == PackageManager.PERMISSION_GRANTED}\t")
+                downloadStoragePermission.launch(storagePermissionsArray)
             }
         }
         paintSizeSlider.addOnChangeListener { _, size, _ ->
@@ -115,72 +142,27 @@ class DrawFragment : Fragment(R.layout.fragment_draw) {
             paintView.brushWidth = size
         }
         brushBtn.setOnClickListener {
-            setPaintTypeIcon(
-                paintType = PaintType.Brush,
-                eraseColor = R.color.poor_gray,
-                brushColor = R.color.poor_white
-            )
+            setPaintIconColor(PaintType.Brush)
         }
         eraseBtn.setOnClickListener {
-            setPaintTypeIcon(
-                paintType = PaintType.Eraser,
-                eraseColor = R.color.poor_white,
-                brushColor = R.color.poor_gray
-            )
+            setPaintIconColor(PaintType.Eraser)
         }
         colorPickerBtn.setOnClickListener {
             viewModel.colorPickerType = ColorPickerType.BrushColorPicker
-            showColorPickerDialog()
+            colorPickDialog.show(parentFragmentManager, "")
         }
         refreshBtn.setOnClickListener {
             paintView.resetSurface()
         }
         fillBackBtn.setOnClickListener {
             viewModel.colorPickerType = ColorPickerType.BackgroundColorPicker
-            showColorPickerDialog()
+            colorPickDialog.show(parentFragmentManager, "")
         }
         stepBackBtn.setOnClickListener {
             paintView.removeLastStep()
         }
         restoreStepBtn.setOnClickListener {
             paintView.restoreDeletedStep()
-        }
-    }
-
-    private fun FragmentDrawBinding.setColorDialogClickListeners() {
-        colorPickerDialog.apply {
-            cancelBtn.setOnClickListener {
-                hideColorPickerDialog()
-            }
-            confirmBtn.setOnClickListener {
-                hideColorPickerDialog()
-                getColorFromPicker(viewModel.colorPickerType, colorPickerView.color)
-            }
-            colorPickerBlur.setOnClickListener {
-                hideColorPickerDialog()
-            }
-            dialogCardView.isClickable = true
-        }
-    }
-
-    private fun FragmentDrawBinding.setSaveEditsClickListeners() {
-        saveEditsDialog.apply {
-            discardEditsBtn.setOnClickListener {
-                hideSaveEditsDialog {
-                    findNavController().popBackStack()
-                }
-            }
-            saveEditsBtn.setOnClickListener {
-                saveAlbumImage {
-                    viewModel.setNewPicturePath(it)
-                    viewModel.addCurrentPicture()
-                }
-                binding.hideSaveEditsDialog { findNavController().popBackStack() }
-            }
-            saveEditsBlur.setOnClickListener {
-                hideSaveEditsDialog()
-            }
-            saveDialogCard.isClickable = true
         }
     }
 
@@ -194,88 +176,78 @@ class DrawFragment : Fragment(R.layout.fragment_draw) {
         color: Int
     ) {
         when (colorPickerType) {
-            is ColorPickerType.BackgroundColorPicker -> setEraserColor(color)
-            is ColorPickerType.BrushColorPicker -> setBrushColor(color)
-        }
-    }
-
-    private fun FragmentDrawBinding.setBrushColor(color: Int) {
-        setPaintTypeIcon(
-            paintType = PaintType.Brush,
-            eraseColor = R.color.poor_gray,
-            brushColor = R.color.poor_white
-        )
-        paintView.brushColor = color
-        colorPickerBtn.setBackgroundColor(color)
-    }
-
-    private fun FragmentDrawBinding.setEraserColor(color: Int) {
-        setPaintTypeIcon(
-            paintType = PaintType.Eraser,
-            eraseColor = R.color.poor_gray,
-            brushColor = R.color.poor_white
-        )
-        paintView.setEraser(color)
-    }
-
-    private fun FragmentDrawBinding.setPaintTypeIcon(
-        paintType: PaintType,
-        eraseColor: Int,
-        brushColor: Int
-    ) {
-        paintView.paintType = paintType
-        eraseBtn.setIconTint(eraseColor)
-        brushBtn.setIconTint(brushColor)
-    }
-
-    private fun setColorPickView() {
-        val bubbleFlag = BubbleFlag(requireContext())
-        bubbleFlag.flagMode = FlagMode.FADE
-        binding.colorPickerDialog.colorPickerView.flagView = bubbleFlag
-    }
-
-    private fun saveAlbumImage(endAction: (String) -> Unit) {
-        binding.paintView.drawToBitmap().saveAlbumImage(endAction)
-    }
-
-    private fun FragmentDrawBinding.showColorPickerDialog() {
-        colorPickerDialog.colorPickerBlur.blurFadeAnim()
-        colorPickerDialog.dialogCardView.translateDialogByXCenter()
-    }
-
-    private fun FragmentDrawBinding.hideColorPickerDialog() {
-        colorPickerDialog.colorPickerBlur.hideFadeAnim()
-        colorPickerDialog.dialogCardView.translateDialogByXOverBorder()
-    }
-
-    private fun FragmentDrawBinding.showSaveEditsDialog() {
-        saveEditsDialog.saveEditsBlur.blurFadeAnim()
-        saveEditsDialog.saveDialogCard.defaultFadeAnim()
-    }
-
-    private fun FragmentDrawBinding.hideSaveEditsDialog(endAction: (() -> Unit)? = null) {
-        saveEditsDialog.saveEditsBlur.hideFadeAnim()
-        saveEditsDialog.saveDialogCard.hideFadeAnim {
-            endAction?.invoke()
-        }
-    }
-
-    private fun FragmentDrawBinding.backPressed() {
-        val backPressedCallback = object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                if (saveEditsDialog.saveDialogCard.isVisible) {
-                    hideSaveEditsDialog()
-                } else if (colorPickerDialog.dialogCardView.isVisible) {
-                    hideColorPickerDialog()
-                } else {
-                    findNavController().popBackStack()
-                }
+            is ColorPickerType.BackgroundColorPicker -> {
+                setPaintIconColor(paintType = PaintType.Eraser)
+                paintView.setEraser(color)
+            }
+            is ColorPickerType.BrushColorPicker -> {
+                setPaintIconColor(paintType = PaintType.Brush)
+                paintView.brushColor = color
+                colorPickerBtn.setBackgroundColor(color)
             }
         }
-        requireActivity().onBackPressedDispatcher.addCallback(
-            viewLifecycleOwner,
-            backPressedCallback
+    }
+
+    private fun FragmentDrawBinding.setPaintIconColor(paintType: PaintType) {
+        val paintIconsList = mapOf(
+            PaintType.Eraser to eraseBtn, PaintType.Brush to brushBtn
         )
+        paintView.paintType = paintType
+        paintIconsList.forEach {
+            if (it.key == paintType) {
+                it.value.setIconTint(R.color.poor_white)
+            } else {
+                it.value.setIconTint(R.color.poor_gray)
+            }
+        }
+    }
+
+    private fun downloadStoragePermissionAction() {
+        binding.paintView.drawToBitmap().saveAlbumImage {
+            viewModel.setNewPicturePath(it)
+            findNavController().navigate(
+                R.id.draw_to_download,
+                bundleOf(
+                    PICTURE to viewModel.currentPicture,
+                    IS_NEW_PICTURE to viewModel.isNewPicture
+                )
+            )
+        }
+    }
+
+    private fun setPaintBackgroundPicture() {
+        viewModel.currentPicture?.let {
+            requireContext().decodePictureFile(it.picturePath) { picture ->
+                viewModel.isNewPicture = false
+                binding.paintView.background = picture
+            }
+        }
+    }
+
+    private fun showStoragePermissionMessage() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            view?.showSnackBar(
+                text = getString(R.string.allow_read_files),
+                action = Pair(
+                    getString(R.string.provide_storage_access),
+                    provideStorageMessageAction()
+                ),
+                actionColor = R.color.blue
+            )
+        } else {
+            view?.showSnackBar(
+                text = getString(R.string.allow_read_files)
+            )
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.R)
+    private fun provideStorageMessageAction() = View.OnClickListener {
+        val intent = Intent(
+            Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION,
+            Uri.parse("package:" + requireActivity().packageName)
+        )
+        settingsActivityResult.launch(intent)
     }
 
 }

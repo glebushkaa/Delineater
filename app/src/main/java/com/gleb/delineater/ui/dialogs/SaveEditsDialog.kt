@@ -1,9 +1,15 @@
 package com.gleb.delineater.ui.dialogs
 
 import android.Manifest
+import android.content.DialogInterface
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.gleb.delineater.R
@@ -26,10 +32,11 @@ class SaveEditsDialog : DialogFragment(R.layout.dialog_save_edits) {
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
         if (permissions.all { !it.value }) {
+            dismissNow()
             editsListener?.deniedPermission()
-            dismiss()
             return@registerForActivityResult
         }
+        dismissNow()
         editsListener?.saveEdits()
     }
 
@@ -45,7 +52,7 @@ class SaveEditsDialog : DialogFragment(R.layout.dialog_save_edits) {
             editsListener?.discardEdits()
         }
         saveEditsBtn.setOnClickListener {
-            saveEditsStoragePermission.launch(storagePermissionsArray)
+            checkPermission()
         }
     }
 
@@ -56,5 +63,51 @@ class SaveEditsDialog : DialogFragment(R.layout.dialog_save_edits) {
         dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
     }
 
+    private fun checkPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            checkManageStoragePermission()
+        } else {
+            checkStoragePermission()
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.R)
+    private fun checkManageStoragePermission() {
+        val manageStoragePermission = Environment.isExternalStorageManager()
+        val permissionArray = arrayOf(Manifest.permission.MANAGE_EXTERNAL_STORAGE)
+
+        if (manageStoragePermission) {
+            dismissNow()
+            editsListener?.saveEdits()
+        } else {
+            saveEditsStoragePermission.launch(permissionArray)
+        }
+    }
+
+    private fun checkStoragePermission() {
+        val readPermission =
+            ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            ) == PackageManager.PERMISSION_GRANTED
+
+        val writePermission =
+            ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            ) == PackageManager.PERMISSION_GRANTED
+
+        if (readPermission && writePermission) {
+            dismissNow()
+            editsListener?.saveEdits()
+        } else {
+            saveEditsStoragePermission.launch(storagePermissionsArray)
+        }
+    }
+
+    override fun onDismiss(dialog: DialogInterface) {
+
+        super.onDismiss(dialog)
+    }
 
 }

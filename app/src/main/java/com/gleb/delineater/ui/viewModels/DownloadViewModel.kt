@@ -20,7 +20,9 @@ class DownloadViewModel(
     var isNewPicture = true
 
     fun saveGalleryPicture(bitmap: Bitmap, context: Context) {
-        context.saveGalleryPicture(bitmap)
+        viewModelScope.launch(Dispatchers.IO){
+            context.saveGalleryPicture(bitmap)
+        }
     }
 
     fun addCurrentPicture() {

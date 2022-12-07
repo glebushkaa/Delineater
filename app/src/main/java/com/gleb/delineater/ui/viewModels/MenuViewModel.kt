@@ -20,7 +20,7 @@ class MenuViewModel(
 
     fun getAllPictures() {
         viewModelScope.launch(Dispatchers.IO) {
-            allPicturesUseCase.getAllPictures().let {
+            allPicturesUseCase.getAllPictures().also {
                 pictureList.clear()
                 pictureList.addAll(it)
                 pictureLiveData.postValue(pictureList)

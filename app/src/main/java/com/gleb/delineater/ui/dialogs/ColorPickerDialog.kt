@@ -39,7 +39,7 @@ class ColorPickerDialog : DialogFragment(R.layout.dialog_color_pick) {
         dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
     }
 
-    fun setColorPickerView() {
+    private fun setColorPickerView() {
         val bubbleFlag = BubbleFlag(binding.root.context)
         bubbleFlag.flagMode = FlagMode.FADE
         binding.colorPickerView.flagView = bubbleFlag

@@ -15,4 +15,5 @@
     <string name="content_changed">Рисунок изменён</string>
     <string name="do_you_want_to_save_your_edits">Вы хотите сохранить свои изменения?</string>
     <string name="provide_storage_access">Предоставить доступ</string>
+    <string name="project_not_found">Проект не был найден</string>
 </resources>

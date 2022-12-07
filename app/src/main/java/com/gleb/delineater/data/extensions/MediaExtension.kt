@@ -12,15 +12,19 @@ import android.provider.MediaStore
 import androidx.annotation.RequiresApi
 import androidx.core.graphics.drawable.toDrawable
 import java.io.File
+import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.io.OutputStream
 import java.util.*
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 
 private const val albumName = "PictureAlbum"
 private const val jpgType = ".jpg"
 private const val jpgMimeType = "image/jpg"
 
-fun Bitmap.saveAlbumImage(callback: (String) -> Unit) {
+suspend fun Bitmap.saveAlbumImage() = suspendCoroutine<String> { continuation ->
     val file = getPictureDir(albumName)
 
     if (!file.exists() && !file.mkdirs()) {
@@ -28,11 +32,11 @@ fun Bitmap.saveAlbumImage(callback: (String) -> Unit) {
     }
     val uuid = UUID.randomUUID().toString()
     val name = "picture$uuid$jpgType"
-    val fileName = file.absolutePath + "/" + name
-    val newFile = File(fileName)
+    val filePath = file.absolutePath + "/" + name
+    val newFile = File(filePath)
 
     compress(Bitmap.CompressFormat.JPEG, 100, newFile.outputStream())
-    callback(fileName)
+    continuation.resume(filePath)
 }
 
 private fun getPictureDir(fileName: String): File {
@@ -40,7 +44,7 @@ private fun getPictureDir(fileName: String): File {
     return File(file, fileName)
 }
 
-fun Context.saveGalleryPicture(bitmap: Bitmap) {
+fun Context.saveGalleryPicture(bitmap: Bitmap) = runCatching {
     val uuid = UUID.randomUUID().toString()
     val filename = uuid + jpgType
     val fos: OutputStream? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -57,7 +61,6 @@ fun Context.saveGalleryPicture(bitmap: Bitmap) {
     fos?.use {
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, it)
     }
-
 }
 
 @RequiresApi(Build.VERSION_CODES.Q)
@@ -67,13 +70,13 @@ private fun getContentValues(fileName: String) = ContentValues().apply {
     put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
 }
 
-fun Context.decodePictureFile(picturePath: String, completeCallback: (BitmapDrawable) -> Unit) {
-    val file = File(picturePath)
-    if (file.exists()) {
-        val picture = BitmapFactory.decodeFile(picturePath).toDrawable(resources)
-        completeCallback(picture)
-    } else {
-        return
+suspend fun Context.decodePictureFile(picturePath: String) =
+    suspendCoroutine<BitmapDrawable> { continuation ->
+        val file = File(picturePath)
+        if (file.exists()) {
+            continuation.resume(BitmapFactory.decodeFile(picturePath).toDrawable(resources))
+        } else {
+            continuation.resumeWithException(FileNotFoundException())
+        }
     }
-}
 

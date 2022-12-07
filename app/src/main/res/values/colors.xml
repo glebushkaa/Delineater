@@ -14,4 +14,5 @@
     <color name="snackbar_blue">#0055D3</color>
     <color name="cancel_red">#FC6A6A</color>
     <color name="poor_white">#EBE8E8</color>
+    <color name="action_color">#0E7CE1</color>
 </resources>

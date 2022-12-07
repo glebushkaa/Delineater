@@ -9,6 +9,9 @@ import com.gleb.delineater.domain.usecases.NewPictureUseCase
 import com.gleb.delineater.domain.usecases.UpdatePictureUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 class DrawViewModel(
     private val updatePictureUseCase: UpdatePictureUseCase,
@@ -22,9 +25,11 @@ class DrawViewModel(
     fun addCurrentPicture() {
         viewModelScope.launch(Dispatchers.IO) {
             if (isNewPicture) {
-                currentPicture?.let {
-                    val number = newPictureUseCase.addNewPicture(it)
-                    currentPicture = PictureEntity(number = number, picturePath = it.picturePath)
+                currentPicture = currentPicture?.run {
+                    PictureEntity(
+                        number = newPictureUseCase.addNewPicture(this),
+                        picturePath = picturePath
+                    )
                 }
             } else {
                 currentPicture?.let { updatePictureUseCase.updatePicture(it) }

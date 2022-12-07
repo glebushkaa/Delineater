@@ -15,4 +15,5 @@
     <string name="do_you_want_to_save_your_edits">Do you want to save your edits?</string>
     <string name="start_brush_size" translatable="false">10dp</string>
     <string name="provide_storage_access">Provide access</string>
+    <string name="project_not_found">The project was not found</string>
 </resources>

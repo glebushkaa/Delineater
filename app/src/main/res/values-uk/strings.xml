@@ -15,4 +15,5 @@
     <string name="content_changed">Малюнок змінено</string>
     <string name="do_you_want_to_save_your_edits">Ви хочете зберегти свої зміни?</string>
     <string name="provide_storage_access">Надати дозвіл</string>
+    <string name="project_not_found">Проект не було знайдено</string>
 </resources>

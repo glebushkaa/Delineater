@@ -9,18 +9,54 @@
         android:id="@+id/splashFragment"
         android:name="com.gleb.delineater.ui.fragments.SplashFragment"
         android:label="fragment_splash"
-        tools:layout="@layout/fragment_splash" >
+        tools:layout="@layout/fragment_splash">
         <action
-            android:id="@+id/splash_to_picture_menu"
+            android:id="@+id/splash_to_menu"
             app:destination="@id/menuFragment"
-            app:enterAnim="@android:anim/fade_in"
-            app:exitAnim="@android:anim/fade_out"
-            app:popEnterAnim="@android:anim/fade_in"
-            app:popExitAnim="@android:anim/fade_out" />
+            app:enterAnim="@anim/left_in_transition"
+            app:exitAnim="@anim/left_out_transition"
+            app:popEnterAnim="@anim/left_in_transition"
+            app:popExitAnim="@anim/left_out_transition"
+            app:popUpTo="@id/splashFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/menuFragment"
         android:name="com.gleb.delineater.ui.fragments.MenuFragment"
         android:label="fragment_menu"
-        tools:layout="@layout/fragment_menu" />
+        tools:layout="@layout/fragment_menu">
+        <action
+            android:id="@+id/menu_to_draw"
+            app:destination="@id/drawFragment"
+            app:enterAnim="@anim/left_in_transition"
+            app:exitAnim="@anim/unmoving_out_transition"
+            app:popEnterAnim="@anim/unmoving_in_transition"
+            app:popExitAnim="@anim/right_out_transition" />
+    </fragment>
+    <fragment
+        android:id="@+id/drawFragment"
+        android:name="com.gleb.delineater.ui.fragments.DrawFragment"
+        android:label="fragment_draw"
+        tools:layout="@layout/fragment_draw">
+        <action
+            android:id="@+id/draw_to_download"
+            app:destination="@id/downloadFragment"
+            app:enterAnim="@anim/left_in_transition"
+            app:exitAnim="@anim/left_out_transition"
+            app:popEnterAnim="@anim/right_in_transition"
+            app:popExitAnim="@anim/right_out_transition" />
+    </fragment>
+    <fragment
+        android:id="@+id/downloadFragment"
+        android:name="com.gleb.delineater.ui.fragments.DownloadFragment"
+        android:label="fragment_download"
+        tools:layout="@layout/fragment_download">
+        <action
+            android:id="@+id/download_to_menu"
+            app:destination="@id/menuFragment"
+            app:enterAnim="@anim/unmoving_in_transition"
+            app:exitAnim="@anim/right_out_transition"
+            app:popUpTo="@id/menuFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
 </navigation>

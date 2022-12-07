@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:cardBackgroundColor="@color/black_background"
+    app:cardCornerRadius="0dp"
+    app:cardElevation="0dp"
+    tools:context=".ui.fragments.DrawFragment">
+
+
+    <com.gleb.delineater.ui.customViews.PaintView
+        android:id="@+id/paintView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white" />
+
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/topBar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/bar_size"
+        app:cardBackgroundColor="@color/black_background"
+        app:cardCornerRadius="0dp"
+        app:cardElevation="0dp">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/backBtn"
+            style="@style/BottomDrawButton"
+            app:icon="@drawable/ic_back"
+            app:iconSize="@dimen/top_icon_size" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/downloadBtn"
+            style="@style/BottomDrawButton"
+            android:layout_gravity="end"
+            app:icon="@drawable/ic_download"
+            app:iconSize="@dimen/top_icon_size" />
+    </com.google.android.material.card.MaterialCardView>
+
+    <HorizontalScrollView
+        android:id="@+id/bottomBar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/bar_size"
+        android:layout_gravity="bottom"
+        android:background="@color/black_background">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/bar_size"
+            android:layout_gravity="bottom|end">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/colorPickerBtn"
+                style="@style/ColorButtonStyle"
+                android:layout_width="@dimen/top_icon_size"
+                android:layout_height="@dimen/top_icon_size"
+                android:layout_gravity="center"
+                android:layout_marginStart="12dp"
+                app:backgroundTint="#880000"
+                app:strokeColor="@color/poor_white"
+                app:strokeWidth="1dp" />
+
+            <com.google.android.material.slider.Slider
+                android:id="@+id/paintSizeSlider"
+                android:layout_width="@dimen/slider_width"
+                android:layout_height="@dimen/bar_size"
+                android:layout_gravity="center"
+                android:layout_marginStart="20dp"
+                android:stepSize="1"
+                android:value="10"
+                android:valueFrom="1"
+                android:valueTo="200"
+                app:haloColor="@color/poor_white"
+                app:labelBehavior="gone"
+                app:thumbColor="@color/poor_white"
+                app:tickColor="@color/poor_gray"
+                app:trackColor="@color/poor_white"
+                app:trackHeight="5dp" />
+
+            <TextView
+                android:id="@+id/paintSize"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:gravity="end"
+                android:paddingStart="20dp"
+                android:text="@string/start_brush_size"
+                android:textColor="@color/poor_white"
+                android:textSize="@dimen/brush_size_text_size" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/eraseBtn"
+                style="@style/BottomDrawButton"
+                app:icon="@drawable/ic_eraser"
+                app:iconTint="@color/poor_gray" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/brushBtn"
+                style="@style/BottomDrawButton"
+                app:icon="@drawable/ic_brush"
+                app:iconTint="@color/poor_white" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/fillBackBtn"
+                style="@style/BottomDrawButton"
+                app:icon="@drawable/ic_fill_back"
+                app:iconTint="@color/poor_white" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/stepBackBtn"
+                style="@style/BottomDrawButton"
+                app:icon="@drawable/ic_back_step"
+                app:iconTint="@color/poor_white" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/restore_step_btn"
+                style="@style/BottomDrawButton"
+                app:icon="@drawable/ic_next_step"
+                app:iconTint="@color/poor_white" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/refreshBtn"
+                style="@style/BottomDrawButton"
+                app:icon="@drawable/ic_refresh"
+                app:iconTint="@color/poor_white" />
+        </LinearLayout>
+    </HorizontalScrollView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black_background"
+    tools:context=".ui.fragments.DownloadFragment">
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/backBtn"
+        style="@style/BottomDrawButton"
+        app:icon="@drawable/ic_back"
+        app:iconSize="@dimen/top_icon_size"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/menuBtn"
+        style="@style/BottomDrawButton"
+        android:layout_gravity="end"
+        app:icon="@drawable/ic_menu"
+        app:iconSize="@dimen/top_icon_size"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/headText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/download_head_top_margin"
+        android:fontFamily="@font/rubik_bold"
+        android:gravity="center"
+        android:text="@string/download_head"
+        android:textColor="@color/poor_white"
+        android:textSize="@dimen/head_text_size"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/headText">
+
+        <ImageView
+            android:id="@+id/downloadImage"
+            android:layout_width="@dimen/download_image_width"
+            android:layout_height="@dimen/download_image_height"
+            android:layout_gravity="center|top"
+            android:scaleType="fitXY"
+            tools:src="@drawable/test_img" />
+    </com.google.android.material.card.MaterialCardView>
+
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/saveBtn"
+        style="@style/DownloadRoundButtons"
+        android:layout_marginBottom="40dp"
+        android:text="@string/save"
+        app:backgroundTint="@color/blue"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:rippleColor="@color/blue" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/shareBtn"
+        style="@style/DownloadRoundButtons"
+        android:layout_marginBottom="16dp"
+        android:text="@string/share"
+        android:textColor="@color/black_background"
+        app:backgroundTint="@color/poor_white"
+        app:layout_constraintBottom_toTopOf="@+id/saveBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:rippleColor="@color/poor_gray" />
+
+
+    <ProgressBar
+        android:id="@+id/save_progress"
+        style="@style/BaseRoundProgressBarStyle"
+        android:layout_marginBottom="40dp"
+        android:alpha="0"
+        android:indeterminateTint="@color/blue"
+        android:progressTint="@color/blue"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/coordinator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

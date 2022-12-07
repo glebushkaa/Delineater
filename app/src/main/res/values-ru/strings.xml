@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Delineater</string>
+    <string name="allow_read_files">Чтобы сохранить ваши проекты, нам необходимо это разрешение</string>
+    <string name="confirm">Подтвердить</string>
+    <string name="cancel">Отменить</string>
+    <string name="select_color">Выберите цвет</string>
+    <string name="share_via">Поделиться c помощью</string>
+    <string name="picture_saved">Изображение сохранено</string>
+    <string name="my_paintings">Мои рисунки</string>
+    <string name="save">Сохранить</string>
+    <string name="download_head">Это ваш рисунок!</string>
+    <string name="share">Поделиться</string>
+    <string name="discard">Сбросить</string>
+    <string name="content_changed">Рисунок изменён</string>
+    <string name="do_you_want_to_save_your_edits">Вы хотите сохранить свои изменения?</string>
+    <string name="provide_storage_access">Предоставить доступ</string>
+    <string name="project_not_found">Проект не был найден</string>
+</resources>

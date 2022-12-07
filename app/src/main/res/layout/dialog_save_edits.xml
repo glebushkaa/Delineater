@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/saveDialogCard"
+    android:layout_width="@dimen/save_edits_dialog_width"
+    android:layout_height="@dimen/save_edits_dialog_height"
+    android:layout_gravity="center"
+    app:cardBackgroundColor="@color/black_background"
+    app:cardCornerRadius="30dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|top"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="@dimen/save_edits_head_top_margin"
+        android:layout_marginEnd="20dp"
+        android:text="@string/content_changed"
+        android:textColor="@color/poor_white"
+        android:textSize="@dimen/save_edits_head_text_size" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|top"
+        android:layout_marginStart="@dimen/save_edits_body_side_margin"
+        android:layout_marginTop="@dimen/save_edits_body_top_margin"
+        android:layout_marginEnd="@dimen/save_edits_body_side_margin"
+        android:alpha="0.8"
+        android:gravity="center"
+        android:text="@string/do_you_want_to_save_your_edits"
+        android:textColor="@color/poor_white"
+        android:textSize="@dimen/save_edits_body_text_size" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginStart="@dimen/save_edits_button_side_margin_size"
+        android:layout_marginEnd="@dimen/save_edits_button_side_margin_size"
+        android:layout_marginBottom="20dp">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/discardEditsBtn"
+            style="@style/NoInsetsButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/save_edits_button_height"
+            android:layout_marginEnd="4dp"
+            android:layout_weight="1"
+            android:letterSpacing="0"
+            android:text="@string/discard"
+            android:textAllCaps="false"
+            android:textSize="@dimen/save_edits_button_text_size"
+            app:backgroundTint="@color/cancel_red"
+            app:cornerRadius="@dimen/simple_corner_button_size" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/saveEditsBtn"
+            style="@style/NoInsetsButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/save_edits_button_height"
+            android:layout_marginStart="4dp"
+            android:layout_weight="1"
+            android:letterSpacing="0"
+            android:text="@string/save"
+            android:textAllCaps="false"
+            android:textColor="@color/black"
+            android:textSize="@dimen/save_edits_button_text_size"
+            app:backgroundTint="@color/poor_white"
+            app:cornerRadius="@dimen/simple_corner_button_size" />
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

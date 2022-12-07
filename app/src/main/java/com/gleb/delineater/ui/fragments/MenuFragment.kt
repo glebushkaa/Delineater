@@ -1,77 +1,68 @@
 package com.gleb.delineater.ui.fragments
 
-import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
-import android.view.LayoutInflater
+import android.util.Log
 import android.view.View
-import android.view.ViewGroup
-import androidx.core.content.res.ResourcesCompat
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ConcatAdapter
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.gleb.delineater.R
-import com.gleb.delineater.data.models.PictureModel
+import com.gleb.delineater.ui.constants.PICTURE
+import com.gleb.delineater.data.entities.PictureEntity
 import com.gleb.delineater.databinding.FragmentMenuBinding
-import com.gleb.delineater.extensions.showSnackBar
-import com.gleb.delineater.ui.recycler.MenuPictureAdapter
-import com.gleb.delineater.ui.viewModels.PictureMenuViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
+import com.gleb.delineater.ui.listeners.ExistPictureListener
+import com.gleb.delineater.ui.listeners.NewPictureListener
+import com.gleb.delineater.ui.recycler.adapter.ExistPictureAdapter
+import com.gleb.delineater.ui.recycler.adapter.NewPictureAdapter
+import com.gleb.delineater.ui.viewModels.MenuViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class MenuFragment : Fragment() {
+class MenuFragment : Fragment(R.layout.fragment_menu) {
 
-    private val viewModel: PictureMenuViewModel by viewModels()
-    private var binding: FragmentMenuBinding? = null
-    private var adapter = MenuPictureAdapter()
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
-        binding = FragmentMenuBinding.inflate(inflater, container, false)
-        return binding?.root
-    }
+    private val viewModel: MenuViewModel by viewModel()
+    private val binding: FragmentMenuBinding by viewBinding()
+    private lateinit var existPictureAdapter: ExistPictureAdapter
+    private lateinit var newPictureAdapter: NewPictureAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initClickListeners()
-        lifecycleScope.launch {
-            val a = async { fillList() }
-            binding?.menuRecycler?.adapter = adapter
-            adapter.setData(a.await())
+        initAdapter()
+        initObservers()
+        viewModel.getAllPictures()
+    }
+
+    private fun initAdapter() {
+        existPictureAdapter = ExistPictureAdapter(provideExistPictureListener())
+        newPictureAdapter = NewPictureAdapter(provideNewPictureListener())
+        newPictureAdapter.addItem(true)
+        binding.menuRecycler.adapter = ConcatAdapter(existPictureAdapter, newPictureAdapter)
+    }
+
+    private fun initObservers() {
+        viewModel.pictureLiveData.observe(viewLifecycleOwner) {
+            existPictureAdapter.submitList(it.toMutableList())
         }
     }
 
-    private suspend fun fillList() = suspendCoroutine<List<PictureModel>> { emitter ->
-        lifecycleScope.launch(Dispatchers.IO) {
-            val pictureList = arrayListOf<PictureModel>()
-            val drawable = (ResourcesCompat.getDrawable(
-                resources, R.drawable.test_img, null
-            ) as BitmapDrawable)
-            for (i in 1..100) {
-                pictureList.add(PictureModel(drawable.bitmap))
-            }
-            emitter.resume(pictureList)
+    private fun provideExistPictureListener() = object : ExistPictureListener {
+
+        override fun deletePicture(picture: PictureEntity) {
+            viewModel.deleteImage(picture)
+        }
+
+        override fun openPicture(picture: PictureEntity) {
+            findNavController().navigate(
+                R.id.menu_to_draw,
+                bundleOf(PICTURE to picture)
+            )
         }
     }
 
-    private fun initClickListeners() {
-        binding?.apply {
-            optionBtn.setOnClickListener {
-                view?.showSnackBar(
-                    text = "Options function",
-                    backgroundColor = resources.getColor(
-                        R.color.white_background,
-                        null
-                    ),
-                    textColor = resources.getColor(
-                        R.color.black_background,
-                        null
-                    )
-                )
-            }
+    private fun provideNewPictureListener() = object : NewPictureListener {
+        override fun openNewPicture() {
+            findNavController().navigate(R.id.menu_to_draw)
         }
     }
 }

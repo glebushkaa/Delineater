@@ -7,20 +7,20 @@
     tools:context=".ui.fragments.SplashFragment">
 
     <ImageView
-        android:layout_width="180dp"
-        android:layout_height="180dp"
+        android:layout_width="@dimen/splash_image_size"
+        android:layout_height="@dimen/splash_image_size"
         android:layout_gravity="center"
-        android:layout_marginBottom="100dp"
-        android:src="@drawable/ic_brush"/>
+        android:layout_marginBottom="@dimen/splash_image_margin"
+        android:src="@drawable/ic_brush" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/app_name"
-        android:textColor="@color/white"
-        android:fontFamily="@font/condiment"
         android:layout_gravity="center"
         android:layout_marginTop="40dp"
-        android:textSize="@dimen/splash_text_size"/>
+        android:fontFamily="@font/condiment"
+        android:text="@string/app_name"
+        android:textColor="@color/white"
+        android:textSize="@dimen/splash_text_size" />
 
 </FrameLayout>

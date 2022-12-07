@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="@dimen/menu_item_width"
+    android:layout_height="@dimen/menu_item_height"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_margin="@dimen/menu_item_margin"
+    app:cardBackgroundColor="@color/white_background"
+    app:cardCornerRadius="10dp">
+
+    <ImageView
+        android:id="@+id/imageContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        tools:src="@drawable/test_img" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/deleteImageBtn"
+        style="@style/NoInsetsButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0"
+        android:visibility="gone"
+        app:backgroundTint="@color/poor_gray"
+        app:cornerRadius="0dp"
+        app:icon="@drawable/ic_close"
+        app:iconGravity="textStart"
+        app:iconPadding="0dp"
+        app:iconSize="40dp" />
+
+    <ProgressBar
+        android:id="@+id/loadProgress"
+        android:layout_width="@dimen/round_progress_bar_size"
+        android:layout_height="@dimen/round_progress_bar_size"
+        android:layout_gravity="center"
+        android:indeterminateTint="@color/poor_gray" />
+
+</com.google.android.material.card.MaterialCardView>

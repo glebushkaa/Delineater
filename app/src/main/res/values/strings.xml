@@ -1,5 +1,19 @@
 <resources>
     <string name="app_name">Delineater</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="allow_read_files">To save your projects, we need this permission</string>
+    <string name="confirm">Confirm</string>
+    <string name="cancel">Cancel</string>
+    <string name="my_paintings">My paintings</string>
+    <string name="save">Save</string>
+    <string name="download_head">This is your painting!</string>
+    <string name="share">Share</string>
+    <string name="select_color">Pick color</string>
+    <string name="share_via">Share via</string>
+    <string name="picture_saved">Picture saved</string>
+    <string name="discard">Discard</string>
+    <string name="content_changed">Content changed</string>
+    <string name="do_you_want_to_save_your_edits">Do you want to save your edits?</string>
+    <string name="start_brush_size" translatable="false">10dp</string>
+    <string name="provide_storage_access">Provide access</string>
+    <string name="project_not_found">The project was not found</string>
 </resources>

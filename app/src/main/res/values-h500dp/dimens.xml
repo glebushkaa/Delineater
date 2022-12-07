@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--Global-->
+    <dimen name="button_text_size">18sp</dimen>
+    <dimen name="head_text_size">20sp</dimen>
+    <dimen name="top_icon_size">20dp</dimen>
+    <dimen name="bar_size">40dp</dimen>
+    <!--Global-->
+
+    <!--Splash screen-->
+    <dimen name="splash_text_size">32sp</dimen>
+    <dimen name="splash_image_size">120dp</dimen>
+    <dimen name="splash_image_margin">60dp</dimen>
+    <!--Splash screen-->
+
+    <!--Download screen-->
+    <dimen name="download_button_height">40dp</dimen>
+    <dimen name="simple_corner_button_size">10dp</dimen>
+    <dimen name="side_download_button_margin">80dp</dimen>
+    <dimen name="round_progress_bar_size">36dp</dimen>
+    <dimen name="download_image_height">200dp</dimen>
+    <dimen name="download_image_width">140dp</dimen>
+    <dimen name="download_head_top_margin">80dp</dimen>
+    <!--Download screen-->
+
+    <!--Draw screen-->
+    <dimen name="color_picker_button_divider_size">8dp</dimen>
+    <dimen name="brush_size_text_size">16sp</dimen>
+    <dimen name="slider_width">100dp</dimen>
+    <!--Draw screen-->
+
+    <!--Save edits dialog-->
+    <dimen name="save_edits_dialog_height">140dp</dimen>
+    <dimen name="save_edits_head_text_size">18sp</dimen>
+    <dimen name="save_edits_head_top_margin">22dp</dimen>
+    <dimen name="save_edits_body_top_margin">54dp</dimen>
+    <dimen name="save_edits_button_height">28dp</dimen>
+    <dimen name="save_edits_body_side_margin">20dp</dimen>
+    <dimen name="save_edits_button_side_margin_size">20dp</dimen>
+    <dimen name="save_edits_button_text_size">12sp</dimen>
+    <dimen name="save_edits_body_text_size">12sp</dimen>
+    <!--Save edits dialog-->
+
+    <!--Color picker dialog-->
+    <dimen name="color_pick_dialog_margin">60dp</dimen>
+    <dimen name="color_pick_place_size">220dp</dimen>
+    <dimen name="color_pick_place_margin">20dp</dimen>
+    <dimen name="color_pick_button_height">32dp</dimen>
+    <dimen name="color_pick_button_side_margin_size">24dp</dimen>
+    <dimen name="color_pick_button_text_size">12sp</dimen>
+    <dimen name="color_picker_height">400dp</dimen>
+    <!--Color picker dialog-->
+
+</resources>

@@ -1,51 +1,48 @@
 package com.gleb.delineater.ui.dialogs
 
+import android.os.Bundle
+import android.view.View
+import androidx.fragment.app.DialogFragment
+import by.kirich1409.viewbindingdelegate.viewBinding
+import com.gleb.delineater.R
 import com.gleb.delineater.databinding.DialogColorPickBinding
-import com.gleb.delineater.ui.extensions.blurFadeAnim
-import com.gleb.delineater.ui.extensions.hideFadeAnim
-import com.gleb.delineater.ui.extensions.translateDialogByXCenter
-import com.gleb.delineater.ui.extensions.translateDialogByXOverBorder
 import com.skydoves.colorpickerview.flag.BubbleFlag
 import com.skydoves.colorpickerview.flag.FlagMode
 
-class ColorPickerDialog(private val colorPickerBinding: DialogColorPickBinding) {
 
+class ColorPickerDialog : DialogFragment(R.layout.dialog_color_pick) {
+
+    private val binding: DialogColorPickBinding by viewBinding()
     var colorListener: ((Int) -> Unit)? = null
 
-    fun initClickListeners() {
-        colorPickerBinding.apply {
-            cancelBtn.setOnClickListener {
-                hide()
-            }
-            confirmBtn.setOnClickListener {
-                hide()
-                colorListener?.invoke(colorPickerView.color)
-            }
-            colorPickerBlur.setOnClickListener {
-                hide()
-            }
-            dialogCardView.isClickable = true
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        setDialog()
+        binding.initClickListeners()
+        setColorPickerView()
+    }
+
+    private fun DialogColorPickBinding.initClickListeners() {
+        cancelBtn.setOnClickListener {
+            dismiss()
+        }
+        confirmBtn.setOnClickListener {
+            colorListener?.invoke(colorPickerView.color)
+            dismiss()
         }
     }
 
-    fun setColorPickView() {
-        val bubbleFlag = BubbleFlag(colorPickerBinding.colorPickerBlur.context)
+    private fun setDialog() {
+        dialog?.window?.setWindowAnimations(R.style.ColorPickerDialogAnim)
+        val width = resources.getDimensionPixelSize(R.dimen.color_picker_width)
+        val height = resources.getDimensionPixelSize(R.dimen.color_picker_height)
+        dialog?.window?.setLayout(width, height)
+        dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
+    }
+
+    fun setColorPickerView() {
+        val bubbleFlag = BubbleFlag(binding.root.context)
         bubbleFlag.flagMode = FlagMode.FADE
-        colorPickerBinding.colorPickerView.flagView = bubbleFlag
-    }
-
-    fun show() {
-        colorPickerBinding.apply {
-            colorPickerBlur.blurFadeAnim()
-            dialogCardView.translateDialogByXCenter()
-        }
-    }
-
-    fun hide() {
-        colorPickerBinding.apply {
-            colorPickerBlur.hideFadeAnim()
-            dialogCardView.translateDialogByXOverBorder()
-        }
+        binding.colorPickerView.flagView = bubbleFlag
     }
 
 }

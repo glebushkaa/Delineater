@@ -1,20 +1,20 @@
 package com.gleb.delineater.ui.recycler.viewHolders
 
 import android.view.View
+import android.widget.Button
 import com.bumptech.glide.Glide
 import com.gleb.delineater.data.entities.PictureEntity
 import com.gleb.delineater.databinding.ItemExistPictureBinding
-import com.gleb.delineater.ui.extensions.hideFadeAnim
-import com.gleb.delineater.ui.extensions.defaultFadeAnim
 import com.gleb.delineater.ui.listeners.ExistPictureListener
 import com.gleb.delineater.ui.listeners.getGlideProgressBarListener
 import com.gleb.delineater.ui.recycler.BaseViewHolder
 import java.io.File
 
-private const val VISIBLE_DELETE_ALPHA = 0.9f
-
 class ExistPictureViewHolder(private val view: View) :
     BaseViewHolder<ExistPictureListener, PictureEntity>(view) {
+
+    private val visibileAlpha = 0.9f
+    private val goneAlpha = 0f
 
     override fun bind(listener: ExistPictureListener, item: PictureEntity) {
         val binding = ItemExistPictureBinding.bind(view)
@@ -32,12 +32,29 @@ class ExistPictureViewHolder(private val view: View) :
                 listener.deletePicture(item)
             }
             root.setOnLongClickListener {
-                deleteImageBtn.defaultFadeAnim(VISIBLE_DELETE_ALPHA)
+                deleteImageBtn.showFideAnim()
                 true
             }
             root.setOnClickListener {
                 listener.openPicture(item)
             }
+        }
+    }
+
+    private fun Button.showFideAnim() {
+        this.visibility = View.VISIBLE
+        this.animate().alpha(visibileAlpha).also {
+            it.start()
+        }
+    }
+
+
+    private fun Button.hideFadeAnim() {
+        this.animate().alpha(goneAlpha).also {
+            it.withEndAction {
+                this.visibility = View.GONE
+            }
+            it.start()
         }
     }
 }

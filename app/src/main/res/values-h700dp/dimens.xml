@@ -46,6 +46,7 @@
     <dimen name="color_pick_button_height">40dp</dimen>
     <dimen name="color_pick_button_side_margin_size">24dp</dimen>
     <dimen name="color_pick_button_text_size">14sp</dimen>
+    <dimen name="color_picker_height">600dp</dimen>
     <!--Color picker dialog-->
 
 </resources>

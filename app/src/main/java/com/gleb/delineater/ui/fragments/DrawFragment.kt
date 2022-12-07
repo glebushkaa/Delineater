@@ -1,19 +1,20 @@
 package com.gleb.delineater.ui.fragments
 
-import android.Manifest.permission.READ_EXTERNAL_STORAGE
-import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+import android.Manifest.permission.*
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.view.View
-import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
+import androidx.core.content.PackageManagerCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.drawToBitmap
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.fragment.findNavController
@@ -30,6 +31,7 @@ import com.gleb.delineater.ui.constants.PICTURE_REQUEST_KEY
 import com.gleb.delineater.ui.dialogs.ColorPickerDialog
 import com.gleb.delineater.ui.dialogs.SaveEditsDialog
 import com.gleb.delineater.ui.extensions.*
+import com.gleb.delineater.ui.listeners.SaveEditsListener
 import com.gleb.delineater.ui.types.ColorPickerType
 import com.gleb.delineater.ui.types.PaintType
 import com.gleb.delineater.ui.viewModels.DrawViewModel
@@ -40,8 +42,8 @@ class DrawFragment : Fragment(R.layout.fragment_draw) {
     private val binding: FragmentDrawBinding by viewBinding()
     private val viewModel: DrawViewModel by viewModel()
 
-    private val colorPickDialog by lazy { ColorPickerDialog(binding.colorPickerCard) }
-    private val saveEditsDialog by lazy { SaveEditsDialog(binding.saveEditsCard) }
+    private val colorPickDialog = ColorPickerDialog()
+    private val saveEditsDialog = SaveEditsDialog()
 
     private val storagePermissionsArray = arrayOf(
         READ_EXTERNAL_STORAGE,
@@ -50,18 +52,6 @@ class DrawFragment : Fragment(R.layout.fragment_draw) {
 
     private var settingsActivityResult =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {}
-
-    private var saveEditsStoragePermission = registerForActivityResult(
-        ActivityResultContracts.RequestMultiplePermissions()
-    ) { permissions ->
-        if (permissions.all { !it.value }) {
-            saveEditsDialog.hide {
-                showStoragePermissionMessage()
-            }
-            return@registerForActivityResult
-        }
-        saveEditsStoragePermissionAction()
-    }
 
     private var downloadStoragePermission = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -74,30 +64,42 @@ class DrawFragment : Fragment(R.layout.fragment_draw) {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
         getArgs()
         setSavedPictureResultListener()
-        initColorPickerDialog()
-        initSaveEditsDialog()
-        binding.initListeners()
+        binding.initClickListeners()
         binding.setColors()
-        binding.backPressed()
+        initColorPickerDialogListener()
+        initSaveEditsDialogListener()
         setPaintBackgroundPicture()
     }
 
-    private fun setPaintBackgroundPicture() {
-        viewModel.currentPicture?.let {
-            requireContext().decodePictureFile(it.picturePath) { picture ->
-                viewModel.isNewPicture = false
-                binding.paintView.background = picture
-            }
-        }
-    }
 
     private fun setSavedPictureResultListener() {
         setFragmentResultListener(PICTURE_REQUEST_KEY) { _, bundle ->
-            bundle.getParcelable<PictureEntity>(NEW_SAVED_PICTURE)?.let {
-                viewModel.currentPicture = it
+            viewModel.currentPicture = bundle.getParcelable(NEW_SAVED_PICTURE)
+        }
+    }
+
+    private fun initColorPickerDialogListener() {
+        colorPickDialog.colorListener = {
+            binding.getColorFromPicker(viewModel.colorPickerType, it)
+        }
+    }
+
+    private fun initSaveEditsDialogListener() {
+        saveEditsDialog.editsListener = object : SaveEditsListener {
+            override fun saveEdits() {
+                binding.paintView.drawToBitmap().saveAlbumImage {
+                    findNavController().popBackStack()
+                }
+            }
+
+            override fun discardEdits() {
+                findNavController().popBackStack()
+            }
+
+            override fun deniedPermission() {
+                showStoragePermissionMessage()
             }
         }
     }
@@ -108,35 +110,32 @@ class DrawFragment : Fragment(R.layout.fragment_draw) {
         }
     }
 
-    private fun initColorPickerDialog() {
-        colorPickDialog.initClickListeners()
-        colorPickDialog.setColorPickView()
-        colorPickDialog.colorListener = { color ->
-            binding.getColorFromPicker(viewModel.colorPickerType, color)
-        }
-    }
-
-    private fun initSaveEditsDialog() {
-        saveEditsDialog.initClickListeners()
-        saveEditsDialog.saveEditsListener = {
-            saveEditsStoragePermission.launch(storagePermissionsArray)
-        }
-        saveEditsDialog.discardEditsListener = {
-            findNavController().popBackStack()
-        }
-    }
-
     @SuppressLint("SetTextI18n")
-    private fun FragmentDrawBinding.initListeners() {
+    private fun FragmentDrawBinding.initClickListeners() {
         backBtn.setOnClickListener {
             if (paintView.checkEdits()) {
-                saveEditsDialog.show()
+                saveEditsDialog.show(parentFragmentManager, "")
             } else {
                 findNavController().popBackStack()
             }
         }
         downloadBtn.setOnClickListener {
-            downloadStoragePermission.launch(storagePermissionsArray)
+            if (ContextCompat.checkSelfPermission(
+                    requireContext(),
+                    READ_EXTERNAL_STORAGE
+                ) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(
+                    requireContext(),
+                    WRITE_EXTERNAL_STORAGE
+                ) == PackageManager.PERMISSION_GRANTED
+            ) {
+                downloadStoragePermissionAction()
+            }else{
+                requireContext().showToast("READ: ${ContextCompat.checkSelfPermission(
+                    requireContext(),
+                    MANAGE_EXTERNAL_STORAGE
+                ) == PackageManager.PERMISSION_GRANTED}\t")
+                downloadStoragePermission.launch(storagePermissionsArray)
+            }
         }
         paintSizeSlider.addOnChangeListener { _, size, _ ->
             paintSize.text = "${size.toInt()}dp"
@@ -150,14 +149,14 @@ class DrawFragment : Fragment(R.layout.fragment_draw) {
         }
         colorPickerBtn.setOnClickListener {
             viewModel.colorPickerType = ColorPickerType.BrushColorPicker
-            colorPickDialog.show()
+            colorPickDialog.show(parentFragmentManager, "")
         }
         refreshBtn.setOnClickListener {
             paintView.resetSurface()
         }
         fillBackBtn.setOnClickListener {
             viewModel.colorPickerType = ColorPickerType.BackgroundColorPicker
-            colorPickDialog.show()
+            colorPickDialog.show(parentFragmentManager, "")
         }
         stepBackBtn.setOnClickListener {
             paintView.removeLastStep()
@@ -203,28 +202,8 @@ class DrawFragment : Fragment(R.layout.fragment_draw) {
         }
     }
 
-    private fun saveAlbumImage(endAction: (String) -> Unit) {
-        binding.paintView.drawToBitmap().saveAlbumImage(endAction)
-    }
-
-    private fun FragmentDrawBinding.backPressed() {
-        val backPressedCallback = object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                when {
-                    saveEditsCard.saveDialogCard.isVisible -> saveEditsDialog.hide()
-                    colorPickerCard.dialogCardView.isVisible -> colorPickDialog.hide()
-                    else -> findNavController().popBackStack()
-                }
-            }
-        }
-        requireActivity().onBackPressedDispatcher.addCallback(
-            viewLifecycleOwner,
-            backPressedCallback
-        )
-    }
-
     private fun downloadStoragePermissionAction() {
-        saveAlbumImage {
+        binding.paintView.drawToBitmap().saveAlbumImage {
             viewModel.setNewPicturePath(it)
             findNavController().navigate(
                 R.id.draw_to_download,
@@ -236,19 +215,24 @@ class DrawFragment : Fragment(R.layout.fragment_draw) {
         }
     }
 
-    private fun saveEditsStoragePermissionAction() {
-        saveAlbumImage {
-            viewModel.setNewPicturePath(it)
-            viewModel.addCurrentPicture()
+    private fun setPaintBackgroundPicture() {
+        viewModel.currentPicture?.let {
+            requireContext().decodePictureFile(it.picturePath) { picture ->
+                viewModel.isNewPicture = false
+                binding.paintView.background = picture
+            }
         }
-        saveEditsDialog.hide { findNavController().popBackStack() }
     }
 
     private fun showStoragePermissionMessage() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             view?.showSnackBar(
                 text = getString(R.string.allow_read_files),
-                action = Pair("Provide", provideStorageMessageAction())
+                action = Pair(
+                    getString(R.string.provide_storage_access),
+                    provideStorageMessageAction()
+                ),
+                actionColor = R.color.blue
             )
         } else {
             view?.showSnackBar(
@@ -259,7 +243,10 @@ class DrawFragment : Fragment(R.layout.fragment_draw) {
 
     @RequiresApi(Build.VERSION_CODES.R)
     private fun provideStorageMessageAction() = View.OnClickListener {
-        val intent = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION)
+        val intent = Intent(
+            Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION,
+            Uri.parse("package:" + requireActivity().packageName)
+        )
         settingsActivityResult.launch(intent)
     }
 

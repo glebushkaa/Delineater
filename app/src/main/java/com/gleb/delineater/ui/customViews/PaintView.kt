@@ -31,6 +31,9 @@ class PaintView @JvmOverloads constructor(
     var eraserColor = Color.WHITE
     var paintType: PaintType = PaintType.Brush
 
+    var onDownListener: (() -> Unit)? = null
+    var onUpListener: (() -> Unit)? = null
+
     init {
         setPaint(brushColor)
     }
@@ -41,6 +44,7 @@ class PaintView @JvmOverloads constructor(
 
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
+                onDownListener?.invoke()
                 onDownAction(x, y)
                 return true
             }
@@ -49,6 +53,7 @@ class PaintView @JvmOverloads constructor(
                 selectPaintType()
             }
             else -> {
+                onUpListener?.invoke()
                 return false
             }
         }

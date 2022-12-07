@@ -44,6 +44,8 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 private const val SAVE_DIALOG_TAG = "save_dialog"
 private const val COLOR_PICKER_DIALOG_TAG = "color_picker_dialog"
 
+private const val BAR_ANIM_DURATION = 600L
+
 class DrawFragment : Fragment(R.layout.fragment_draw) {
 
     private val binding: FragmentDrawBinding by viewBinding()
@@ -75,6 +77,7 @@ class DrawFragment : Fragment(R.layout.fragment_draw) {
         setSavedPictureResultListener()
         binding.initClickListeners()
         binding.setColors()
+        binding.providePaintingListener()
         provideColorPickerDialogListener()
         provideSaveEditsDialogListener()
         setPaintBackgroundPicture()
@@ -292,4 +295,24 @@ class DrawFragment : Fragment(R.layout.fragment_draw) {
         }
     }
 
+    private fun FragmentDrawBinding.providePaintingListener() {
+        val defaultY = 0f
+        val hideTopBarY = -200f
+        val hideBottomBarY = 200f
+        paintView.onDownListener = {
+            bottomBar.animBar(defaultY, hideBottomBarY)
+            topBar.animBar(defaultY, hideTopBarY)
+        }
+        paintView.onUpListener = {
+            bottomBar.animBar(hideBottomBarY, defaultY)
+            topBar.animBar(hideTopBarY, defaultY)
+        }
+    }
+
+    private fun View.animBar(startY: Float, endY: Float) {
+        animate().translationYBy(startY).translationY(endY).also {
+            it.duration = BAR_ANIM_DURATION
+            it.start()
+        }
+    }
 }

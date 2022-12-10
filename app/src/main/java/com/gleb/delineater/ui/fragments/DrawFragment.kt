@@ -1,17 +1,14 @@
 package com.gleb.delineater.ui.fragments
 
-import android.Manifest.permission.*
+import android.Manifest.permission.READ_EXTERNAL_STORAGE
+import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Build.VERSION.SDK_INT
 import android.os.Build.VERSION_CODES
 import android.os.Bundle
-import android.provider.Settings
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.drawToBitmap
@@ -22,8 +19,8 @@ import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.gleb.delineater.R
 import com.gleb.delineater.data.entities.PictureEntity
-import com.gleb.delineater.data.extensions.decodePictureFile
 import com.gleb.delineater.data.extensions.cachePicture
+import com.gleb.delineater.data.extensions.decodePictureFile
 import com.gleb.delineater.databinding.FragmentDrawBinding
 import com.gleb.delineater.ui.constants.IS_NEW_PICTURE
 import com.gleb.delineater.ui.constants.NEW_SAVED_PICTURE
@@ -57,9 +54,6 @@ class DrawFragment : Fragment(R.layout.fragment_draw) {
         READ_EXTERNAL_STORAGE,
         WRITE_EXTERNAL_STORAGE
     )
-
-    private var settingsActivityResult =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {}
 
     private var downloadStoragePermission = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -105,7 +99,11 @@ class DrawFragment : Fragment(R.layout.fragment_draw) {
             }
         }
         downloadBtn.setOnClickListener {
-            checkPermission()
+            if (SDK_INT >= VERSION_CODES.R) {
+                downloadStoragePermissionAction()
+            } else {
+                checkStoragePermission()
+            }
         }
         paintSizeSlider.addOnChangeListener { _, size, _ ->
             paintSize.text = "${size.toInt()}dp"
@@ -204,51 +202,17 @@ class DrawFragment : Fragment(R.layout.fragment_draw) {
     }
 
     private fun showStoragePermissionMessage() {
-        if (SDK_INT >= VERSION_CODES.R) {
-            view?.showSnackBar(
-                text = getString(R.string.allow_read_files),
-                action = Pair(
-                    getString(R.string.provide_storage_access),
-                    provideStorageMessageAction()
-                ),
-                actionColor = R.color.action_color
-            )
-        } else {
-            view?.showSnackBar(
-                text = getString(R.string.allow_read_files)
-            )
-        }
-    }
-
-    @RequiresApi(VERSION_CODES.R)
-    private fun provideStorageMessageAction() = View.OnClickListener {
-        val intent = Intent(
-            Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION,
-            Uri.parse("package:" + requireActivity().packageName)
+        view?.showSnackBar(
+            text = getString(R.string.allow_read_files)
         )
-        settingsActivityResult.launch(intent)
-    }
-
-    private fun checkPermission() {
-        if (SDK_INT >= VERSION_CODES.R) {
-            checkManageStoragePermission()
-        } else {
-            checkStoragePermission()
-        }
-    }
-
-    @RequiresApi(VERSION_CODES.R)
-    private fun checkManageStoragePermission() {
-        downloadStoragePermissionAction()
     }
 
     private fun checkStoragePermission() {
-        val writePermission =
-            ContextCompat.checkSelfPermission(
+        if (ContextCompat.checkSelfPermission(
                 requireContext(),
                 WRITE_EXTERNAL_STORAGE
             ) == PackageManager.PERMISSION_GRANTED
-        if (writePermission) {
+        ) {
             downloadStoragePermissionAction()
         } else {
             downloadStoragePermission.launch(storagePermissionsArray)

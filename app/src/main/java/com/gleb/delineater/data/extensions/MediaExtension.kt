@@ -25,24 +25,26 @@ private const val jpgType = ".jpg"
 private const val jpgMimeType = "image/jpg"
 
 suspend fun Bitmap.cachePicture() = suspendCoroutine<String> { continuation ->
-    val file = getPictureDir(cacheAlbumName)
+    runCatching {
+        val file = getPictureDir(cacheAlbumName)
 
-    if (!file.exists() && !file.mkdirs()) {
-        file.mkdir()
+        if (!file.exists() && !file.mkdirs()) {
+            file.mkdir()
+        }
+        val uuid = UUID.randomUUID().toString()
+        val name = "picture$uuid$jpgType"
+        val filePath = file.absolutePath + "/" + name
+        val newFile = File(filePath)
+
+        compress(Bitmap.CompressFormat.JPEG, 100, newFile.outputStream())
+        continuation.resume(filePath)
+    }.recover {
+        continuation.resumeWithException(it)
     }
-    val uuid = UUID.randomUUID().toString()
-    val name = "picture$uuid$jpgType"
-    val filePath = file.absolutePath + "/" + name
-    val newFile = File(filePath)
-
-    compress(Bitmap.CompressFormat.JPEG, 100, newFile.outputStream())
-    continuation.resume(filePath)
 }
 
-private fun getPictureDir(fileName: String): File {
-    val file = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-    return File(file, fileName)
-}
+private fun getPictureDir(fileName: String) =
+    File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), fileName)
 
 fun Context.saveGalleryPicture(bitmap: Bitmap) = runCatching {
     val uuid = UUID.randomUUID().toString()

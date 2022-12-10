@@ -64,16 +64,11 @@ class SaveEditsDialog : DialogFragment(R.layout.dialog_save_edits) {
 
     private fun checkPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            checkManageStoragePermission()
+            dismissNow()
+            editsListener?.saveEdits()
         } else {
             checkStoragePermission()
         }
-    }
-
-    @RequiresApi(Build.VERSION_CODES.R)
-    private fun checkManageStoragePermission() {
-        dismissNow()
-        editsListener?.saveEdits()
     }
 
     private fun checkStoragePermission() {

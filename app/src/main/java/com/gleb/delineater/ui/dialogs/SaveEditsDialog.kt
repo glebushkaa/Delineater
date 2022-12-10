@@ -24,7 +24,6 @@ class SaveEditsDialog : DialogFragment(R.layout.dialog_save_edits) {
     private val binding: DialogSaveEditsBinding by viewBinding()
 
     private val storagePermissionsArray = arrayOf(
-        Manifest.permission.READ_EXTERNAL_STORAGE,
         Manifest.permission.WRITE_EXTERNAL_STORAGE
     )
 
@@ -73,41 +72,22 @@ class SaveEditsDialog : DialogFragment(R.layout.dialog_save_edits) {
 
     @RequiresApi(Build.VERSION_CODES.R)
     private fun checkManageStoragePermission() {
-        val manageStoragePermission = Environment.isExternalStorageManager()
-        val permissionArray = arrayOf(Manifest.permission.MANAGE_EXTERNAL_STORAGE)
-
-        if (manageStoragePermission) {
-            dismissNow()
-            editsListener?.saveEdits()
-        } else {
-            saveEditsStoragePermission.launch(permissionArray)
-        }
+        dismissNow()
+        editsListener?.saveEdits()
     }
 
     private fun checkStoragePermission() {
-        val readPermission =
-            ContextCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.READ_EXTERNAL_STORAGE
-            ) == PackageManager.PERMISSION_GRANTED
-
         val writePermission =
             ContextCompat.checkSelfPermission(
                 requireContext(),
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
             ) == PackageManager.PERMISSION_GRANTED
 
-        if (readPermission && writePermission) {
+        if (writePermission) {
             dismissNow()
             editsListener?.saveEdits()
         } else {
             saveEditsStoragePermission.launch(storagePermissionsArray)
         }
     }
-
-    override fun onDismiss(dialog: DialogInterface) {
-
-        super.onDismiss(dialog)
-    }
-
 }

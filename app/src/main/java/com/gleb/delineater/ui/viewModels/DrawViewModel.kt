@@ -22,8 +22,8 @@ class DrawViewModel(
     var isNewPicture = true
     var colorPickerType: ColorPickerType = ColorPickerType.BrushColorPicker
 
-    fun addCurrentPicture() {
-        viewModelScope.launch(Dispatchers.IO) {
+    suspend fun addCurrentPicture() {
+        withContext(Dispatchers.IO) {
             if (isNewPicture) {
                 currentPicture = currentPicture?.run {
                     PictureEntity(

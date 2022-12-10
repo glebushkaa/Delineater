@@ -20,12 +20,12 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
-private const val albumName = "PictureAlbum"
+private const val cacheAlbumName = "PictureAlbum"
 private const val jpgType = ".jpg"
 private const val jpgMimeType = "image/jpg"
 
-suspend fun Bitmap.saveAlbumImage() = suspendCoroutine<String> { continuation ->
-    val file = getPictureDir(albumName)
+suspend fun Bitmap.cachePicture() = suspendCoroutine<String> { continuation ->
+    val file = getPictureDir(cacheAlbumName)
 
     if (!file.exists() && !file.mkdirs()) {
         file.mkdir()

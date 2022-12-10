@@ -8,7 +8,6 @@ import android.net.Uri
 import android.os.Build.VERSION.SDK_INT
 import android.os.Build.VERSION_CODES
 import android.os.Bundle
-import android.os.Environment
 import android.provider.Settings
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
@@ -24,7 +23,7 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.gleb.delineater.R
 import com.gleb.delineater.data.entities.PictureEntity
 import com.gleb.delineater.data.extensions.decodePictureFile
-import com.gleb.delineater.data.extensions.saveAlbumImage
+import com.gleb.delineater.data.extensions.cachePicture
 import com.gleb.delineater.databinding.FragmentDrawBinding
 import com.gleb.delineater.ui.constants.IS_NEW_PICTURE
 import com.gleb.delineater.ui.constants.NEW_SAVED_PICTURE
@@ -175,7 +174,7 @@ class DrawFragment : Fragment(R.layout.fragment_draw) {
 
     private fun downloadStoragePermissionAction() {
         lifecycleScope.launch {
-            val filePath = binding.paintView.drawToBitmap().saveAlbumImage()
+            val filePath = binding.paintView.drawToBitmap().cachePicture()
             viewModel.setNewPicturePath(filePath)
             findNavController().navigate(
                 R.id.draw_to_download,
@@ -240,28 +239,16 @@ class DrawFragment : Fragment(R.layout.fragment_draw) {
 
     @RequiresApi(VERSION_CODES.R)
     private fun checkManageStoragePermission() {
-        val manageStoragePermission = Environment.isExternalStorageManager()
-        val permissionArray = arrayOf(MANAGE_EXTERNAL_STORAGE)
-
-        if (manageStoragePermission) {
-            downloadStoragePermissionAction()
-        } else {
-            downloadStoragePermission.launch(permissionArray)
-        }
+        downloadStoragePermissionAction()
     }
 
     private fun checkStoragePermission() {
-        val readPermission =
-            ContextCompat.checkSelfPermission(
-                requireContext(),
-                READ_EXTERNAL_STORAGE
-            ) == PackageManager.PERMISSION_GRANTED
         val writePermission =
             ContextCompat.checkSelfPermission(
                 requireContext(),
                 WRITE_EXTERNAL_STORAGE
             ) == PackageManager.PERMISSION_GRANTED
-        if (readPermission && writePermission) {
+        if (writePermission) {
             downloadStoragePermissionAction()
         } else {
             downloadStoragePermission.launch(storagePermissionsArray)
@@ -278,7 +265,7 @@ class DrawFragment : Fragment(R.layout.fragment_draw) {
         saveEditsDialog.editsListener = object : SaveEditsListener {
             override fun saveEdits() {
                 lifecycleScope.launch {
-                    val filePath = binding.paintView.drawToBitmap().saveAlbumImage()
+                    val filePath = binding.paintView.drawToBitmap().cachePicture()
                     viewModel.setNewPicturePath(filePath)
                     viewModel.addCurrentPicture()
                     findNavController().popBackStack()
